@@ -1936,9 +1936,9 @@ dependent identity algebra \verb;lf2vf;:
 
 \begin{verbatim}
 lf2vf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ Y : ★. 
- Π f : Y ➔ Nat. 
- IdDep Y (λ y. X (f y)) ➔ 
- IdDep (ListF A Y ) (λ xs. VecF A X (lenAlgM f xs))
+ Π r : Y ➔ Nat. 
+ Π c : IdDep Y (λ y. X (r y)).
+ IdDep (ListF A Y ) (λ xs. VecF A X (lenAlgM r xs))
   = λ c. elimListF
   (pair nilVF β)
   (λ x,xs. pair (consVF x (elimIdDep c xs) β)).

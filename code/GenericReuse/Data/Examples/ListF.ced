@@ -26,9 +26,7 @@ ListFInd ◂ ∀ A : ★. ∀ X : ★. Π lf : ListF · A · X . ∀ Q : ListF �
  (Λ Y. λ q. q (in1lf · A · X) β i1) (λ a. λ x. Λ Y. λ q. q (in2lf · A · X a x) β (i2 a x) ) · (Q lf) 
  (λ x' . λ e . λ u . ρ e - u).
 
-
--- identity mapping for ListF
-lfimap ◂ ∀ A : ★. IdMapping · (ListF · A) 
+imapL ◂ ∀ A : ★. IdMapping · (ListF · A) 
  = Λ A. Λ X. Λ Y. λ c.  intrId · (ListF · A · X) · (ListF · A · Y)
  (λ lf. lf.1 · (ListF · A · Y) (in1lf · A · Y) 
    (λ a. λ x. in2lf · A · Y a (elimId · X · Y c  x))) 

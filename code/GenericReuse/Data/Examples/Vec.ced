@@ -7,7 +7,7 @@ import IFixIndM.
 import VecF.
 
 
-Vec ◂ ★ ➔ Nat ➔ ★ = λ A : ★. λ n : Nat. IFixIndM · Nat · (VecF · A) (vfimap · A) n.
+Vec ◂ ★ ➔ Nat ➔ ★ = λ A : ★. λ n : Nat. IFixIndM · Nat · (VecF · A) (imapV · A) n.
 
 rebVec ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ n : Nat. Π z : VecF · A · X n. {z in1vf in2vf ≃ z}
  = Λ A. Λ X. Λ n. λ z. (VecFInd · A · X -n z) 

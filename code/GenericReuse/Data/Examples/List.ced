@@ -8,13 +8,13 @@ import Nat.
 import IFixM.
 import Unit.
 
-List ◂ ★ ➔ ★ = λ A : ★. FixIndM · (ListF · A) (lfimap · A).
+List ◂ ★ ➔ ★ = λ A : ★. FixIndM · (ListF · A) (imapL · A).
 
 lenAlgM ◂ ∀ A : ★. AlgM · (ListF · A) · Nat 
- = Λ A. Λ R. λ rec. λ lf. lf.1 · Nat Z (λ a. λ r. S (rec r)).
+ = Λ A. Λ R. λ rec. λ lf. lf.1 · Nat Z (λ x. λ xs. S (rec xs)).
 
 len ◂ ∀ A : ★. List · A ➔ Nat 
- = Λ A. λ l. foldM · (ListF · A) -(lfimap · A) · Nat (lenAlgM · A) l.
+ = Λ A. foldM · (ListF · A) -(imapL · A) · Nat (lenAlgM · A).
 
 rebList ◂ ∀ A : ★. ∀ X : ★. Π z : ListF · A · X. {ListFInd z in2lf in1lf ≃ z}
  = Λ A. Λ X. λ z. θ<z> (ListFInd · A · X z) (λ a. λ x. β) β.
