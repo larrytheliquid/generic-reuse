@@ -15,20 +15,20 @@ rather than propositional equality.
 
 This directory includes our primary contributions,
 the generic zero-cost reuse combinators for the following types:
-* [Function Types (forgetful)](code/Datatypes/FogFun.ced)
-* [Function Types (enriching)](code/Datatypes/EnrFun.ced)
-* [Fixpoint Types (forgetful)](code/Datatypes/FogFix.ced)
-* [Fixpoint Types (enriching)](code/Datatypes/EnrFix.ced)
+* [Functions (forgetful `allArr2arr` & `allPi2pi`)](code/GenericReuse/FogFun.ced)
+* [Functions (enriching `arr2allArrP` & `pi2allPiP`)](code/GenericReuse/EnrFun.ced)
+* [Fixpoints (forgetful `ifix2fix`)](code/GenericReuse/FogFix.ced)
+* [Fixpoints (enriching `fix2ifix`)](code/GenericReuse/EnrFix.ced)
 
 [Datatypes](code/Datatypes)
 ---------------------------
 
 This directory includes the algebraic list and vector datatypes,
 and their schemes, defined using generic Mendler-style fixpoints:
-* [List Scheme (ListF)](code/Datatypes/ListF.ced)
-* [List](code/Datatypes/List.ced)
-* [Vec Scheme (VecF)](code/Datatypes/VecF.ced)
-* [Vec](code/Datatypes/Vec.ced)
+* [Lists Scheme (`ListF`)](code/Datatypes/ListF.ced)
+* [Lists (`List`)](code/Datatypes/List.ced)
+* [Vectors Scheme (`VecF`)](code/Datatypes/VecF.ced)
+* [Vectors (`Vec`)](code/Datatypes/Vec.ced)
 
 [IndexedMendlerInduction](code/IndexedMendlerInduction)
 -------------------------------------------------------
@@ -36,15 +36,15 @@ and their schemes, defined using generic Mendler-style fixpoints:
 This directory imports the generic datatype development
 (via efficient Mendler-style fixpoints) by
 [Firsov et al.](https://arxiv.org/abs/1803.02473):
-* [Non-Indexed Fixpoints (FixIndM)](code/IndexedMendlerInduction/FixIndM.ced)
-* [Indexed Fixpoints (IFixIndM)](code/IndexedMendlerInduction/IFixIndM.ced)
-* [Identity Mappings (IIdMapping)](code/IndexedMendlerInduction/IIdMapping.ced)
+* [Non-Indexed Fixpoints (`FixIndM`)](code/IndexedMendlerInduction/FixIndM.ced)
+* [Indexed Fixpoints (`IFixIndM`)](code/IndexedMendlerInduction/IFixIndM.ced)
+* [Identity Mappings (`IIdMapping`)](code/IndexedMendlerInduction/IIdMapping.ced)
 
 [Base](code/Base)
 -----------------
 
 This directory includes base or "prelude" definitions,
-like the [Unit](code/Base/Unit.ced) and [Sigma](code/Base/Sigma.ced) types.
-It also includes [IdDep](code/Base/Id.ced),
+like the [`Unit`](code/Base/Unit.ced) and [`Sigma`](code/Base/Sigma.ced) types.
+It also includes [`IdDep`](code/Base/Id.ced),
 the type of dependent identity functions.
 
