@@ -1,5 +1,4 @@
-module ReuseForgetful.
-
+module FogFix.
 import Id.
 import IIdMapping.
 import IFixIndM.

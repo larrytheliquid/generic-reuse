@@ -20,3 +20,4 @@ _TZ_*
 *.ps
 *.out
 html
+.cedille

@@ -1,4 +1,4 @@
-module ReuseEnriching.
+module EnrFix.
 import Sigma.
 import Id.
 import IIdMapping.

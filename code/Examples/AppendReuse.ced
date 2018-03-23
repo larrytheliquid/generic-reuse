@@ -1,5 +1,5 @@
 import Id.
-module GenericReuse.Program.Examples.Append
+module AppendReuse
   (Nat : ★) (List : ★ ➔ ★) (Vec : ★ ➔ Nat ➔ ★)
   (add : Nat ➔ Nat ➔ Nat)
   (len : ∀ A : ★. List · A ➔ Nat)
@@ -7,7 +7,9 @@ module GenericReuse.Program.Examples.Append
   (v2lPres : ∀ A : ★. ∀ n : Nat. Π xs : Vec · A n. {n ≃ len xs})
   (l2v : ∀ A : ★. IdDep · (List · A) · (λ xs : List · A. Vec · A (len · A xs)))
  .
-import Combinators.
+import Aux.
+import FogFun.
+import EnrFun.
 
 v2l# ◂ ∀ A : ★. ∀ n : Nat. Vec · A n ➔ List · A
   = Λ A. Λ n. elimId · (Vec · A n) · (List · A) (v2l · A -n).

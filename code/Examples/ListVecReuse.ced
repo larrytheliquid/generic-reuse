@@ -1,17 +1,16 @@
 module ListVecReuse.
-
 import Sigma.
 import Unit.
 import Nat.
 import Id.
 import IIdMapping.
 import IFixIndM.
-import Forget.
-import Enrich.
 import ListF.
 import List.
 import VecF.
 import Vec.
+import FogFix.
+import EnrFix.
 
 vf2lf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ Y :  ★. 
   Π c : ∀ n : Nat. Id · (X n) · Y.
@@ -26,6 +25,8 @@ v2l ◂ ∀ A : ★. ∀ n : Nat. Id · (Vec · A n) · (List · A)
   = Λ A. Λ n. ifix2fix · Nat · (VecF · A) · (ListF · A)
   (imapV · A) (imapL · A)
   (Λ X. Λ Y. λ c. Λ i. vf2lf · A · X · Y c -i) -n. 
+v2l# ◂ ∀ A : ★. ∀ n : Nat. Vec · A n ➔ List · A
+  = Λ A. Λ n. elimId · (Vec · A n) · (List · A) (v2l · A -n).
 
 lf2vf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ Y : ★. 
   Π r : Y ➔ Nat. 
@@ -43,3 +44,5 @@ l2v ◂ ∀ A : ★. IdDep · (List · A) · (λ xs : List · A. Vec · A (len �
   = Λ A. fix2ifix · Nat · (VecF · A) · (ListF · A)
   (imapV · A) (imapL · A) (lenAlgM · A)
   (Λ X. Λ Y. λ f. λ a.  lf2vf · A · X · Y f a) .
+l2v# ◂ ∀ A : ★. Π xs : List · A. Vec · A (len · A xs)
+  = Λ A. elimIdDep · (List · A) · (λ xs : List · A. Vec · A (len · A xs)) (l2v · A).

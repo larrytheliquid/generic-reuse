@@ -1,0 +1,47 @@
+module Aux.
+import Id.
+
+id ◂ ∀ A : ★. Id · A · A = Λ A . λ a. pairId · A · A -a a β .
+
+subst ◂ ∀ Y : ★. ∀ I : ★. ∀ X : I ➔ ★.
+  ∀ r : Y ➔ I. ∀ i : I.
+  IdDep · Y · (λ y : Y. X (r y)) ➔
+  IdDep · Y · (λ y : Y. {r y ≃ i} ➾ X i)
+  = Λ Y. Λ I. Λ X. Λ r. Λ i. λ c. λ y. pairIdDep
+  · Y · (λ y : Y. {r y ≃ i} ➾ X i) -y
+  (Λ q. ρ ς q - (elimIdDep · Y · (λ y : Y. X (r y)) c y))
+  β.
+
+supplyPrem ◂ ∀ Y : ★. ∀ P : ★. ∀ X : ★.
+  P ➔ Id · Y · (P ➾ X) ➔
+  Id · Y · X
+  = Λ Y. Λ P. Λ X. λ p. λ c. λ y. pairId
+  · Y · X -y
+  (elimId · Y · (P ➾ X) c y -p)
+  β.
+
+skipPrem ◂ ∀ Y : ★. ∀ P : ★. ∀ X : ★.
+  Id · Y · X ➔
+  Id · Y · (P ➾ X)
+  = Λ Y. Λ P. Λ X. λ c. λ y. pairId
+  · Y · (P ➾ X) -y
+  (Λ p. elimId · Y · X c y)
+  β.
+
+copyType ◂ ∀ F : ★ ➔ ★. ∀ G : ★ ➔ ★.
+  (∀ A : ★. Id · (F · A) · (G · A)) ➔
+  Id · (∀ A : ★. F · A) · (∀ A : ★. G · A)
+  = Λ F. Λ G. λ c. λ xs. pairId
+  · (∀ A : ★. F · A) · (∀ A : ★. G · A) -xs
+  (Λ A. elimId · (F · A) · (G · A) (c · A) (xs · A))
+  β.
+
+copyTypeP ◂ ∀ F : ★ ➔ ★. ∀ P : Π A : ★. F · A ➔ ★. ∀ G : ★ ➔ ★.
+  (∀ A : ★. IdDep · (F · A) · (λ xs : F · A. P · A xs ➾ G · A)) ➔
+  IdDep · (∀ A : ★. F · A) · (λ xs : ∀ A : ★. F · A. (∀ A : ★. P · A (xs · A)) ➾ ∀ A : ★. G · A)
+  = Λ F. Λ P. Λ G. λ c. λ xs. pairIdDep
+  · (∀ A : ★. F · A) · (λ xs : ∀ A : ★. F · A. (∀ A : ★. P · A (xs · A)) ➾ ∀ A : ★. G · A) -xs
+  (Λ p. Λ A. elimIdDep · (F · A) · (λ xs : F · A. P · A xs ➾ G · A)
+    (c · A) (xs · A) -(p · A)
+  ) β.
+
