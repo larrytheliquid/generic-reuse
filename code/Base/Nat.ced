@@ -8,9 +8,11 @@ sucC ◂ NatC ➔ NatC = λ n. Λ X. λ cZ. λ cS. cS (n · X cZ cS).
 NatI ◂ NatC ➔ ★ = λ n : NatC. ∀ P : NatC ➔ ★. P zeroC ➔ (∀ n' : NatC. P n' ➔ P (sucC n')) ➔ P n.
 Nat ◂ ★ = ι n : NatC. NatI n.
 zeroI ◂ NatI zeroC = Λ P. λ pZ. λ pS. pZ.
-sucI ◂ Π n : Nat. NatI (sucC n.1) = λ n. Λ P. λ pZ. λ pS. pS -n.1 (n.2 · P pZ pS).
+sucI ◂ ∀ nC : NatC. Π n : NatI nC. NatI (sucC nC) =
+  Λ nC. λ n. Λ P. λ pZ. λ pS. pS -nC (n · P pZ pS).
+
 zero ◂ Nat = [zeroC, zeroI].
-suc ◂ Nat ➔ Nat = λ n. [sucC n.1, sucI n].
+suc ◂ Nat ➔ Nat = λ n. [sucC n.1, sucI -n.1 n.2].
 
 toNat ◂ NatC ➔ Nat = λ n. n · Nat zero suc.
 toNatId ◂ Π n : Nat. Eq · Nat (toNat n.1) n = λ n. n.2
