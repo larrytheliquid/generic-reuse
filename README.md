@@ -29,8 +29,10 @@ the generic zero-cost reuse combinators for the following types:
 ---------------------------------
 
 This directory includes reuse examples via our combinators:
-* [Program and Proof Reuse of `append` and `assoc`](code/Examples/AppendReuse.ced)
-* [Data Reuse of `List` and `Vec`](code/Examples/ListVecReuse.ced)
+* [Program Reuse of append and Proof Reuse of associativity](code/Examples/AppendReuse.ced)
+  * forgetful `appV2appL` & enriching `appL2appV`
+  * forgetful `assocV2assocL` & enriching `assocL2assocV`
+* [Data Reuse of lists (`l2v`) and vectors (`v2l`)](code/Examples/ListVecReuse.ced)
 
 [Datatypes](code/Datatypes)
 ---------------------------
