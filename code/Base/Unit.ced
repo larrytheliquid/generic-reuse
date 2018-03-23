@@ -1,24 +1,24 @@
 module Unit.
+import Eq.
 
-cUnit ◂ ★ = ∀ X : ★. X ➔ X.
-cunit ◂ cUnit = Λ X. λ x. x.
+UnitC ◂ ★ = ∀ C : ★. C ➔ C.
+unitC ◂ UnitC = Λ C. λ c. c.
 
+UnitI ◂ UnitC ➔ ★ = λ uC : UnitC. ∀ P : UnitC ➔ ★. P unitC ➔ P uC.
+unitI ◂ UnitI unitC = Λ P. λ p. p.
 
-param-Unit ◂ cUnit ➔ ★ =
- λ x : cUnit. ∀ X : ★. ∀ P : X ➔ ★. ∀ cu : X. P cu ➔ P (x · X cu).
+Unit ◂ ★ = ι u : UnitC. UnitI u.
+unit ◂ Unit = [unitC, unitI].
 
+toUnit ◂ UnitC ➔ Unit = λ u. u · Unit unit.
+toUnitId ◂ Π u : Unit. Eq · Unit (toUnit u.1) u
+  = λ u. u.2 · (λ uC : UnitC. HEq · Unit · UnitC (toUnit uC) uC) β.
 
--- unit datatype and its constructor
-Unit ◂ ★ = ι x : cUnit. ι _ : { x cunit ≃ x }. param-Unit x.
-unit ◂ Unit = [ cunit , [β{cunit} , Λ X. Λ P. Λ cu. λ u. u ]].
+elimUnit ◂ ∀ P : Unit ➔ ★. P unit ➔ Π u : Unit. P u
+  = Λ P. λ p. λ u.
+  ρ ς (toUnitId u) -
+  (u.2 · (λ uC : UnitC. P (toUnit uC)) p).
 
-
--- induction principle for Unit derived from parametricity
-indUnit ◂ Π x : Unit. ∀ P : Unit ➔ ★. P unit ➔ P x =
-  λ x. Λ P. λ u. ρ ς x.2.1 - (x.2.2 · Unit · P -unit u).
-
-
--- Unit has a single inhabitant "unit".
-etaUnit ◂ Π x : Unit. { x ≃ unit } =
-  λ x. θ<x> (indUnit x) β.
+etaUnit ◂ Π u : Unit. { u ≃ unit } =
+  elimUnit · (λ u : Unit. { u ≃ unit }) β.
 

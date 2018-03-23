@@ -2,9 +2,9 @@ module Sigma.
 import Eq.
 
 SigmaC ◂ Π A : ★. (A ➔ ★) ➔ ★ = λ A : ★. λ B : A ➔ ★.
-  ∀ X : ★. (Π a : A. B a ➔ X) ➔ X.
+  ∀ C : ★. (Π a : A. B a ➔ C) ➔ C.
 pairC ◂ ∀ A : ★. ∀ B : A ➔ ★. Π a : A. B a ➔ SigmaC · A · B =
- Λ A. Λ B. λ a. λ b. Λ X. λ c. c a b.
+ Λ A. Λ B. λ a. λ b. Λ C. λ c. c a b.
 
 SigmaI ◂ Π A : ★. Π B : A ➔ ★. SigmaC · A · B ➔ ★ =
   λ A : ★ . λ B : A ➔ ★. λ s : SigmaC · A · B.

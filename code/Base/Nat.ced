@@ -1,9 +1,9 @@
 module Nat.
 import Eq.
 
-NatC ◂ ★ = ∀ X : ★. X ➔ (X ➔ X) ➔ X.
-zeroC ◂ NatC = Λ X. λ cZ. λ cS. cZ.
-sucC ◂ NatC ➔ NatC = λ n. Λ X. λ cZ. λ cS. cS (n · X cZ cS).
+NatC ◂ ★ = ∀ C : ★. C ➔ (C ➔ C) ➔ C.
+zeroC ◂ NatC = Λ C. λ cZ. λ cS. cZ.
+sucC ◂ NatC ➔ NatC = λ n. Λ C. λ cZ. λ cS. cS (n · C cZ cS).
 
 NatI ◂ NatC ➔ ★ = λ n : NatC. ∀ P : NatC ➔ ★. P zeroC ➔ (∀ n' : NatC. P n' ➔ P (sucC n')) ➔ P n.
 Nat ◂ ★ = ι n : NatC. NatI n.
