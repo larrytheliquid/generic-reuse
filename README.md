@@ -11,8 +11,8 @@ work, where identity functions are defined via definitional equality,
 rather than propositional equality.
 
 We describe the directories containing our code below. As in the paper,
-program reuse corresponds to dependent function type reuse,
-proof reuse corresponds to non-dependent function type reuse,
+program reuse corresponds to non-dependent function type reuse,
+proof reuse corresponds to dependent function type reuse,
 and data reuse corresponds to fixpoint type reuse.
 
 [GenericReuse](code/GenericReuse)
