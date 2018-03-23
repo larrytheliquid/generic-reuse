@@ -10,6 +10,11 @@ previous [manual reuse](https://github.com/larrytheliquid/zero-cost-coercions)
 work, where identity functions are defined via definitional equality, 
 rather than propositional equality.
 
+We describe the directories containing our code below. As in the paper,
+program reuse corresponds to dependent function type reuse,
+proof reuse corresponds to non-dependent function type reuse,
+and data reuse corresponds to fixpoint type reuse.
+
 [GenericReuse](code/GenericReuse)
 ---------------------------------
 
@@ -19,6 +24,13 @@ the generic zero-cost reuse combinators for the following types:
 * [Functions (enriching `arr2allArrP` & `pi2allPiP`)](code/GenericReuse/EnrFun.ced)
 * [Fixpoints (forgetful `ifix2fix`)](code/GenericReuse/FogFix.ced)
 * [Fixpoints (enriching `fix2ifix`)](code/GenericReuse/EnrFix.ced)
+
+[Examples](code/Examples)
+---------------------------------
+
+This directory includes reuse examples via our combinators:
+* [Program and Proof Reuse of `append` and `assoc`](code/Examples/AppendReuse.ced)
+* [Data Reuse of `List` and `Vec`](code/Examples/ListVecReuse.ced)
 
 [Datatypes](code/Datatypes)
 ---------------------------
