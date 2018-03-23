@@ -1,8 +1,6 @@
 module Id.
-
+import Eq.
 import Sigma.
-import SubstComp.
-
 
 -- type of dependent identity functions
 IdDep ◂ Π A : ★. Π B : A ➔ ★. ★ = λ A : ★. λ B : A ➔ ★. 

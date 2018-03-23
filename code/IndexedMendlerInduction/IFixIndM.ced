@@ -1,6 +1,5 @@
 module IFixIndM.
 
-import SubstComp.
 import Id.
 import IIdMapping.
 import IFixM.
