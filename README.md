@@ -25,6 +25,8 @@ the generic zero-cost reuse combinators for the following types:
 * [Fixpoints (forgetful `ifix2fix`)](code/GenericReuse/FogFix.ced)
 * [Fixpoints (enriching `fix2ifix`)](code/GenericReuse/EnrFix.ced)
 
+The [auxiliary](code/GenericReuse/Aux.ced) combinators are also included.
+
 [Examples](code/Examples)
 ---------------------------------
 
@@ -32,7 +34,7 @@ This directory includes reuse examples via our combinators:
 * [Program Reuse of append and Proof Reuse of associativity](code/Examples/AppendReuse.ced)
   * forgetful `appV2appL` & enriching `appL2appV`
   * forgetful `assocV2assocL` & enriching `assocL2assocV`
-* [Data Reuse of lists (enriching `l2v`) and vectors (forgetful `v2l`)](code/Examples/ListVecReuse.ced)
+* [Data Reuse of vectors (forgetful `v2l`) and lists (enriching `l2v`)](code/Examples/ListVecReuse.ced)
 
 [Datatypes](code/Datatypes)
 ---------------------------
