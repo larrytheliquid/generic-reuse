@@ -1,27 +1,27 @@
 module Nat.
+import Eq.
 
-cNat ◂ ★ = ∀ X : ★ . (X ➔ X) ➔ X ➔ X .
+NatC ◂ ★ = ∀ X : ★. X ➔ (X ➔ X) ➔ X.
+zeroC ◂ NatC = Λ X. λ cZ. λ cS. cZ.
+sucC ◂ NatC ➔ NatC = λ n. Λ X. λ cZ. λ cS. cS (n · X cZ cS).
 
-cZ ◂ cNat = Λ X . λ f . λ a . a .
+NatI ◂ NatC ➔ ★ = λ n : NatC. ∀ P : NatC ➔ ★. P zeroC ➔ (∀ n' : NatC. P n' ➔ P (sucC n')) ➔ P n.
+Nat ◂ ★ = ι n : NatC. NatI n.
+zeroI ◂ NatI zeroC = Λ P. λ pZ. λ pS. pZ.
+sucI ◂ Π n : Nat. NatI (sucC n.1) = λ n. Λ P. λ pZ. λ pS. pS -n.1 (n.2 · P pZ pS).
+zero ◂ Nat = [zeroC, zeroI].
+suc ◂ Nat ➔ Nat = λ n. [sucC n.1, sucI n].
 
-cS ◂ cNat ➔ cNat = λ n . Λ X . λ f . λ a . f (n · X f a) .
+toNat ◂ NatC ➔ Nat = λ n. n · Nat zero suc.
+toNatId ◂ Π n : Nat. Eq · Nat (toNat n.1) n = λ n. n.2
+  · (λ nC : NatC. HEq · Nat · NatC (toNat nC) nC)
+  β (Λ mC. λ ih. ρ+ ih - β).
 
+elimNat ◂ ∀ P : Nat ➔ ★. P zero ➔ (∀ n : Nat. P n ➔ P (suc n)) ➔ Π n : Nat. P n
+  = Λ P. λ pZ. λ pS. λ n.
+  ρ ς (toNatId n) -
+  (n.2 · (λ nC : NatC. P (toNat nC))
+    pZ (Λ mC. λ ih. pS -(toNat mC) ih)).
 
-cNatInductive ◂ cNat ➔ ★ = λ x : cNat . ∀ Q : cNat ➔ ★ . (∀ x : cNat . Q x ➔ Q (cS x)) ➔ Q cZ ➔ Q x.
-
-Nat ◂ ★ = ι x : cNat . cNatInductive x.
-
-Z ◂ Nat = [ cZ , Λ X . λ s . λ z . z ] .
-S ◂ Nat ➔ Nat = λ n . [ cS n.1 , Λ P . λ s . λ z . s -n.1 (n.2 · P s z) ] .
-
-zero ◂ Nat = Z.
-suc  ◂ Nat ➔ Nat = S.
-
-NatInd ◂ Π x : Nat . ∀ Q : Nat ➔ ★ . (∀ x : Nat . Q x ➔ Q (S x)) ➔ Q Z ➔ Q x =
-  λ x . Λ Q . λ s . λ z . 
-    x.2 · (λ x : cNat . ∀ X : ★ . (Π x' : Nat . {x ≃ x'} ➔ Q x' ➔ X) ➔ X)
-     (Λ x' . λ ih . Λ X . λ c . ih · X (λ x'' . λ e . λ u . c (S x'') (ρ e - β) (s -x'' u)))
-     (Λ X . λ c . c Z β z) · (Q x) (λ x' . λ e . λ u . ρ e - u).
-
-add ◂ Nat ➔ Nat ➔ Nat = λ m . λ n . m.1 · Nat S n .
+add ◂ Nat ➔ Nat ➔ Nat = λ m. λ n. m.1 · Nat n suc.
 

@@ -11,7 +11,7 @@ import Unit.
 List ◂ ★ ➔ ★ = λ A : ★. FixIndM · (ListF · A) (imapL · A).
 
 lenAlgM ◂ ∀ A : ★. AlgM · (ListF · A) · Nat 
- = Λ A. Λ R. λ rec. λ lf. lf.1 · Nat Z (λ x. λ xs. S (rec xs)).
+ = Λ A. Λ R. λ rec. λ lf. lf.1 · Nat zero (λ x. λ xs. suc (rec xs)).
 
 len ◂ ∀ A : ★. List · A ➔ Nat 
  = Λ A. foldM · (ListF · A) -(imapL · A) · Nat (lenAlgM · A).
