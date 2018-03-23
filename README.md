@@ -32,7 +32,7 @@ This directory includes reuse examples via our combinators:
 * [Program Reuse of append and Proof Reuse of associativity](code/Examples/AppendReuse.ced)
   * forgetful `appV2appL` & enriching `appL2appV`
   * forgetful `assocV2assocL` & enriching `assocL2assocV`
-* [Data Reuse of lists (`l2v`) and vectors (`v2l`)](code/Examples/ListVecReuse.ced)
+* [Data Reuse of lists (enriching `l2v`) and vectors (forgetful `v2l`)](code/Examples/ListVecReuse.ced)
 
 [Datatypes](code/Datatypes)
 ---------------------------
