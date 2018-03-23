@@ -1,0 +1,39 @@
+module GenericReuse.Program.Combinators2.
+import Unit.
+import Sigma.
+import Id.
+import Combinators.
+
+copyTypePD ◂ ∀ F : ★ ➔ ★. ∀ P : Π A : ★. F · A ➔ ★. ∀ G : Π A : ★. Π xs : F · A. P · A xs ➔ ★.
+  (∀ A : ★. IdDep · (F · A) · (λ xs : F · A. ∀ p : P · A xs. G · A xs p)) ➔
+  IdDep · (∀ A : ★. F · A) · (λ xs : ∀ A : ★. F · A.
+    ∀ p : ∀ A : ★. P · A (xs · A).
+    ∀ A : ★. G · A (xs · A) (p · A))
+  = Λ F. Λ P. Λ G. λ c. λ xs. pairIdDep
+  · (∀ A : ★. F · A) · (λ xs : ∀ A : ★. F · A. ∀ p : ∀ A : ★. P · A (xs · A). ∀ A : ★. G · A (xs · A) (p · A)) -xs
+  (Λ p. Λ A. elimIdDep · (F · A) · (λ xs : F · A. ∀ p : P · A xs. G · A xs p)
+  -(c · A) (xs · A) -(p · A)
+  ) β.
+
+pi2allPiPD ◂ ∀ Y : ★. ∀ Y' : Y ➔ ★. ∀ P : Π y : Y. Y' y ➔ ★.
+  ∀ I : ★. ∀ X : I ➔ ★. ∀ r : Y ➔ I.
+  Π c1 : Π i : I. Id · (X i) · Y.
+  ∀ X' : Π i : I. Π x : X i. Π y' : Y' (elimId · (X i) · Y -(c1 i) x). P (elimId · (X i) · Y -(c1 i) x) y' ➔ ★.
+  (Π i : I. Π x : X i. {i ≃ r x}) ➔
+  Π c2 : IdDep · Y · (λ y : Y. X (r y)).
+  (Π y : Y. IdDep · (Y' y) · (λ y' : Y' y. ∀ p : P y y'. X' (r y) (elimIdDep · Y · (λ y : Y. X (r y)) -c2 y) y' p)) ➔
+  IdDep · (Π y : Y. Y' y) · (λ f : Π y : Y. Y' y.
+    ∀ p : Π y : Y. P y (f y).
+    ∀ i : I. Π x : X i. X' i x (f (elimId · (X i) · Y -(c1 i) x)) (p (elimId · (X i) · Y -(c1 i) x)))
+  = Λ Y. Λ Y'. Λ P. Λ I. Λ X. Λ r. λ c1. Λ X'. λ c1'. λ c2. λ c3. λ f. pairIdDep
+  · (Π y : Y. Y' y) · (λ f : Π y : Y. Y' y.
+    ∀ p : Π y : Y. P y (f y).
+    ∀ i : I. Π x : X i. X' i x (f (elimId · (X i) · Y -(c1 i) x)) (p (elimId · (X i) · Y -(c1 i) x))) -f
+  (Λ p. Λ i. λ x. elimIdDep
+    · (Y' (elimId · (X i) · Y -(c1 i) x))
+    · (λ y' : Y' (elimId · (X i) · Y -(c1 i) x). ∀ p : P (elimId · (X i) · Y -(c1 i) x) y'. X' i x y' p)
+    -(ρ (c1' i x) - (c3 (elimId · (X i) · Y -(c1 i) x)))
+    (f (elimId · (X i) · Y -(c1 i) x))
+    -(p (elimId · (X i) · Y -(c1 i) x))
+  ) β.
+

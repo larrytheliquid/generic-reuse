@@ -1,0 +1,38 @@
+module ListVecReuse.
+
+import Sigma.
+import Unit.
+import Nat.
+import Id.
+import IIdMapping.
+import IFixIndM.
+import Forget.
+import Enrich.
+import ListF.
+import List.
+import VecF.
+import Vec.
+
+
+vf2lf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ Y :  ★. 
+  (∀ n : Nat. Id · (X n) · Y) ➔
+  ∀ n : Nat. Id · (VecF · A · X n) · (ListF · A · Y) 
+  = Λ A. Λ X. Λ Y. λ c. Λ n. λ v. pair · (ListF · A · Y) · (λ b : ListF · A · Y . {b ≃ v}) (v.1 · (ListF · A · Y ) 
+  (Λ p. in1lf · A · Y) (Λ m. Λ p. λ a. λ x. in2lf · A · Y a (elimId · (X m) · (Y ) (c -m) x))) (rebVec · A · X -n v).
+
+v2l ◂ ∀ A : ★. ∀ n : Nat. Id · (Vec · A n) · (List · A)
+  = Λ A. Λ n. ifix2fix · Nat · (VecF · A) (vfimap · A)
+  · (ListF · A) (lfimap · A)  (Λ X. Λ Y. λ c. Λ i. vf2lf · A · X · Y c -i) -n. 
+
+lf2vf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ Y : ★. 
+  Π f : Y ➔ Nat. 
+  (IdDep · Y · (λ y : Y . X (f y))) ➔ 
+  IdDep · (ListF · A · Y ) · (λ gy : ListF · A · Y . VecF · A · X (lenAlgM · A · Y f gy))
+  = Λ A. Λ X. Λ Y. λ f.  λ c. λ l. pair · (VecF · A · X (lenAlgM · A · Y f  l)) · (λ b : VecF · A · X (lenAlgM · A · Y f  l) . {b ≃ l}) 
+  (ListFInd · A · Y l ·  (λ l : (ListF · A · Y). VecF · A · X (lenAlgM · A · Y f  l)) 
+  (λ a. λ y. in2vf · A · X -(f  y) a (elimIdDep · (Y) · (λ y : Y . X (f  y)) c y)) (in1vf · A · X))  
+  (rebList · A · Y l).
+ 
+l2v ◂ ∀ A : ★. IdDep · (List · A) · (λ l : List · A. Vec · A (len · A l))
+  = Λ A. fix2ifix · Nat · (VecF · A) (vfimap · A)
+  · (ListF · A) (lfimap · A) (lenAlgM · A)  (Λ X. Λ Y. λ f. λ a.  lf2vf · A · X · Y f a) .

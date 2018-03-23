@@ -1,0 +1,2218 @@
+%% For double-blind review submission, w/o CCS and ACM Reference (max submission space)
+%% \documentclass[acmsmall,review,anonymous]{acmart}\settopmatter{printfolios=true,printccs=false,printacmref=false}
+%% For double-blind review submission, w/ CCS and ACM Reference
+%\documentclass[acmsmall,review,anonymous]{acmart}\settopmatter{printfolios=true}
+%% For single-blind review submission, w/o CCS and ACM Reference (max submission space)
+%% \documentclass[acmsmall,review]{acmart}\settopmatter{printfolios=true,printccs=false,printacmref=false}
+%% For single-blind review submission, w/ CCS and ACM Reference
+%\documentclass[acmsmall,review]{acmart}\settopmatter{printfolios=true}
+%% For final camera-ready submission, w/ required CCS and ACM Reference
+\documentclass[acmsmall]{acmart}\settopmatter{}
+
+%% Journal information
+%% Supplied to authors by publisher for camera-ready submission;
+%% use defaults for review submission.
+\acmJournal{PACMPL}
+\acmVolume{1}
+\acmNumber{CONF} % CONF = POPL or ICFP or OOPSLA
+\acmArticle{1}
+\acmYear{2018}
+\acmMonth{3}
+\acmDOI{} % \acmDOI{10.1145/nnnnnnn.nnnnnnn}
+\startPage{1}
+
+%% Copyright information
+%% Supplied to authors (based on authors' rights management selection;
+%% see authors.acm.org) by publisher for camera-ready submission;
+%% use 'none' for review submission.
+\setcopyright{none}
+%\setcopyright{acmcopyright}
+%\setcopyright{acmlicensed}
+%\setcopyright{rightsretained}
+%\copyrightyear{2018}           %% If different from \acmYear
+
+%% Bibliography style
+\bibliographystyle{ACM-Reference-Format}
+%% Citation style
+%% Note: author/year citations are required for papers published as an
+%% issue of PACMPL.
+\citestyle{acmauthoryear}   %% For author/year citations
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Note: Authors migrating a paper from PACMPL format to traditional
+%% SIGPLAN proceedings format must update the '\documentclass' and
+%% topmatter commands above; see 'acmart-sigplanproc-template.tex'.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Some recommended packages.
+\usepackage{booktabs}   %% For formal tables:
+                        %% http://ctan.org/pkg/booktabs
+\usepackage{subcaption} %% For complex figures with subfigures/subcaptions
+                        %% http://ctan.org/pkg/subcaption
+
+\usepackage{lipsum}
+\usepackage{hyperref}
+\usepackage{textgreek}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bbm}
+\usepackage[greek,english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{url}
+\usepackage{proof}
+\usepackage{fancyvrb}
+
+\DefineVerbatimEnvironment{verbatim}{Verbatim}{xleftmargin=.2in}
+
+\DeclareUnicodeCharacter{25CF}{\ensuremath{\blacksquare}}
+\DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}
+\DeclareUnicodeCharacter{2605}{\ensuremath{\star}}
+\DeclareUnicodeCharacter{2794}{\ensuremath{\rightarrow}}
+\DeclareUnicodeCharacter{2243}{\ensuremath{\simeq}}
+\DeclareUnicodeCharacter{03A0}{\ensuremath{\mathrm{\Pi}}}
+\DeclareUnicodeCharacter{03BB}{\textlambda}
+\DeclareUnicodeCharacter{923}{\textLambda}
+\DeclareUnicodeCharacter{25C2}{\ensuremath{\blacktriangleleft}}
+\DeclareUnicodeCharacter{27BE}{\ensuremath{\Rightarrow}}
+\DeclareUnicodeCharacter{2218}{\ensuremath{\circ}}
+\DeclareUnicodeCharacter{2081}{$_1$}
+\DeclareUnicodeCharacter{2082}{$_2$}
+\DeclareUnicodeCharacter{7522}{$_i$}
+
+\newtheorem{notation}{Notation}
+\newtheorem{convention}{Convention}
+\newtheorem{assumption}{Assumption}
+
+\newcommand{\refsec}[1]{Section \ref{sec:#1}}
+\newcommand{\labsec}[1]{\label{sec:#1}}
+\newcommand{\reffig}[1]{Figure \ref{fig:#1}}
+\newcommand{\labfig}[1]{\label{fig:#1}}
+\newcommand{\refrem}[1]{Remark \ref{rem:#1}}
+\newcommand{\labrem}[1]{\label{rem:#1}}
+\newcommand{\refasm}[1]{Assumption \ref{asm:#1}}
+\newcommand{\labasm}[1]{\label{asm:#1}}
+\newcommand{\refapen}[1]{Appendix \ref{apen:#1}}
+\newcommand{\labapen}[1]{\label{apen:#1}}
+\newcommand{\refdef}[1]{Definition \ref{def:#1}}
+\newcommand{\labdef}[1]{\label{def:#1}}
+\newcommand{\refthm}[1]{Theorem \ref{thm:#1}}
+\newcommand{\labthm}[1]{\label{thm:#1}}
+\newcommand{\reflem}[1]{Lemma \ref{lem:#1}}
+\newcommand{\lablem}[1]{\label{lem:#1}}
+
+\newcommand{\abs}[4]{{#1}\, #2\! : \! #3.\, #4}
+\newcommand{\lam}[2]{\lambda\, #1.\, #2}
+
+\newcommand{\txt}[1]{\ensuremath{\texttt{#1}}}
+\newcommand{\arr}[0]{\ensuremath{\rightarrow}}
+\newcommand{\nat}[0]{\ensuremath{\mathbb{N}}}
+
+%% \raggedbottom
+\begin{document}
+
+%% Title information
+%% \title{Generic Zero-Cost Reuse of Dependently Typed\\ Programs, Proofs, and Datatypes}         %% [Short Title] is optional;
+\title{Generic Zero-Cost Reuse for Dependent Types}
+%% \title{Generic Zero-Cost Reuse of Dependently Typed Programs}
+                                        %% when present, will be used in
+                                        %% header instead of Full Title.
+%% \titlenote{with title note}             %% \titlenote is optional;
+%%                                         %% can be repeated if necessary;
+%%                                         %% contents suppressed with 'anonymous'
+%% \subtitle{Subtitle}                     %% \subtitle is optional
+%% \subtitlenote{with subtitle note}       %% \subtitlenote is optional;
+%%                                         %% can be repeated if necessary;
+%%                                         %% contents suppressed with 'anonymous'
+
+
+%% Author information
+%% Contents and number of authors suppressed with 'anonymous'.
+%% Each author should be introduced by \author, followed by
+%% \authornote (optional), \orcid (optional), \affiliation, and
+%% \email.
+%% An author may have multiple affiliations and/or emails; repeat the
+%% appropriate command.
+%% Many elements are not rendered, but should be provided for metadata
+%% extraction tools.
+
+%% Author with single affiliation.
+\author{Larry Diehl}
+\affiliation{
+  \institution{University of Iowa}            %% \institution is required
+  \country{U.S.A}                    %% \country is recommended
+}
+\author{Denis Firsov}
+\affiliation{
+  \institution{University of Iowa}            %% \institution is required
+  \country{U.S.A}                    %% \country is recommended
+}
+\author{Aaron Stump}
+\affiliation{
+  \institution{University of Iowa}            %% \institution is required
+  \country{U.S.A}                    %% \country is recommended
+}
+
+%% Abstract
+%% Note: \begin{abstract}...\end{abstract} environment must come
+%% before \maketitle command
+\begin{abstract}
+Dependently typed languages are well known for having a problem with
+code reuse. Traditional non-indexed algebraic datatypes (e.g. lists)
+appear alongside a plethora of indexed variations (e.g. vectors).
+Functions are often rewritten for both non-indexed and indexed versions of
+essentially the same datatype, which is a source of code duplication.
+
+We work in a Curry-style dependent type theory, where the same untyped
+term may be classified as both the non-indexed and indexed versions of
+a datatype. Many solutions have been proposed for the problem of
+dependently typed reuse, but we exploit Curry-style type theory in our
+solution to not only reuse data and programs, but do so at zero-cost
+(without a runtime penalty). Our work is an exercise in dependently
+typed generic programming, and internalizes the process
+of zero-cost reuse as the identity function in a
+Curry-style theory.
+\end{abstract}
+
+
+%% 2012 ACM Computing Classification System (CSS) concepts
+%% Generate at 'http://dl.acm.org/ccs/ccs.cfm'.
+\begin{CCSXML}
+<ccs2012>
+<concept>
+<concept_id>10011007.10011006.10011008</concept_id>
+<concept_desc>Software and its engineering~General programming languages</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+<concept>
+<concept_id>10003456.10003457.10003521.10003525</concept_id>
+<concept_desc>Social and professional topics~History of programming languages</concept_desc>
+<concept_significance>300</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Software and its engineering~General programming languages}
+\ccsdesc[300]{Social and professional topics~History of programming languages}
+%% End of generated code
+
+
+%% Keywords
+%% comma separated list
+\keywords{dependent types, generic programming, reuse}  %% \keywords are mandatory in final camera-ready submission
+
+
+%% \maketitle
+%% Note: \maketitle command must come after title commands, author
+%% commands, abstract environment, Computing Classification System
+%% environment and commands, and keywords command.
+\maketitle
+
+\section{Introduction}
+
+Dependently typed languages
+(such as Agda~\cite{lang:agda}, Coq~\cite{lang:coq},
+Idris~\cite{lang:idris}, or Lean~\cite{lang:lean}) can be used to
+define ordinary algebraic datatypes, as well as indexed versions of
+algebraic datatypes that enforce various correctness properties.
+For example, we can index lists by natural numbers to
+enforce that they have a particular length
+(i.e. \texttt{$\txt{Vec}_A : \nat \arr \star $}).
+Similarly, we can index lists by two elements to
+enforce that they are ordered and have a lower and upper bound
+(i.e. \texttt{$\txt{OList}_{A,R} : A \arr A \arr \star $}).
+We can even combine these two forms of indexing to
+enforce that lists have all of the aforementioned correctness properties
+(i.e. \texttt{$\txt{OVec}_{A,R} : A \arr A \arr \nat \arr \star$}).
+
+Which datatype a programmer uses depends upon how much correctness
+they wish to enforce at the time a function is written, versus proving
+correctness as a separate step sometime later (corresponding to
+intrinsic and extrinsic correctness proofs of functions). Certain
+types tend to be better suited to writing intrinsically correct
+functions than others, e.g. it is natural to define a safe \txt{lookup}
+function that takes a \txt{Vec} as an argument, and a correct \txt{sort}
+function that returns an \txt{OList}.
+
+However, once we have written a function using a suitable indexed
+variant of a datatype, reusing the function to define a corresponding version
+for the unindexed (or less indexed) datatype variants can be
+painful. We may also wish to delay extrinsic verification, thereby
+suffering later while reusing a function over unindexed (or less
+indexed) datatype variants to define a corresponding function over
+more indexed indexed datatypes. We refer to the former direction as
+\textit{forgetful reuse}, and to the latter direction as
+\textit{enriching reuse}.
+
+One source of pain is \textit{manually writing} functions
+over some datatypes by reusing functions over differently indexed
+variants of the same underlying datatypes. Another source of pain is
+that reusing functions involves linear time conversions between
+differently indexed types, resulting in a
+runtime \textit{performance penalty} incurred by practicing the good software
+engineering practice of code reuse. In this paper we address both of
+these problems, for both the forgetful and enriching directions of
+reuse, by:
+\begin{enumerate}
+\item Defining generic combinators to incrementally attack the problem
+  of reuse for various types, where each combinator application
+  results in simplified subgoals (similar to tactics).
+\item Ensuring that the combinators are closed operations with respect to
+  a type abstraction, which can be eliminated to obtain reused
+  functions at zero-cost (i.e. no performance penalty).
+\end{enumerate}
+Our \textbf{primary contributions} are:
+\begin{enumerate}
+\item{\refsec{prog:fog}:} Generic combinator solutions to zero-cost
+  \textit{forgetful program reuse}
+  (combinator \verb;allArr2arr;, handling the type of non-dependent functions),
+  and \textit{proof reuse} (combinator \verb;allPi2pi;,
+  handling the type of dependent functions).
+\item{\refsec{prog:enr}:} Generic combinator solutions to zero-cost
+  \textit{enriching program reuse}
+  (combinator \verb;arr2allArrP;, handling the type of non-dependent functions),
+  and \textit{proof reuse} (combinator \verb;pi2allPiP;,
+  handling the type of dependent functions).
+\item{\refsec{data:fog}:} A generic combinator solution to zero-cost
+  \textit{forgetful data reuse}
+  (combinator \verb;ifix2fix;, handling the type of fixpoints for
+  generically encoded datatypes).
+\item{\refsec{data:enr}:} A generic combinator solution to zero-cost
+  \textit{enriching data reuse}
+  (combinator \verb;fix2ifix;, handling the type of fixpoints for
+  generically encoded datatypes).
+\end{enumerate}
+
+The remainder of our paper proceeds as follows:
+\begin{itemize}
+\item{\refsec{back}:} We review background material, covering the
+  Curry-style type theory that our results are developed within, and
+  providing intuition for why zero-cost conversions are motivated by
+  Curry-style type theory.
+\item{\refsec{prob}:} We explain the primary problems
+  (linear time reuse of programs, proofs, and data) we are solving
+  through concrete examples, and provide manual solutions (zero-cost,
+  or constant time, reuse), which our
+  primary contribution combinators generalize via generic programming.
+\item{\refsec{prog}:} We generically solve the problems of
+  (both forgetful and enriching) zero-cost
+  program and proof reuse (as combinators for the types of non-dependent
+  and dependent functions).
+\item{\refsec{data}:} We generically solve the problems of
+  (both forgetful and enriching) zero-cost
+  data reuse (as combinators for the type of fixpoints).
+\item{\refsec{rel}: We compare what we have done with related
+  work. This includes comparing our results with the closely related
+  work of dependently typed reuse via
+  ornaments~\cite{ornaments:original} and
+  dependent interoperability~\cite{dagand:interop}, the primary
+  difference being that our work achieves \textit{zero-cost} reuse.}
+\item{\refsec{future}: We go over extensions that we have already made
+  to our work, not covered herein, as well as planned future work.}
+\end{itemize}
+All of our results have been formalized in
+Cedille~\cite{stump17a,stump18}, a dependently typed language
+implementing the theory we work in
+(covered in \refsec{back:cdle}).\footnote{
+  \raggedright{The Cedille code accompanying this paper is here:\\
+  \url{https://github.com/larrytheliquid/generic-reuse}}
+}
+
+\section{Background}
+\labsec{back}
+
+\subsection{The Type Theory (CDLE)}
+\labsec{back:cdle}
+
+We briefly summarize the type theory,
+the Calculus of Lambda Eliminations (CDLE),
+that the results  of this paper depend on.
+For full details on CDLE, including semantics and
+soundness results, please see the previous
+papers~\cite{stump17a,stump18}.
+The main metatheoretic property
+proved in the previous work is logical consistency: there are types
+which are not inhabited.
+Cedille is an implementation of CDLE, and all the
+code appearing in this paper is Cedille code.
+
+CDLE is an extrinsic (i.e. Curry-style)
+type theory, whose terms are exactly those of the pure untyped lambda
+calculus (with no additional constants or constructs).  The
+type-assignment system for CDLE is not subject-directed, and thus
+cannot be used directly as a typing algorithm.  Indeed, since CDLE
+includes Curry-style System F as a subsystem, type assignment is
+undecidable~\cite{Wells99}.  To obtain a usable type theory, Cedille
+thus has a system of annotations for terms, where the annotations
+contain sufficient information to type terms algorithmically.  But
+true to the extrinsic nature of the theory, these annotations play no
+computational role.  Indeed, they are erased both during compilation
+and before formal reasoning about terms within the type theory, in
+particular by definitional equality (see \reffig{cdle} and \reffig{erase}).
+
+\begin{figure}
+\centering
+  \[
+  \begin{array}{cc}
+    \infer{\Gamma\vdash \abs{\Lambda}{x}{T'}{t} : \abs{\forall}{x}{T'}{T}}{\Gamma,x:T'\vdash t : T & \!\!x\not\in\textit{FV}(|t|)} & 
+    \infer{\Gamma\vdash t\ -t' : [t'/x]T}{\Gamma\vdash t : \abs{\forall}{x}{T'}{T} & \Gamma\vdash t':T'} \\ \\
+
+    \infer{\Gamma\vdash \beta : t \simeq t}{\Gamma\vdash t : T} &
+    \infer{\Gamma\vdash \rho\ q\ -\ t : [t_2/x]T}{\Gamma\vdash q : t_1 \simeq t_2 & \Gamma \vdash t : [t_1/x]T} \\ \\
+
+    \infer{\Gamma\vdash \phi\ q\ -\ t_1 \{t_2\} : T}{\Gamma\vdash q : t_1 \simeq t_2 & \Gamma \vdash t_1 : T} &
+    \infer{\Gamma\vdash [t_1,t_2] : \abs{\iota}{x}{T}{T'}}{\Gamma\vdash t_1 : T & \Gamma\vdash t_2 : [t_1/x]T' & |t_1| = |t_2|} \\ \\
+
+    \infer{\Gamma\vdash t.1 : T}{\Gamma\vdash t : \abs{\iota}{x}{T}{T'}} &
+    \infer{\Gamma\vdash t.2 : [t.1/x]T'}{\Gamma\vdash t : \abs{\iota}{x}{T}{T'}} \\ \\
+
+  \end{array}
+  \]
+\caption{Introduction and elimination rules for additional type constructs} 
+\labfig{cdle}
+\end{figure}
+
+\begin{figure}
+\centering
+\[
+  \begin{array}{lll}
+    |\abs{\Lambda}{x}{T}{t}| & = & |t| \\
+    |t\ -t'| & = & |t| \\
+    |\beta| & = & \lam{x}{x} \\
+    |\rho\ q\ - \ t| & = & |t| \\
+    |\phi\ q\ - \ t_1 \{t_2\}| & = & |t_2| \\
+    |[t_1,t_2]| & = & |t_1| \\
+    |t.1| & = & |t| \\
+    |t.2| & = & |t| 
+  \end{array}
+  \]
+\caption{Erasure rules for additional type constructs} 
+\labfig{erase}
+\end{figure}
+
+%% TODO should we say lambdaPomega?
+CDLE extends the (Curry-style) Calculus of Constructions (CC) with
+implicit products, primitive heterogeneous equality,
+and intersection types:
+\begin{itemize}
+\item \verb;∀ x : T. T';, the implicit product type of
+  \citet{miquel01}.  This can be thought of as the type for
+  functions which accept an erased input of type \verb;x : T;, and
+  produce a result of type \verb;T';. There are term constructs
+  \verb;Λ x. t; for introducing an implicit input \verb;x;, and
+  \verb;t -t'; for instantiating such an input with \verb;t';. The
+  implicit arguments exist just for purposes of typing so that they
+  play no computational role and equational reasoning happens on terms
+  from which the implicit arguments have been erased.
+
+\item \verb;t₁ ≃ t₂;, a Curry-style heterogeneous equality type.  The terms
+  \verb;t₁; and \verb;t₂; are required to be typed, but need not have
+  the same type.  We introduce this with a constant \verb;β; which
+  erases to \verb;λ x. x; (so our type-assignment system has no
+  additional constants, as promised); \verb;β; proves \verb;t ≃ t; for
+  any typeable term \verb;t;.  Combined with definitional equality,
+  \verb;β; proves \verb;t₁ ≃ t₂; for any $\beta$-equal \verb;t₁; and
+  \verb;t₂; whose free variables are all declared in the typing
+  context.  We eliminate the equality type by rewriting, with a
+  construct \verb;ρ q - t;.  Suppose \verb;q; proves \verb;t₁ ≃ t₂;
+  and we synthesize a type \verb;T; for \verb;t;, where \verb;T; has
+  several occurrences of terms definitionally equal to \verb;t₁;.
+  Then the type synthesized for \verb;ρ q - t; is \verb;T; except with
+  those occurrences replaced by \verb;t₂;.
+  The construct \verb;φ q - t₁{t₂}; casts a term \verb;t₂; (of any type)
+  to type \verb;T;, provided that \verb;t₁; has type \verb;T; and
+  \verb;q; proves \verb;t₁ ≃ t₂;. The point of using the term
+  \verb;φ q - t₁{t₂}; at type \verb;T;, instead of the term \verb;t₁;,
+  is that the \verb;φ; term erases to \verb;|t₂|;.
+  Note that the types of the
+  terms are not part of the equality type itself, nor does the
+  elimination rule require that the types of the left-hand and right-hand
+  sides are the same to do an elimination.
+
+\item \verb;ι x : T. T';, the dependent intersection type of
+  \citet{kopylov03}.  This is the type for terms \verb;t; which
+  can be assigned both the type \verb;T; and the type \verb;[t/x]T';,
+  the substitution instance of \verb;T'; by \verb;t;.  In the
+  annotated language, we introduce a value of \verb;ι x : T. T'; by
+  construct \verb;[ t, t' ];, where \verb;t; has type \verb;T;
+  (algorithmically), \verb;t'; has type \verb;[t/x]T';, and
+  the erasure \verb;|t|; is definitionally equal to the erasure
+  \verb;|t'|;.  There are also annotated constructs
+  \verb;t.1; and \verb;t.2; to select either the \verb;T; or
+  \verb;[t.1/x]T'; view of a term \verb;t; of type \verb;ι x : T. T';.
+\end{itemize}
+It is important to understand that the described constructs are erased
+before the formal reasoning (e.g. when checking if 2 terms are
+definitionally equal), according to the erasure rules in
+\reffig{erase}.
+
+\subsection{Curry-Style Typing}
+\labsec{back:curry}
+
+There is an intuitive explanation for why zero-cost (i.e. no
+performance penalty) conversion should be possible
+between differently indexed data (i.e. \txt{List} and \txt{Vec}) and
+differently indexed programs (i.e. \txt{appL} and
+\txt{appV}). In a Curry-style theory, the same
+underlying untyped term can be typed multiple different
+ways. Therefore, if it is possible to type a term as both a list and a
+vector, then there is actually no need to do any conversion at all
+because the same term can inhabit both types! In a type-annotated
+(rather than type-assignement) setting, this translates to having 2
+distinct terms at two distinct types, whose \textit{erasures} are equal.
+
+\paragraph{Curry-Style Data}
+As an example of Curry-style data, consider the standard definitions of
+Church-encoded lists and vectors below:
+\begin{verbatim}
+List ◂ ★ ➔ ★ = λ A. ∀ X : ★. X ➔ (A ➔ X ➔ X) ➔ X.
+nilL ◂ ∀ A : ★. List A = Λ A,X. λ cN,cC. cN.
+consL ◂ ∀ A : ★. A ➔ List A ➔ List A =
+  Λ A. λ x,xs. Λ X. λ cN,cC. cC x (xs -X cN cC).
+
+Vec ◂ ★ ➔ Nat ➔ ★ = λ A,n. ∀ X : Nat ➔ ★.
+  X zero ➔ (∀ n : Nat. A ➔ X n ➔ X (suc n)) ➔ X n.
+nilV ◂ ∀ A : ★. Vec A zero = Λ A,X. λ cN,cC. cN.
+consV ◂ ∀ A : ★. ∀ n : Nat. A ➔ Vec A n ➔ Vec A (suc n) =
+  Λ A,n. λ x,xs. Λ X. λ cN,cC. cC -n x (xs -X cN cC).
+\end{verbatim}
+Notice that the only difference between the list constructor terms
+(\verb;nilL; and \verb;consL;) and vector constructor terms
+(\verb;nilV; and \verb;consV;) is the number of implicit
+abstractions (e.g. \verb;Λ n;) and implicit applications
+(e.g. \verb;-n;). According to the erasure rules of \reffig{erase},
+this means that after erasure, \verb;nilL; and \verb;nilV; share the
+same underlying untyped term
+(and the same holds for \verb;consL; and \verb;consV;):
+
+\begin{verbatim}
+|nilL| = |nilV| = λ cN,cC. cN
+|consL| = |consV| = λ x,xs,cN,cC. cC x (xs cN cC)
+\end{verbatim}
+
+%% mention definitional equality (equational theory)
+
+\paragraph{Curry-Style Programs}
+As an example of Curry-style programs, consider the standard
+definitions of the append function for Church-encoded lists and
+vectors below:
+
+\begin{verbatim}
+appL ◂ ∀ A : ★. List A ➔ List A ➔ List A
+  = Λ A. λ xs. xs -(List A ➔ List A)
+  (λ ys. ys)
+  (Λ xs. λ x,ih,ys. consL -A x (ih ys)).
+
+appV ◂ ∀ A : ★. ∀ n : Nat. Vec A n ➔ 
+  ∀ m : Nat. Vec A m ➔ Vec A (add n m)
+  = Λ A. λ xs. xs -(λ n. ∀ m : Nat. Vec A m ➔ Vec A (add n m))
+  (Λ m. λ ys. ys)
+  (Λ n. Λ xs,x,ih. Λ m. λ ys. consV A -(add n m) x (ih -m ys)).
+\end{verbatim}
+Like before, \verb;appL; and \verb;appV; differ by implicit
+abstractions and applications. An additional difference is that
+\verb;appL; uses \verb;consL; in its second branch, while \verb;appV; uses
+\verb;consV; in its second branch. Because (as seen above)
+the erasure \verb;|consL|; is equal to the erasure \verb;|consV|;, it
+follows that \verb;appL; and \verb;appV; also share the same
+underlying untyped term:
+
+\begin{verbatim}
+|appL| = |appV| = 
+  λ xs. xs (λ ys. ys) (λ x,ih,ys,cN,cC. cC x (ih ys cN cC))
+\end{verbatim}
+
+\subsection{Inductive Datatypes}
+\labsec{back:inductive}
+
+The enriching direction of reuse requires \textit{dependent}
+function types, which must be proven by induction on their inputs using
+eliminators. The Church-encoded \verb;List; and \verb;Vec; datatypes
+of \refsec{back:curry} do not support induction, due to a result by
+\citet{geuvers01}. However, \citet{stump18} shows that the
+dependent intersection (using the $\iota$-type from \reffig{cdle})
+of an impredicative Church-encoded type with a
+predicate, representing what it means for the type to be inductive,
+\textit{does} support induction (or an eliminator):
+
+\begin{verbatim}
+List ◂ ★ ➔ ★ = λ A. ι xs : ListChurch A. ListInductive A xs.
+
+elimList ◂ ∀ A : ★. ∀ P : List A ➔ ★.
+  P (nilL -A) ➔
+  (∀ xs : List A. Π x : A. P xs ➔ P (consL -A x xs)) ➔
+  Π xs : List A. P xs
+\end{verbatim}
+Above, \verb;ListChurch; is the renamed definition of \verb;List; from
+\refsec{back:curry}. Intersection-type versions of the constructors
+\verb;nilL; and \verb;consL; can also be defined. We refer readers interested
+in the definitions of \verb;nilL;, \verb;consL;, and \verb;elimList;
+to \citet{stump18}, as this section only depends on their
+type-level interface (rather than their term-level implementation). We
+also assume a corresponding $\iota$-type definition of \verb;Vec;
+(in terms of \verb;VecChurch;), its constructors (\verb;nilV; and
+\verb;consV;), and its eliminator (\verb;elimVec;).
+
+An important thing to point out is that \verb;List; is
+defined as the intersection of the \verb;ListChurch; and
+\verb;ListInductive; types, and that intersection pairs (i.e. $[t_1,t_2]$) erase to their
+first components (i.e. $t_1$ of type \verb;ListChurch;) by \reffig{erase}.
+Hence, the erased $\iota$-style \verb;nilL; is the same as the erased
+Church-style \verb;nilL; (and the same holds for both styles of
+\verb;consL;).
+
+\section{The Problem \& Manual Solution}
+\labsec{prob}
+
+\refsec{back:curry} shows how differently indexed data
+(e.g. \verb;List; and \verb;Vec;) and programs
+(e.g. \verb;appL; and \verb;appV;) can share the same erased
+untyped terms in a Curry-style dependent type theory. 
+Now we consider the problem of manually reusing data and programs,
+in both the forgetful (e.g. \verb;Vec; to \verb;List;, and
+\verb;appV; to \verb;appL;) and enriching
+(e.g. \verb;List; to \verb;Vec;, and
+\verb;appL; to \verb;appV;) directions.
+
+\subsection{The Problem: Manual Linear Time Reuse}
+\labsec{prob:linear}
+
+First, we review how to manually reuse data and programs using
+linear time conversions, which is already possible in popular dependently
+typed languages. Then (in \refsec{prob:manual}),
+we show how Cedille lets us manually derive
+zero-cost (or constant time) conversions from the linear time
+conversions. To aid readability, from now on we omit implicit
+abstractions (e.g. \verb;Λ A;) and implicit applications
+(e.g. \verb;-A;).\footnote{
+  While we omit most implicit abstractions and applications in this
+  paper, the current implementation of Cedille only supports a limited
+  form of type inference. Our accompanying Cedille formalization does
+  not omit any implicits.
+  }
+
+\paragraph{Linear Time Forgetful Data Reuse}
+We can convert a vector to a list by iteration:
+
+\begin{verbatim}
+v2l ◂ ∀ A : ★. ∀ n : Nat. Vec A n ➔ List A
+  = elimVec nilL (λ x,ih. consL x ih).
+\end{verbatim}
+The conversion above only requires iteration, rather than induction,
+because the codomain \verb;List A; does not depend on the domain
+\verb;Vec A n;. If we explicitly supplied the motive (or, predicate)
+\verb;P; to \verb;elimVec;, it would ignore its argument
+(i.e. \verb;P = λ xs. List A;).
+
+\paragraph{Linear Time Enriching Data Reuse}
+We can convert a list to a vector by induction:
+
+\begin{verbatim}
+l2v ◂ ∀ A : ★. Π xs : List A. Vec A (len xs)
+  = elimList nilV (λ x,ih. consV x ih).
+\end{verbatim}
+The conversion above requires induction, rather than iteration,
+because the codomain \verb;Vec A (len xs); depends on the domain
+\verb;List A;. If we explicitly supplied the motive \verb;P; to
+\verb;elimList;, it would depend on its argument
+(i.e. \verb;P = λ xs. Vec A (len xs);).
+
+\paragraph{Linear Time Forgetful Program Reuse}
+After defining the type synonyms \verb;AppL; and \verb;AppV; for the
+types of list and vector append, respectively, forgetful reuse of
+vector append to define list append corresponds to writing a function from
+\verb;AppV; to \verb;AppL;:
+
+\begin{verbatim}
+AppL ◂ ★ = ∀ A : ★. List A ➔ List A ➔ List A.
+AppV ◂ ★ = ∀ A : ★. ∀ n : Nat. Vec A n ➔ 
+  ∀ m : Nat. Vec A m ➔ Vec A (add n m).
+
+appV2appL ◂ AppV ➔ AppL
+  = λ appV,xs,ys. v2l (appV (l2v xs) (l2v ys)).
+\end{verbatim}
+The function \verb;appV2appL; first reuses vector append
+(\verb;appV;) by applying \verb;appV; to the result of
+translating both list arguments (\verb;xs; and \verb;ys;) to
+vectors (via \verb;v2l;). Then, it translates the result of
+\verb;appV; from a vector to a list (via \verb;v2l;).
+
+\paragraph{Linear Time Enriching Program Reuse}
+
+Enriching reuse of list append to define vector append is the
+difficult direction, which requires proving a lemma stating
+that once a vector has been converted to a list
+(via \verb;v2l;, or forgetful data reuse), the length of the output
+list is equal to (or, preserves) the length index of the input vector:
+
+\begin{verbatim}
+v2lPresLen ◂ ∀ A : ★. ∀ n : Nat. Π xs : Vec A n. n ≃ len (v2l xs) 
+  = elimVec β (λ x,ih. ρ ih - β).
+\end{verbatim}
+Recall (from \refsec{back:cdle}) that \verb;β; is the reflexivity constructor
+of an equality of type \verb;t ≃ t; for any term \verb;t;,
+and that \verb;ρ; is a rewrite primitive that exchanges
+occurrences of \verb;t; with occurrences of \verb;t'; in the goal,
+when given evidence that \verb;t ≃ t';. The proof of \verb;v2lPresLen;
+is an easy induction, which rewrites by the inductive hypothesis
+(\verb;ih;) in the cons case of the input vector.
+
+It is not possible to reuse function of type \verb;AppL; to define
+a function of type \verb;AppV; in general, because the result of the second function
+has specific index requirements (namely, that the output vector
+length is the sum of the input vector lengths). Enriching
+function reuse must be modulo an additional premise, which establishes
+a relationship between the input and output datatype
+indices.\footnote{
+  Enriching data reuse of a list (\txt{List}) as a vector (\txt{Vec})
+  does not require a premise, but in general enriching data reuse is
+  also modulo a premise. For example, a list can only be enriched to
+  an ordered list (\txt{OList}) modulo a premise that the list is
+  sorted (as discussed in \refsec{future}).
+  }
+The premise necessary to define \verb;AppV; in terms of \verb;AppL; requires
+list length (\verb;len;) to distribute through list append (\verb;appL;):
+
+\begin{verbatim}
+LenDistAppL ◂ AppL ➔ ★ = λ appL. ∀ A : ★. Π xs,ys : List A.
+  add (len xs) (len ys) ≃ len (appL xs ys).
+
+appL2appV ◂ Π appL : AppL. LenDistAppL appL ➔ AppV
+  = λ appL,q,xs,ys.       // Vec A (add n m)            
+  ρ v2lPresLen xs -       // Vec A (add (len (v2l xs)) m)
+  ρ v2lPresLen ys -       // Vec A (add (len (v2l xs)) (len (v2l ys)))
+  ρ q (v2l xs) (v2l ys) - // Vec A (len (appL (v2l xs) (v2l ys)))
+  l2v (appL (v2l xs) (v2l ys)).
+\end{verbatim}
+After binding the arguments to \verb;appL2appV;,
+the initial goal type, and the resulting goal type after each
+rewrite (using \verb;ρ;), appears as a comment
+(i.e. to the right of the syntactic comment delimiter \verb;//; on each line).
+
+Initially, the length of the goal vector is the sum of the lengths of
+both input vectors \verb;xs; and \verb;ys;. First, we use the
+previously proven lemma \verb;v2lPresLen; to state our goal in terms
+of the lists resulting from converting input vectors \verb;xs; and
+\verb;ys; (via \verb;v2l;). After reusing \verb;appL; applied to both
+converted list, we would like to convert the result to a vector (via
+\verb;l2v;) and return it. However, the dependent data reuse function
+\verb;l2v; returns a vector indexed by the \verb;len; of its input
+list, but the current goal is stated in terms of a sum
+(i.e. \verb;add; rather than \verb;len;). Therefore, we must first
+rewrite the goal using our premise that length distributes through
+append, so that we may finally return the result of applying
+\verb;l2v;.
+
+\subsection{Manual Solution: Zero-Cost Reuse}
+\labsec{prob:manual}
+
+Now we derive zero-cost (constant time) data and program conversions
+from the linear time equivalents of \refsec{prob:linear}.
+Linear time reuse
+(e.g. in \refsec{prob:linear}) is already possible in conventional
+Church-style type theories, but zero-cost reuse is additionally
+possible in Curry-style type theories. This is semantically motivated
+because a Curry-style term can inhabit multiple types,
+so conversion is semantically unnecessary
+(as explained in \refsec{back:curry}).
+The zero-cost (data and program) conversions in this section
+are all defined in 2 parts:
+\begin{enumerate}
+\item An extensional identity proof about the corresponding linear-time conversion.
+\item The actual zero-cost conversion, defined using \verb;φ; from
+  \reffig{cdle}, the linear-time conversion, and the extensional
+  identity proof.
+\end{enumerate}
+
+\paragraph{Zero-Cost Forgetful Data Reuse}
+
+First, we prove that the \verb;v2l; conversion is extensionally the
+identity function:
+
+\begin{verbatim}
+v2lId ◂ ∀ A : ★. ∀ n : Nat. Π xs : Vec A n. v2l xs ≃ xs 
+  = elimVec β (λ x,ih. ρ ih - β).
+\end{verbatim}
+Next, we use the \verb;φ; primitive (of \reffig{cdle}) to return the
+vector input \verb;xs; at type \verb;List A;, by appealing to the
+proof (\verb;v2lId;) that \verb;v2l xs; is equal to \verb;xs;.
+
+\begin{verbatim}
+v2l! ◂ ∀ A : ★. ∀ n : Nat. Vec A n ➔ List A
+  = λ xs. φ (v2lId xs) - (v2l xs) {xs}.
+\end{verbatim}
+The \verb;φ; expression erases to the term within the braces
+(\verb;{xs};) by the erasure rules of \reffig{erase}, hence
+the erasure \verb;|v2l!|; is the identity function.
+Thus, \verb;v2l!; converts a vector to a list in
+constant time, as applying \verb;v2l!; is definitionally equal to
+applying the identity function in CDLE:
+
+\begin{verbatim}
+|v2l!| = λ xs. xs
+\end{verbatim}
+By convention, we suffix a
+conversion function with a bang (\verb;!;) to denote its zero-cost
+equivalent.
+
+\paragraph{Zero-Cost Enriching Data Reuse}
+
+The enriching direction of zero-cost data reuse follows the same
+pattern as the forgetful direction, by first proving an extensional identity
+(\verb;l2vId;), and then using it to define a zero-cost version
+(\verb;l2v!;) via \verb;φ;:
+
+\begin{verbatim}
+l2vId ◂ ∀ A : ★. Π xs : List A. l2v xs ≃ xs
+   = elimVec β (λ x,ih. ρ ih - β).
+
+l2v! ◂ ∀ A : ★. Π xs : List A. Vec A (len xs)
+  = λ xs. φ (l2vId xs) - (l2v xs) {xs}.
+\end{verbatim}
+And similarly, \verb;l2v!; converts any list (\verb;xs;)
+to a vector at zero-cost:
+
+\begin{verbatim}
+|l2v!| = (λ xs. xs)
+\end{verbatim}
+
+\paragraph{Zero-Cost Forgetful Program Reuse}
+
+For zero-cost forgetful program reuse of vector append, we prove
+the following extensional identity:
+Applying the conversion \verb;appV2appL; to any implementation of
+vector append (\verb;f;), \textit{and} both list arguments, is equal
+to applying vector append (\verb;f;) to both list argument that have been
+zero-cost converted to vectors (via \verb;l2v!;).
+
+\begin{verbatim}
+appV2appLId ◂ Π f : AppV. ∀ A : ★. Π xs,ys : List A. 
+  appV2appL f xs ys ≃ f (l2v! xs) (l2v! ys)
+  = λ f,xs,ys.          // v2l (f (l2v xs) (l2v ys)) ≃ f xs ys
+  ρ (l2vId xs) -        // v2l (f xs (l2v ys))
+  ρ (l2vId ys) -        // v2l (f xs ys)
+  ρ (v2lId (f xs ys)) - // f xs ys ≃ f xs ys
+  β
+\end{verbatim}
+The right-side of the equality in the goal begins with
+\verb;f xs ys;, because the zero-cost conversions \verb;l2v! xs; and
+\verb;l2v! ys; definitionally reduce to \verb;xs; and \verb;ys;,
+respectively. We rewrite twice (for \verb;xs; and \verb;ys;)
+by the extensional identity lemma for \verb;l2v; (using \verb;l2vId;).
+Then, we rewrite once (for \verb;f xs ys;) by the extensional identity
+lemma for \verb;v2l; (using \verb;v2lId;), after which our goal is
+solvable by reflexivity (\verb;β;).
+
+We define the zero-cost conversion \verb;appV2appL!; using \verb;φ; and
+the identity lemma \verb;appV2appLId; applied to the vector append
+argument (\verb;f;) and both list arguments (\verb;xs; and \verb;ys;):
+
+\begin{verbatim}
+appV2appL! ◂ AppV ➔ AppL
+  = λ f,xs,ys. φ (appV2appLId f xs ys) - 
+  (appV2appL f xs ys) {f (l2v! xs) (l2v! ys)}.
+\end{verbatim}
+The erased zero-cost conversion \verb;appV2appL!; also definitionally
+reduces to the identity function:
+
+\begin{verbatim}
+|appV2appL!| = λ f. λ xs,ys. |f (l2v! xs) (l2v! ys)|
+  = λ f. λ xs,ys. f xs ys 
+  = λ f. f
+\end{verbatim}
+The \verb;l2v!; zero-cost conversions reduce to applications of the
+identity function. Then, the body of the \verb;λ f; abstraction
+$\eta$-contracts to \verb;f;, such that the entire expression reduces
+to the identity function.
+
+\paragraph{Zero-Cost Enriching Program Reuse}
+
+The zero-cost enriching program reuse of list append requires
+the following extensional identity:
+Applying the conversion \verb;appL2appV; to any implementation of
+list append (\verb;f;), a proof of the length distributivity premise (\verb;p;),
+and both vector arguments, is equal
+to applying list append (\verb;f;) to both vector argument that have been
+zero-cost converted to lists (via \verb;v2l!;).
+
+\begin{verbatim}
+appL2appVId ◂ Π f : AppV. Π q : LenDistAppL f.
+  ∀ A : ★. ∀ n,m : Nat. Π xs : Vec A n. Π ys : Vec A m.
+  appL2appV f q xs ys ≃ f (v2l! xs) (v2l! ys)
+  = λ f,q,xs,ys.        // l2v (f (v2l xs) (v2l ys)) ≃ f xs ys
+  ρ (v2lId xs) -        // l2v (f xs (v2l ys)) ≃ f xs ys
+  ρ (v2lId ys) -        // l2v (f xs ys) ≃ f xs ys
+  ρ (l2vId (f xs ys)) - // f xs ys ≃ f xs ys
+  β
+\end{verbatim}
+Once again, the zero-cost conversion (\verb;appL2appV!;) is defined in
+terms of the linear time conversion (\verb;appL2appV;),
+\verb;φ;, and the extensional identity (\verb;appL2appVId;):
+
+\begin{verbatim}
+appL2appV! ◂ Π f : AppL. LenDistAppL f ➾ AppV
+  = λ f. Λ q. λ xs,ys. 
+  φ (appL2appVId f q xs ys) - 
+  (appL2appV f q xs ys) {f (v2l! xs) (v2l! ys)}.
+\end{verbatim}
+The implication (\verb;➾;) to the right of the
+premise (\verb;LenDistAppL appL;) of \verb;appL2appV; is syntax for a
+non-dependent implicit (or, erased) product (i.e. a \verb;∀; with no
+dependency on the quantified variable).
+The fact that the zero-cost conversion \verb;appL2appV!; uses an
+erased premise (compared to the non-erased premise in the linear time
+conversion \verb;appL2appV;) is \textit{crucial},
+allowing \verb;appL2appV!; to also erase to the identity function:
+
+\begin{verbatim}
+|appL2appV!| = (λ f. λ xs,ys. |f (v2l! xs) (v2l! ys)|) 
+  = λ f. λ xs,ys. f xs ys 
+  = λ f. f
+\end{verbatim}
+The implicit abstraction \verb;Λ q; is discarded by erasure,
+allowing the erasure \verb;|appL2appV!|; to $\eta$-contract to the
+identity function (similar to how \verb;|appV2appL!|; reduces).
+
+\section{Generic Program \& Proof Reuse}
+\labsec{prog}
+%% aka The Generic (or, Combinatory) Solution
+
+\refsec{prob:manual} gives a zero-cost solution to the problem of
+linear time data and program reuse problem presented in
+\refsec{prob:linear}. However, the reused definitions in
+\refsec{prob:manual} are \textit{manually} derived. Beginning with
+this section, and for the remainder of this paper, we solve the
+problem of zero-cost reuse \textit{generically}.
+
+In \refsec{prog:id} we review the type of dependent identity
+functions (\verb;IdDep;), which captures a pattern appearing in the
+manual zero-cost solution to reuse (\refsec{prob:manual}).
+The \verb;IdDep; type is the dependent generalization of the
+non-dependent \verb;Id; type introduced by \citet{firsov18b}.
+\refsec{prog:fog} generically solves the
+problem of \textit{forgetful} program and proof reuse, which corresponds to
+defining \verb;IdDep;-closed combinators for
+the type of non-dependent functions (for program reuse), and
+the type of dependent functions (for proof reuse).
+\refsec{prog:enr} defines 2 additional combinators to generically solve the
+problem of \textit{enriching} program and proof reuse.
+
+\subsection{Type of Dependent Identity Functions}
+\labsec{prog:id}
+
+As explained in \refsec{back:curry}, an (erased) term may have several
+possible types in a Curry-style theory. Of particular importance to
+our work is that the identity function, represented by the untyped
+lambda term ($\lam{x}{x}$), can have many possible types. We have seen
+several examples of this in \refsec{prob:linear}, where the zero-cost
+conversions \verb;v2l!;, \verb;l2v!;, \verb;appV2appL!;, and
+\verb;appL2appV!; all erase to the identity function. Thus, it makes
+sense to define a \textit{type of dependent identity functions} for any domain
+$A : \star$ and codomain $B : A \rightarrow \star$.
+We informally denote the
+type of dependent identity functions by $(a : A) \leq B~a$.
+Inhabitance of the type $(a : A) \leq B~a$ represents
+the existence of a term $\mathcal{F}$, such that
+$|\mathcal{F}|=(\lam{x}{x}$), and the existence of a typing derivation
+for the judgement $\Gamma\vdash \mathcal{F} : \Pi a : A.~B~a$.
+
+\refsec{prob:linear} manually defines zero-cost conversions
+using a proof that the linear time conversion is (after erasure)
+an identity operation. Hence, the zero-cost conversion depends on 2 parts:
+\begin{enumerate}
+\item The linear time conversion.
+\item A proof that the linear time conversion is extensionally an
+  identity function. 
+\end{enumerate}
+
+Now we formally derive the type of dependent identity functions $(a :
+A) \leq B~a$ in Cedille as \verb;IdDep A B;,
+which abstractly represents both zero-cost conversion
+parts as a dependent function (\verb;Π;) returning a dependent pair
+(\verb;Sigma;):\footnote{
+  The dependent pair type \txt{Sigma} can be derived in Cedille just
+  like the inductive \txt{List} and \txt{Vec} types, as explained in
+  \refsec{back:inductive}.
+  }
+
+\begin{verbatim}
+IdDep ◂ Π A : ★. Π B : A ➔ ★. ★
+  = λ A,B. Π a : A. Sigma (B a) (λ b. b ≃ a).
+\end{verbatim}
+The type \verb;IdDep A B; is defined when \verb;A; is a type and
+\verb;B; is a family of types indexed by \verb;A;. Inhabitants of
+\verb;IdDep A B; take elements of (\verb;a : A;) to elements of
+(\verb;b : B a;), and a proof that \verb;b; is propositionally equal
+to \verb;a; (using the heterogeneous equality type
+$\simeq$
+from \reffig{cdle}).
+We can represent the 2 parts more explicitly by deriving
+an introduction rule that takes the (conversion) function \verb;f; and
+its extensional identity proof as arguments:
+
+\begin{verbatim}
+intrIdDep ◂ ∀ A : ★. ∀ B : A ➔ ★. 
+  Π f : (Π a : A. B a). (Π a : A. f a ≃ a) ➔ IdDep A B 
+  =  λ f,q,a. pair (f a) (q a).
+\end{verbatim}
+In practice, it is more convenient to introduce elements of
+\verb;IdDep; directly in terms of the underlying $\Pi\Sigma$
+representation, rather than using \verb;intrIdDep;.
+
+Now we define the crucial elimination rule \verb;elimIdDep;, which exposes
+the witness $\mathcal{F}$ at type \verb;Π a : A. B a;, whose erasure
+is the identity function:
+
+\begin{verbatim}
+elimIdDep ◂ ∀ A : ★. ∀ B : A ➔ ★. IdDep A B ➔ Π a : A. B a
+  = λ c,a. φ (proj2 (c a)) - (proj1 (c a)) {a}.
+\end{verbatim}
+The elimination rule \verb;elimIdDep; uses \verb;φ; to return the input
+\verb;a;, originally at type \verb;A;, at type (\verb;B a;) using the
+extensional identity proof (\verb;proj2 (c a);), where \verb;c : IdDep A B;.
+From the erasure rules of CDLE (in \reffig{erase}), it follows
+that for any dependent identity function \verb;c; of type \verb;IdDep A B;,
+\verb;|elimIdDep c| = ; $|\mathcal{F}|$ \verb; = (λ a. a);.
+
+Finally, notice how the definition of
+\verb;elimIdDep; abstracts out a part (i.e. the use of \verb;φ; and the
+extensional identity proof) of the zero-cost
+conversion definitions (\verb;v2l!;, \verb;l2v!;, \verb;appV2appL!;, and
+\verb;appL2appV!;) from \refsec{prob:manual}. In subsequent sections
+we define \verb;IdDep;-closed combinators, taking \verb;IdDep; inputs
+and producing an \verb;IdDep; output. Because the combinators always
+return an \verb;IdDep;, well typed combinator definitions guarantee
+the existence of zero-cost conversions
+(whose witness we can always produce by applying \verb;elimIdDep;).
+
+We will also use non-dependent identity function counterparts
+\verb;Id;, \verb;intrId;, and \verb;elimId;
+(of \verb;IdDep;, \verb;intrIdDep;, and \verb;elimIdDep;, respectively),
+where \verb;A : ★;, but also \verb;B : ★; (rather than \verb;B : A ➔ ★;).
+These are trivially derivable from the dependent versions, so we
+omit their definitions. Note that our derived non-dependent \verb;Id;
+type is isomorphic to the \verb;Id; typed introduced by \citet{firsov18b}.
+
+Recall our informal notation of type
+\verb;IdDep A B; as $(a : A) \leq B~a$.
+The informal notation is
+inspired by \citet{miquel01}, who uses a non-dependent version
+of this notation ($A \leq B$) for a
+subtyping judgement derivable in a Curry-style theory with implicit
+products. Indeed, our \verb;Id A B; is inhabited when
+\verb;A; is a subtype of \verb;B;, and correspondingly all of
+our combinators can also be understood as internalized subtyping
+inference rules (we discuss the relationship with subtyping further in
+our related work, \refsec{rel:judg}).
+When there is an identity function
+from \verb;A; to \verb;B; (i.e. \verb;Id A B;), and both
+\verb;A; and \verb;B; be are functions, it becomes confusing to talk
+about domains and codomains (e.g. ``domain'' could refer to the
+identity function domain \verb;A;, or the
+domain of the non-identity function \verb;A;,
+or the domain of the non-identity function \verb;B;). To avoid confusion,
+and inspired by the relationship with subtyping, we refer to the
+domain of an identity function as the \textit{subtype} and the
+codomain as the \textit{supertype} (thus, we can non-ambiguously refer
+to the domain and codomain of the subtype, and the same for the supertype).
+
+\subsection{Forgetful Reuse}
+\labsec{prog:fog}
+
+Now we define generic solutions to the problem of
+forgetful program and proof reuse as \verb;IdDep;-closed
+combinators for the non-dependent and dependent function types,
+respectively. As a demonstration of using our generic solution,
+we redo the \verb;appV; reuse example from \refsec{prob:manual} in
+terms of our combinators (we also provide an additional example of
+reusing the proof of vector append associativity).
+
+The examples in this section assume the existence of
+identity functions (i.e. values of type \verb;IdDep;)
+to convert between lists and vectors:
+
+\begin{verbatim}
+v2l ◂ ∀ A : ★. ∀ n : Nat. Id (Vec A n) (List A)
+l2v ◂ ∀ A : ★. IdDep (List A) (λ xs. Vec A (len xs))
+\end{verbatim}
+We delay the task of defining \verb;v2l; and \verb;l2v; to
+\refsec{data}, where we define both identity functions as examples
+of using our generic data reuse combinators.
+
+\subsubsection{Program Reuse Combinator}
+
+All the names of our combinators are short descriptions of their
+return types. For example, below, \verb;allArr2arr; has return type
+\verb;Id (∀ i : I. X i ➔ X' i) (Y ➔ Y');. Mnemonically,
+\verb;allArr2arr; returns an identity function from \verb;allArr;
+($\forall\rightarrow$) to (\verb;2;) \verb;arr; ($\rightarrow$).
+We define \verb;allArr2arr; as:
+
+\begin{verbatim}
+allArr2arr ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : I ➔ ★. ∀ Y : ★. ∀ Y' : ★.
+  Π r : Y ➔ I.
+  Π c1 : IdDep Y (λ y. X (r y)).
+  Π c2 : ∀ i : I. Id (X' i) Y'.
+  Id (∀ i : I. X i ➔ X' i) (Y ➔ Y')
+  = λ r,c1,c2,f. pair (λ y. elimId 
+    (c2 -(r y))
+    (f -(r y) (elimIdDep c1 y))
+  ) β.
+\end{verbatim}
+The combinator \verb;allArr2arr; is a generic solution to forgetful
+\textit{non-dependent function} reuse (or, forgetful \textit{program} reuse). For
+example, it can solve a problem like the one below, where black boxes
+(\verb;●;) represent arbitrary (not necessarily the same) types:
+
+\begin{verbatim}
+Id (∀ n : Nat. Vec A n ➔ ●) (List A ➔ ●)
+\end{verbatim}
+The domain of the subtype is an indexed type
+and the domain of the supertype is a non-indexed type.
+For example, if
+we were to solve the problem above with \verb;allArr2arr;, we would set
+index type \verb;I; to \verb;Nat;, the type family \verb;X; to
+\verb;Vec A;, and the non-indexed type \verb;Y; to \verb;List A;.
+The codomains of the subtype and supertype
+(i.e. the black boxes, or \verb;X'; and \verb;Y';, respectively)
+cannot depend on the
+explicit domain arguments (i.e. \verb;X; and \verb;Y;),
+which is why we say that \verb;allArr2arr; solves the problem of
+non-dependent function reuse.
+However, the codomain of the subtype (\verb;X';)
+can depend on the implicit index argument (of type \verb;I;).
+This covers all the implicit arguments of \verb;allArr2arr;,
+and now we explain the explicit arguments:
+
+\begin{itemize}
+\item The argument \verb;r;  is the
+  \textit{refinement function}, computing an
+  index of type \verb;I; from the
+  non-indexed type \verb;Y;, e.g. \verb;len : List A ➔ Nat;.
+
+\item The argument \verb;c1; is the
+  \textit{contravariant dependent identity function between domains}.
+  It enriches the non-indexed supertype domain \verb;y : Y;,
+  e.g. \verb;xs : List A;.
+  to the indexed subtype domain \verb;X (r y);,
+  e.g. \verb;Vec A (len xs);.
+  The index is the refinement
+  of the non-indexed input \verb;y;, e.g. \verb;(len xs);).
+
+\item The argument \verb;c2; is the
+  \textit{covariant non-dependent identity function between codomains}.
+  It forgets the indexed subtype codomain \verb;X' i;
+  as the non-indexed supertype codomain \verb;Y';.
+\end{itemize}
+
+Notice that \verb;c2; is parameterized by the index type \verb;i : I;,
+e.g. \verb;Nat;, rather than the non-indexed type \verb;y : Y;,
+e.g. \verb;List A;. In the implementation of \verb;allArr2arr;, we
+generate the type index \verb;I; by automatically applying the
+refinement function (\verb;r;) to a value of the non-indexed type
+(\verb;y : Y;), making our combinator easier to use.
+
+\subsubsection{Program Reuse Example}
+
+Now we demonstrate zero-cost forgetful program reuse of vector append
+to define list append, in terms of \verb;allArr2arr;. We produce
+an identity function (\verb;Id;) from \verb;AppV; to \verb;AppL;,
+called \verb;appV2appL; below:
+
+\begin{verbatim}
+appV2appL ◂ Id AppV AppL
+  = // Id (∀ A : ★. ●) (∀ A : ★. ●)
+  copyType (Λ A. 
+  // Id (∀ n : Nat. Vec A n ➔ ●) (List A ➔ ●)
+  allArr2arr (len -A) (l2v -A) (Λ n. 
+  // Id (∀ m : Nat. Vec A n ➔ ●) (List A ➔ ●)
+  allArr2arr (len -A) (l2v -A) (Λ m. 
+  // Id (Vec A (add n m)) (List A)
+  v2l -A -(add n m)
+  ))).
+\end{verbatim}
+Our example includes goal types in comments, where each goal above
+illustrates the part of the problem solved by a combinator
+application below. The black boxes (\verb;●;) hide the parts of the
+goals that are not relevant to what is being solved by the combinators
+below. We begin by handling the impredicative quantification
+\verb;∀ A : ★.;, which is present in both \verb;AppV; and \verb;AppL;,
+using the easy to define auxiliary definition \verb;copyType; from
+\reffig{aux}. Next, we apply \verb;allArr2arr; twice to handle
+contravariantly enriching both arguments from lists to
+vectors. In these applications, \verb;r; is the length function
+(\verb;len;), and \verb;c1; is the enriching data reuse function
+\verb;l2v;. Additionally, \verb;c2; becomes the remainder of the
+\verb;appV2appL; definition, giving us access to index arguments
+\verb;n; and \verb;m;. Finally, we covariantly forget the return type from a
+list to a vector using the forgetful data reuse function \verb;v2l;.
+
+Note that \verb;appV2appL;, above, simultaneously captures the linear
+time conversion function and the extensional identity proof
+from \refsec{prob:manual}
+(i.e. the former \verb;appV2appL; and \verb;appV2appLId;).
+We can recover the actual zero-cost
+conversion by applying \verb;elimId; to our identity function:
+
+\begin{verbatim}
+appV2appL! ◂ AppV ➔ AppL = elimId appV2appL.
+\end{verbatim}
+Previously, we used a bang (\verb;!;) suffix as a \textit{syntactic} convention for
+defining a zero-cost conversion. Now, we can also think of the elimination
+rule of identity functions (\verb;elimId;) as a bang
+\textit{operator}, because applying it to any \verb;Id; results in a
+zero-cost conversion. From now on we omit defining the actual
+zero-cost conversions (like \verb;appV2appL!;), because they can always
+be recovered by applying the elimination rule for the type of identity
+functions.
+
+\subsubsection{Proof Reuse Combinator}
+
+The combinator \verb;allPi2pi; is a generic solution to forgetful
+\textit{dependent function} reuse (or, forgetful \textit{proof} reuse). For
+example, it can solve a problem like the one below:
+
+\begin{verbatim}
+Id (∀ n : Nat. Π xs : Vec A n. ●) (Π xs : List A. ●)
+\end{verbatim}
+The subtype codomain may depend on subtype (vector) domain, and
+the supertype codomain may depend on the supertype (list) domain.
+The definition of \verb;allPi2pi; follows:
+
+\begin{verbatim}
+allPi2pi ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★.
+  ∀ Y : ★. ∀ Y' : Y ➔ ★. Π r : Y ➔ I.
+  Π c1 : IdDep Y (λ y. X (r y)).
+  Π c2 : ∀ i : I. Id (X i) Y.
+  Π c3 : ∀ i : I. Π x : X i. Id (X' i x) (Y' (elimId (c2 -i) x))).
+  Id (∀ i : I. Π x : X i. X' i x) (Π y : Y. Y' y)
+  = λ r,c1,c2,c3,f. pair (λ y. elimId 
+    (c3 -(r y) (elimIdDep c1 y))
+    (f -(r y) (elimIdDep c1 y))
+  ) β.
+\end{verbatim}
+Compared to \verb;allArr2arr;, the \verb;I;, \verb;X;, \verb;Y;,
+\verb;r;, and \verb;c1; arguments are the same. However, now the
+subtype codomain \verb;X'; may depend on its indexed domain
+\verb;X i;, and the supertype codomain \verb;Y'; may depend on its
+non-indexed domain \verb;Y;. Now we explain the remaining explicit
+arguments to \verb;allPi2pi;:
+
+\begin{itemize}
+\item The argument \verb;c2; is the
+  \textit{covariant dependent identity function between domains}.
+  It forgets the indexed subtype domain \verb;X i;,
+  e.g. \verb;Vec A n;,
+  as the non-indexed subtype domain \verb;Y;,
+  e.g. \verb;List A;. We use this additional
+  covariant function between domains (compared to the contravariant
+  version \verb;c1;) in the type of the \verb;c3; argument.
+
+\item The argument \verb;c3; is the
+  \textit{covariant non-dependent identity function between codomains}.
+  It forgets the indexed subtype codomain \verb;X' i x;
+  as the non-indexed supertype codomain \verb;Y' (elimId (c2 -i) x);.
+  The \verb;Y; index to \verb;Y'; is zero-cost converted
+  from \verb;x; using the extra covariant argument \verb;c2;. 
+\end{itemize}
+
+The need for the conversion above, and hence the additional covariant argument
+\verb;c2;, stems from the convenience of argument \verb;c3; being
+parameterized by index \verb;I; and indexed type \verb;X i;, rather
+than non-indexed type \verb;Y;. In other words, it is needed for
+argument \verb;c3; to assume that its parameter has already been
+zero-cost converted via \verb;elimIdDep c1 y; (as performed in the
+implementation of \verb;allPi2pi;). Recall that
+\verb;allArr2arr; already automated the refinement \verb;r y;, and
+now \verb;allPi2pi; additionally automates the zero-cost conversion
+\verb;elimIdDep c1 y;, because the codomains of \verb;allPi2pi; can
+depend on the domains.
+
+\subsubsection{Proof Reuse Example}
+
+As an example of zero-cost proof reuse, we demonstrate how to prove
+associativity of list append from the associativity of vector
+append.\footnote{
+  The concept of proof reuse being ``zero-cost'' may seem odd,
+  as systems like Coq erase proofs during program
+  extraction. However, proofs in intentional type theory may sometimes
+  have computational content we wish to preserve,
+  and hence it can be valuable to zero-cost reuse such proofs.
+}
+First, we create type synonyms for the theorem of list append
+associativity (\verb;AssocL;) and vector append associativity
+(\verb;AssocV;), parameterized by a definition of list append
+(\verb;AppL;) and vector append (\verb;AppV;), respectively:
+
+\begin{verbatim}
+AssocL ◂ AppL ➔ ★ = λ appL.
+  ∀ A : ★. Π xs,ys,zs : List A.  
+  appL (appL xs ys) zs ≃ appL xs (appL ys zs)).
+
+AssocV ◂ AppV ➔ ★ = λ appV.
+  ∀ A : ★. ∀ n : Nat. Π xs : Vec A n.
+  ∀ m : Nat. Π ys : Vec A m. ∀ o : Nat. Π zs : Vec A o.
+  appV (appV xs ys) zs ≃ appV xs (appV ys zs)).
+\end{verbatim}
+Next, we reuse any proof of \verb;AssocV; to prove
+\verb;AssocL; at zero-cost:
+
+\begin{verbatim}
+assocV2assocL ◂ ∀ appV : AppV.
+  Id (AssocV appV) (AssocL (elimId appV2appL appV))
+  // Id (∀ A : ★. ●) (∀ A : ★. ●)
+  = copyType (Λ A.
+  // Id (∀ n : Nat. Π xs : Vec A n. ●) (Π xs : List A. ●)
+  allPi2pi (len -A) (l2v -A) (v2l -A) (Λ n. λ xs.
+  // Id (∀ m : Nat. Π ys : Vec A m. ●) (Π ys : List A. ●)
+  allPi2pi (len -A) (l2v -A) (v2l -A) (Λ m. λ ys.
+  // Id (∀ o : Nat. Π zs : Vec A o. ●) (Π zs : List A. ●)
+  allPi2pi (len -A) (l2v -A) (v2l -A) (Λ o. λ zs.
+  // Id (appV (appV xs ys) zs ≃ appV xs (appV ys zs)))
+  //    (appV (appV xs ys) zs ≃ appV xs (appV ys zs)))
+  id
+  )))).
+\end{verbatim}
+Notice that the identity function \verb;assocV2assocL; is parameterized
+by any implementation (\verb;appV;) of the type of vector append
+(\verb;AppV;). We apply the type synonym for vector append associativity
+(\verb;AssocV;) directly to vector append (\verb;appV;), but the type
+synonym for list append associativity (\verb;AssocL;) expects an
+implementation of list append (i.e. a value of type
+\verb;AppL;). Hence, we apply \verb;AssocL; to the result of
+zero-cost converting \verb;appV; to a list append, via
+\verb;elimId appV2appL appV;, which uses our
+previously defined identity function \verb;appV2appL;.
+
+Once again, we begin solving \verb;assocV2assocL; by copying the type
+parameter \verb;A; via \verb;copyType;. Next, we apply \verb;allPi2pi;
+to handle the 3 primary arguments to the theorem. Compared to
+\verb;allArr2arr;, \verb;allPi2pi; receives the additional covariant
+argument \verb;c2;, e.g. \verb;(λ n. v2l -A -n);. Also, the final
+\verb;c3; argument gets to abstract over the indexed type, in addition
+to the index, e.g. \verb;λ n,xs;. The final goal is solvable by the
+auxiliary identity combinator for identity functions
+(\verb;id; from \reffig{aux}). Before erasure, the supertype of the final goal has
+instances of \verb;elimId appV2appL appV;, instead of
+\verb;appV;. Similarly, before erasure, the final goal
+has instances of \verb;elimId v2l xs;, instead of
+\verb;xs; (and the same for \verb;ys; and \verb;zs;).
+However, because these are zero-cost conversions, after
+erasure (as depicted in the comment above)
+the goal is simply solvable by \verb;id;.
+
+\subsection{Enriching Reuse}
+\labsec{prog:enr}
+
+Now we generically solve
+enriching program and proof reuse as \verb;IdDep;-closed
+combinators for the non-dependent and dependent function types,
+respectively.
+Each forgetful program and proof reuse (\refsec{prog:fog})
+combinator returns a \textit{non-dependent} identity function (\verb;Id;). In
+contrast, each enriching version returns a \textit{dependent}
+identity function (\verb;IdDep;), where the dependency is used to
+define the \textit{premise} necessary for enrichment.
+We demonstrate our enriching combinators by
+redoing the \verb;appL; enriching program reuse example from
+\refsec{prob:manual}.
+
+\subsubsection{Program Reuse Combinator}
+
+The combinator \verb;arr2allArrP; is a generic solution to
+\textit{enriching} non-dependent function reuse
+(or, enriching \textit{program} reuse).
+Recall (from \refsec{prob:manual}) that (in general)
+enriching program reuse must be
+performed modulo a premise required for the enrichment
+to be possible.
+For example, \verb;arr2allArrP; can solve a problem like the one
+below:
+
+\begin{verbatim}
+IdDep (List A ➔ ●) (λ f. (Π xs : List A. ●) ➾ ∀ n : Nat. Vec A n ➔ ●)
+\end{verbatim}
+
+Program enrichment returns a dependent identity function
+(\verb;IdDep;). 
+An additional implicit (erased) \textit{premise} argument
+(to the left of \verb;➾;)
+appears in the supertype, and the premise has a dependent domain
+whose type is equal to the subtype's domain (e.g. \verb;List A;).
+The codomain of the premise can depend on the subtype (e.g. \verb;f;),
+in addition to the domain of the premise (\verb;xs;).
+The definition of \verb;arr2allArrP; follows:
+
+\begin{verbatim}
+arr2allArrP ◂ ∀ Y : ★. ∀ Y' : ★. ∀ P : Y ➔ Y' ➔ ★.
+  ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : I ➔ ★. Π r : Y ➔ I.
+  Π c1 : ∀ i : I. Id (X i) Y.
+  Π c1' : ∀ i : I. Π x : X i. i ≃ r (elimId (c1 i) x).
+  Π c2 : Π y : Y. IdDep Y' (λ y'. P y y' ➾ X' (r y)).
+  IdDep (Y ➔ Y') (λ f. (Π y : Y. P y (f y)) ➾ ∀ i : I. X i ➔ X' i)
+  = λ r,c1,c1',c2,f. pair (Λ p,i. λ x. elimIdDep
+    (ρ (c1' -i x) - (c2 (elimId (c1 -i) x)))
+    (f (elimId (c1 -i) x))
+    -(p (elimId (c1 -i) x))
+  ) β.
+\end{verbatim}
+Enriching \verb;arr2allArrP; shares the following implicit arguments
+with forgetful \verb;allArr2arr; (from \refsec{prog:fog}):
+\verb;Y;, \verb;Y';, \verb;I;, \verb;X;, and \verb;X';, as well as the
+following explicit arguments: \verb;r; and \verb|c1|.
+However, the premise \verb;P; appears as an additional implicit
+argument, which may depend on both the domain (\verb;Y;) and codomain
+(\verb;Y';) of the subtype. Now we explain the differing explicit
+arguments:
+\begin{itemize}
+\item The argument \verb;c1'; is the
+  \textit{index preservation property}.
+  It requires the index \verb;i; of the supertype domain
+  (\verb;x : X i;) to equal the refinement (using refinement
+  function \verb;r;) of the zero-cost converting \verb;x;
+  (using the identity function \verb;c1;),
+  e.g. \verb;n ≃ len (elimId c1 xs);, where
+  \verb;xs : Vec A n;.
+
+\item The argument \verb;c2; is the
+  \textit{covariant dependent identity function between codomains}.
+  It enriches the non-indexed subtype codomain \verb;Y';
+  as the indexed supertype codomain \verb;X' i;.
+  The enrichment codomain also gets an additional implicit premise
+  argument \verb;P;, which may depend on both the subtype domain and
+  codomain.
+\end{itemize}
+
+Notice that \verb;c2; is parameterized by the non-indexed
+type \verb;y : Y;,
+e.g. \verb;List A;, rather than the index \verb;i : I;,
+e.g. \verb;Nat;. This makes \verb;arr2allArrP; easier to use, as the
+implementation automatically rewrites by \verb;c1'; (the index
+preservation property)! We point out the consequence of this automatic
+rewrite in the following example.
+
+\subsubsection{Program Reuse Example}
+
+Below, we redo the enriching reuse of list append example from
+\refsec{prob:manual}. While our forgetful function type combinators
+attack 2 pieces at a time (the domains of the supertype and subtype),
+the enriching function type combinators attack 3 (the additional piece
+being the premise, whose type is duplicated from the subtype domain).
+
+\begin{verbatim}
+appL2appV ◂ IdDep AppL (λ appL. LenDistAppL appL ➾ AppV)
+  // IdDep (∀ A : ★. ●) (λ x. (∀ A : ★. ●) ➾ ∀ A : ★. ●)
+  = copyTypeP (Λ A.
+  // IdDep (List A ➔ ●) (λ f. (Π xs : List A. ●) ➾ ∀ n : Nat. Vec A n ➔ ●)
+  arr2allArrP (len -A) (v2l -A) (v2lPresLen -A) (λ xs.
+  // IdDep (List A ➔ ●) (λ g. (Π ys : List A. ●) ➾ ∀ m : Nat. Vec A m ➔ ●)
+  arr2allArrP (len -A) (v2l -A) (v2lPresLen -A) (λ ys.
+  // IdDep (List A) (λ zs. len zs ≃ add (len xs) (len ys)
+  //                       ➾ Vec A (add (len xs) (len ys)))
+  subst (l2v -A)
+  ))).
+\end{verbatim}
+
+We begin with the auxiliary \verb;copyTypeP; combinator
+(from \reffig{aux}), which is a version of \verb;copyTypeP; that also handles
+the premise (i.e. the 3rd piece). Next, we use our enriching
+combinator \verb;arr2allArrP; to handle both inductive arguments of
+append. This leaves leaves us with the goal in the final comment,
+above. Finally, we discharge the premise by rewriting, via the auxiliary
+combinator \verb;subst; (from \reffig{aux}). As an argument,
+\verb;subst; takes the identity function to apply after rewriting,
+which is the enriching data reuse \verb;l2v; in this example.
+
+The final goal type includes the sum of the lengths of both input
+vectors, rather than the sum of two vector indices.
+This convenience is a result
+of the automatic rewriting performed in the implementation of our
+\verb;arr2allArrP; combinator! In contrast, the manual definition of
+\verb;appL2appV; in \refsec{prob:manual} needed to manually rewrite
+by \verb;v2lPresLen; for both append inputs.
+
+\subsubsection{Proof Reuse Combinator}
+
+We include the definition of the enriching proof reuse combinator
+(\verb;pi2allPiP;), for reference, below.
+We do not describe it in detail, as the extensions to handle the
+dependent arguments in codomains \verb;X'; and \verb;Y';,
+as well as the additional \verb;c1'; through \verb;c3;
+arguments, follow the
+same pattern as \verb;allPi2pi; from \refsec{prog:fog}.
+
+\begin{verbatim}
+pi2allPiP ◂ ∀ Y : ★. ∀ Y' : Y ➔ ★. ∀ P : Π y : Y. Y' y ➔ ★.
+  ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★. Π r : Y ➔ I.
+  Π c1 : ∀ i : I. Id (X i) Y.
+  Π c1' : ∀ i : I. Π x : X i. i ≃ r x.
+  Π c2 : IdDep Y (λ y. X (r y)).
+  Π c3 : Π y : Y. IdDep (Y' y) (λ y'. P y y' ➾ X' (r y) (elimIdDep c2 y)).
+  IdDep (Π y : Y. Y' y) 
+    (λ f. (Π y : Y. P y (f y)) ➾ ∀ i : I. Π x : X i. X' i x)
+  = λ r,c1,c1',c2,c3,f. pair (Λ p,i. λ x. elimIdDep
+    (ρ (c1' -i x) - (c3 (elimId (c1 -i) x)))
+    (f (elimId (c1 -i) x))
+    -(p (elimId (c1 -i) x))
+  ) β.
+\end{verbatim}
+
+We also omit the example of enriching proof reuse of list append
+associativity. It is very similar to the forgetful proof reuse example
+of vector append associativity, because \verb;v2lPresLen; becomes an
+additional argument, making the premise the trivial \verb;Unit; type.
+
+\begin{figure}
+\centering
+
+\begin{verbatim}
+id ◂ ∀ A : ★. Id A A = λ a. pair a β.
+
+copyType ◂ ∀ F : ★ ➔ ★. ∀ G : ★ ➔ ★.
+  (∀ A : ★. Id (F A) (G A)) ➔
+   Id (∀ A : ★. F A) (∀ A : ★. G A)
+  = λ c,xs. pair (Λ A. elimId (c -A) (xs -A)) β.
+
+copyTypeP ◂ ∀ F : ★ ➔ ★. ∀ P : Π A : ★. F A ➔ ★. ∀ G : ★ ➔ ★.
+  (∀ A : ★. IdDep (F A) (λ xs. P A xs ➾ G A)) ➔
+  IdDep (∀ A : ★. F A) (λ xs. (∀ A : ★. P A (xs -A)) ➾ ∀ A : ★. G A)
+  = λ c,xs. pair (Λ p,A. elimIdDep (c -A) (xs -A) -(p -A)) β.
+
+subst ◂ ∀ Y : ★. ∀ I : ★. ∀ X : I ➔ ★.
+  ∀ r : Y ➔ I. ∀ i : I.
+  IdDep Y (λ y. X (r y)) ➔
+  IdDep Y (λ y. r y ≃ i ➾ X i)
+  = λ c,y. pair (Λ q. ρ ς q - elimIdDep c y) β.
+\end{verbatim}
+
+\caption{Auxiliary identity combinator, combinators to copy a shared
+  impredicative quantification, and combinator to rewrite by
+  an equality constraint.} 
+\labfig{aux}
+\end{figure}
+
+\section{Generic Data Reuse}
+\labsec{data}
+
+In this section we give the \textit{generic} zero-cost solution to the problem of
+linear time data reuse presented in \refsec{prob:linear}, and manually
+solved in \refsec{prob:manual}. In \refsec{data:fix}, we review a
+type of least fixed points, used to generically encode datatypes.
+\refsec{data:fog} covers generic forgetful data reuse, and
+\refsec{data:fog} covers generic enriching data reuse.
+
+\subsection{Type of Least Fixed Points}
+\labsec{data:fix}
+%% talk about relationship to Id type
+
+\refsec{back:inductive} reviews the work by \citet{stump18} to
+manually derive induction principles for Church-encoded datatypes via
+intersecting (using $\iota$) with an inductivity predicate.
+\citet{firsov18a} solved the same problem generically, by deriving a
+least fixed point type for any \textit{functor}, composed of 4 pieces:
+\begin{enumerate}
+\item An object mapping (\verb;F ◂ ★ ➔ ★;).
+\item An arrow mapping
+  (\verb;fmap ◂ ∀ X,Y : ★. (X ➔ Y) ➔ F X ➔ F Y;).
+\item The identity functor law.
+\item The composition functor law.
+\end{enumerate}
+
+\citet{firsov18b} improved the solution by deriving a
+least fixed point type that only requires 2 pieces:
+\begin{enumerate}
+\item A type scheme (\verb;F ◂ ★ ➔ ★;).
+\item An identity mapping
+  (\verb;imap ◂ ∀ X,Y : ★. Id X Y ➔ Id (F X) (F Y);).
+\end{enumerate}
+
+In type theory, the type scheme \verb;F; is the same as the object
+mapping of the functor. However, the identity mapping (\verb;imap;) is
+a restriction of the arrow map (\verb;fmap;), which only requires the
+user to lift an identity function
+(\verb;Id; from \refsec{prog:id}) between 2 types
+(\verb;X; and \verb;Y;) to an identity function
+between the scheme \verb;F; applied to the same 2 types.
+Deriving a concrete datatype in terms of the generic encoding of
+\citet{firsov18b} takes less effort (compared to using the encoding of
+\citet{firsov18a}), because \verb;imap; is less onerous to define, and no
+laws need to be proved.
+
+Furthermore, the class of datatypes representable by the
+\citet{firsov18b} encoding expands to include infinitary types and
+positive (not merely strictly-positive) types. \citet{firsov18b} is an
+``efficient'' lambda-encoding (using Mendler-style F-algebras), in the
+sense that inductive types support a constant time ``predecessor''
+operation (e.g. \verb;pred; for \verb;Nat;, and \verb;tail; for
+\verb;List;), using only linear space in the encoding.
+Expert readers may have noticed that the tail \verb;xs : List;
+(where \verb;List; is Church-encoded) in
+the cons case of \verb;elimList; from \refsec{back:inductive} is
+erased (i.e. quantified using \verb;∀; rather than \verb;Π;), hence
+computations cannot be defined with (unerased) access to the tail of the
+list. Deriving induction for a concrete \verb;List; type
+encoded via the work of \citet{firsov18b},
+and using Mendler-style F-algebras,
+solves this problem (allowing unerased quantification over the tail
+via \verb;Π;, accessible in constant time).
+
+In this work we generically solve zero-cost \emph{data reuse} by defining
+combinators for the fixpoint type of \citet{firsov18b}, whose type is:
+\begin{verbatim}
+IdMapping ◂  (★ ➔ ★) ➔ ★ = λ F. ∀ X,Y : ★. Id X Y ➔ Id (F X) (F Y).
+
+Fix ◂ Π F : ★ ➔ ★. IdMapping F ➔ ★
+\end{verbatim}
+This work derives the non-indexed fixpoint (\verb;Fix;) in terms of an
+indexed fixpoint (\verb;IFix;), over indexed schemes and
+index-preserving identity mappings (\verb;IIdMapping;). The
+non-indexed fixpoint is the trivial case where the index is the
+\verb;Unit; type (having the single inhabitant \verb;unit;). Below, we
+only give the type of the indexed fixpoint \verb;IFix;, and its
+implementation is a straightforward generalization of the non-indexed
+version by \citet{firsov18b}:
+
+\begin{verbatim}
+IIdMapping ◂ Π I : ★. ((I ➔ ★) ➔ (I ➔ ★)) ➔ ★ = λ I,F. 
+  ∀ X,Y : I ➔ ★. (∀ i : I. Id (X i) (Y i)) ➔
+    ∀ i : I. Id (F X i) (F Y i).
+
+IFix ◂ Π I : ★. Π F : (I ➔ ★) ➔ (I ➔ ★). 
+  Π imap : IIdMapping I F. I ➔ ★
+\end{verbatim}
+
+\begin{figure}
+\centering
+
+\begin{verbatim}
+nilLF ◂ ∀ A,X : ★. ListF A X
+consLF ◂ ∀ A,X : ★. A ➔ X ➔ ListF A X
+elimListF ◂ ∀ A,X : ★. ∀ P : ListF A X ➔ ★.
+  P nilLF ➔
+  (Π x : A. Π xs : X. P (consLF x xs)) ➔
+  Π xs : ListF A X. P xs
+
+nilVF ◂ ∀ A : ★. ∀ X : Nat ➔ ★. VecF A X zero
+consVF ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ n : Nat. A ➔ X n ➔ VecF A X (suc n)
+elimVecF ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ P : Π n : Nat. VecF A X n ➔ ★.
+  P zero nilVF ➔
+  (∀ n : Nat. Π a : A. Π x : X n. P (suc n) (consVF x xs)) ➔ 
+  ∀ n : Nat. Π xs : VecF A X n. P n xs
+\end{verbatim}
+
+\caption{Constructors and eliminators for list and vector schemes (\txt{ListF} and \txt{VecF})}
+\labfig{schemes}
+\end{figure}
+
+\subsection{Data Schemes and Identity Mappings}
+\labsec{data:schemes}
+
+The examples in the remainder of this section will demonstrate how
+data reuse combinators reduce the problem of defining an identity
+function between fixpoints, to defining an identity function between
+schemes. This is a much simpler problem, because schemes are
+essentially sums-of-products, which do \textit{not} have inductive
+arguments.
+
+Our later examples will refer to the scheme for lists (\verb;ListF;),
+and the scheme for vectors (\verb;VecF;), whose Church-encodings
+appear below:
+
+\begin{verbatim}
+ListF ◂ ★ ➔ ★ ➔ ★ = λ A,X. 
+  ∀ C : ★. C ➔ (A ➔ X ➔ C) ➔ C.
+
+VecF ◂ ★ ➔ (Nat ➔ ★) ➔ Nat ➔ ★ = λ A,X,n.
+  ∀ C : ★.
+  (n ≃ zero ➾ C) ➔
+  (∀ m : Nat. n ≃ suc m ➾ A ➔ X m ➔ C)
+  ➔ C.
+\end{verbatim}
+Importantly, the impredicatively quantified return type
+(\verb;∀ C : ★;) does not appear in the recursive
+tail position of the cons case of either scheme. Intead, the
+non-indexed \verb;X; appears there for \verb;ListF;, while the indexed
+\verb;X m; appears there for \verb;VecF;.
+
+Another important detail is that the natural number \verb;n; in
+\verb;VecF; is a parameter, rather than an index, because \verb;C; is
+merely a type (\verb;★;), rather than a family (\verb;Nat ➔ ★;).
+
+Finally, notice that the nil and cons cases of \verb;VecF; have
+additional \textit{implicit} index equality constraint
+arguments. Because both the natural number (in the cons case of
+\verb;VecF;) and the equality constraints are implicit arguments, the
+constructors of \verb;ListF; and \verb;VecF; erase to the same
+underlying untyped terms. For reference, the type signatures for the
+\verb;ListF; and \verb;VecF; constructors and eliminators appear in
+\reffig{schemes}. We assume an intersection-type encoding of
+\verb;ListF; and \verb;VecF;, using the same technique as in
+\refsec{back:inductive}, to make it possible to define the
+eliminators.\footnote{
+  There is no predecessor problem to worry about when deriving schemes
+  with induction principles (or, eliminators), because schemes
+  contain no inductive occurrences.
+}
+
+Next, we define the identity mappings \verb;imapL; (for \verb;ListF;)
+and \verb;imapV; (for \verb;VecF;), whose definitions only differ by
+which eliminator is used:
+
+\begin{verbatim}
+imapL ◂ ∀ A : ★. IdMapping (ListF A) = λ f. elimListF
+  (pair nilLF β)
+  (λ x,xs. pair (consLF x (elimId f xs) β)).
+
+imapV ◂ ∀ A : ★. IIdMapping Nat (VecF A) = λ f. elimVecF
+  (pair nilVF β)
+  (λ x,xs. pair (consVF x (elimId f xs) β)).
+\end{verbatim}
+The returned value is \verb;Sigma;-type the codomain of \verb;Id; from
+\refsec{prog:id}, where the first component is the supertype and
+second component is the equality witness. For both \verb;imapL; and
+\verb;imapV;, we mostly rebuild the term with constructors. The
+interesting subterm is the tail argument (\verb;elimId f xs;) of the
+cons rebuilding (for both \verb;consLF; and \verb;consVF;).
+In the nil cases, the second component of the pair (constructing
+\verb;Sigma;) is obviously reflexivity (\verb;β;) when rebuilding
+\verb;nilLF; with itself and \verb;nilVF; with itself. However, in the
+cons cases, the second component is also \verb;β;. This is because the
+\textit{identity} function being mapped (\verb;f;) is erased when
+zero-cost converting (i.e. \verb;|elimId f xs| = xs;).
+Hence, \verb;β; is evidence of the
+cons rebuilding cases because \verb;|consLF x (elimId f xs)| = |consLF| x xs;,
+and \verb;|consVF x (elimId f xs)| = |consVF| x xs;.
+
+\subsection{Forgetful Reuse}
+\labsec{data:fog}
+
+\subsubsection{Data Reuse Combinator}
+
+The combinator \verb;ifix2fix; is a generic solution to forgetful
+\textit{fixpoint} reuse (or, forgetful \textit{data} reuse). For
+example, it can solve a problem like the one below:
+
+\begin{verbatim}
+Id (IFix Nat (VecF A) (imapV A) n) (Fix (ListF A) (imapL A))
+\end{verbatim}
+Above, the subtype is an indexed fixpoint and the supertype is a
+non-indexed fixpoint (hence, this the forgetful direction of data
+reuse). The type of \verb;ifix2fix; follows:
+
+\begin{verbatim}
+ifix2fix ◂ ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★). ∀ G : ★ ➔ ★. 
+  Π imapF : IIdMapping I F. 
+  Π imapG : IdMapping G.
+  Π c : ∀ X : I ➔ ★. ∀ Y : ★. 
+    (∀ i : I. Id (X i) Y) ➔ ∀ i : I. Id (F X i) (G Y).
+  ∀ i : I. Id (IFix I F imapF i) (Fix G imapG)
+\end{verbatim}
+If we were to solve the problem above with \verb;ifix2fix;,
+we would set index type \verb;I; to \verb;Nat;,
+the indexed scheme \verb;X; to
+\verb;VecF A;, and the non-indexed scheme \verb;Y; to \verb;ListF A;.
+This covers all the implicit arguments of \verb;ifix2fix;,
+and now we explain the explicit arguments:
+
+\begin{itemize}
+\item The argument \verb;imapF;  is the
+  \textit{index-preserving identity mapping} for the indexed scheme \verb;F;,
+  e.g. \verb;imapV A; for \verb;VecF A;.
+
+\item The argument \verb;imapG; is the
+  \textit{identity mapping} for the non-indexed scheme \verb;G;,
+  e.g. \verb;imapL A; for \verb;ListF A;.
+
+\item The argument \verb;c; is the \textit{identity algebra}. It
+  forgets the indexed subtype scheme (\verb;F X i;) as
+  the non-indexed supertype scheme (\verb;G Y;), while assuming
+  how to forget the abstract indexed subtype (\verb;X;) as the
+  abstract non-indexed supertype (\verb;Y;).
+\end{itemize}
+
+The type of \verb;ifix2fix; is reminiscent of standard patterns
+appearing in generic programming using fixpoint encodings of
+datatypes. If you define a \textit{non-recursive}
+identity function between schemes, where the
+``recursive'' positions \verb;X i; are abstract, and you have access to an
+abstract forgetful identity function (from \verb;X i; to \verb;Y;),
+you are rewarded with a \textit{recursive}
+identity function between fixpoints of those schemes.
+
+We omit the implementation of \verb;ifix2fix; combinator since the
+exact details depend on a particular encoding of Mendler-style fixed
+points. Intuitively, the identity function from \verb;IFix; to
+\verb;Fix; is developed by using the generic dependent elimination of
+\verb;IFix; to apply the \verb;c; argument on each inductive level of
+the value. The premise of \verb;c;, namely
+\verb;(∀ i : I. Id (X i) Y);, is the inductive hypothesis of the
+dependent elimination.
+
+\subsubsection{Data Reuse Example}
+
+Now we demonstrate zero-cost forgetful reuse of vector data as list
+data. First, we establish type synonyms for the list and vector types,
+derived generically as the fixpoints of their schemes and identity
+mappings:
+
+\begin{verbatim}
+List ◂ ★ ➔ ★ = λ A. Fix (ListF A) (imapL A).
+Vec ◂ ★ ➔ Nat ➔ ★ = λ A,n. IFix Nat (VecF A) (imapV A) n.
+\end{verbatim}
+Next, we define an identity function (\verb;v2l;) from
+\verb;Vec A n; to \verb;List A; by applying
+\verb;ifix2fix; to the identity mappings and an
+identity algebra. For legibility, we provide the identity algebra
+(\verb;vf2lf;) as a standalone definition:
+
+\begin{verbatim}
+vf2lf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ Y :  ★. 
+  Π c : ∀ n : Nat. Id (X n) Y.
+  ∀ n : Nat. Id (VecF A X n) (ListF A Y)
+  = λ c. elimVecF
+  (pair nilLF β)
+  (λ x,xs. pair (consLF x (elimId c xs) β)).
+
+v2l ◂ ∀ A : ★. ∀ n : Nat. Id (Vec A n) (List A) =
+  ifix2fix imapV imapL vf2lf. 
+\end{verbatim}
+The identity algebra \verb;vf2lf; is defined by constructing an
+identity function, and the construction is very similar to how we
+defined the identity mappings \verb;imapL; and \verb;imapV; in
+\refsec{data:schemes}. This time, the conversion changes the types (by going
+from indexed scheme \verb;VecF; to scheme \verb;ListF;), but \verb;β;
+still suffices as equality in both cases because the constructors of
+both schemes erase to the same untyped terms. More concretely,
+\verb;|nilVF| = |nilLF|; and
+\verb;|consVF x xs| = |consLF x (elimId c xs)|;. In the cons case,
+\verb;xs; has (abstract vector) type \verb;X n;, but this is zero-cost
+converted via \verb;c; to (abstract list) type \verb;Y;. Hence,
+because we know that \verb;|consVF| = |consLF|;, it follows that:
+
+\begin{verbatim}
+|consVF x xs| = |consVF| x xs = |consLF| x xs = |consLF x (elimId c xs)|
+\end{verbatim}
+
+\subsection{Mendler-Style Algebras}
+\labsec{data:mendler}
+
+In generic developments using fixpoint-encodings of datatypes, it is
+common to define non-dependent functions as the fold of an algebra.
+Our generic enriching data reuse combinator (in \refsec{data:enr})
+requires an algebra argument (which is folded in the dependent type signature of
+the combinator). However, because our fixpoint type is defined
+using a Mendler-style encoding~\cite{firsov18b}, our enriching combinator
+must take a \textit{Mendler-style algebra}. Below, we give the definition of
+a Mendler-style algebra (\verb;AlgM;), and we include the more familiar
+Church-style algebra (\verb;AlgC;) for reference:
+
+\begin{verbatim}
+AlgC ◂ (★ ➔ ★) ➔ ★ ➔ ★ = λ F,X. F X ➔ X.
+AlgM ◂ (★ ➔ ★) ➔ ★ ➔ ★ = λ F,X. ∀ R : ★. Π rec : R ➔ X. F R ➔ X.
+\end{verbatim}
+Mendler algebras (\verb;AlgM;) exploit parametricity to abstractly
+hide inductive data via impredicative quantification
+(\verb;∀ R : ★;). However, a \textit{recursion function}
+(\verb;Π rec : R ➔ X;) is provided to explicitly make recursive calls
+on the hidden data. \footnote{
+  Mendler-style data hiding and explicit recursion is one of the
+  ingredients used by \cite{firsov18b} to define constant-time
+  predecessor functions.
+}
+
+Below, we give an example of defining the list length function
+(\verb;len;) as the fold of a Mendler-style length algebra
+(\verb;lenAlgM;). We also provide the type of the Mendler-style
+\verb;foldM; function for reference.
+
+\begin{verbatim}
+lenAlgM ◂ ∀ X : ★. AlgM (ListF X) Nat
+  = λ rec. elimListF zero (λ x,xs. suc (rec xs)).
+len ◂ ∀ A : ★. List A ➔ Nat = foldM lenAlgM.
+
+foldM ◂ ∀ F : ★ ➔ ★. ∀ imap : IdMapping F. ∀ X : ★. 
+  AlgM F X ➔ Fix F imap ➔ X
+\end{verbatim}
+The length algebra (\verb;lenAlgM;) case-splits (using
+\verb;elimListF;) on the scheme (\verb;ListF;) of the generically
+encoded list. The nil case returns \verb;zero;, and the cons case
+returns the \verb;suc;(essor) of the result of applying the recursion
+function (\verb;rec;) to the abstract recursive data (\verb;xs : R;).
+Our example in \refsec{data:enr} uses both the
+length algebra (\verb;lenAlgM;) and the
+length function (\verb;len;) defined as its fold.
+
+
+\subsection{Enriching Reuse}
+\labsec{data:enr}
+
+The combinator we define in this section
+(\verb;fix2ifix;) generically solves data enrichment, going from a
+non-indexed to an indexed type, when the index can be
+computed as a total function from the non-indexed type
+(e.g. going from \verb;List; to \verb;Vec; via the total function
+\verb;len : List A ➔ Nat;).
+
+\subsubsection{Data Reuse Combinator}
+
+Next, we define the combinator \verb;fix2ifix;, which
+is a generic solution
+to enriching \textit{fixpoint} reuse
+(or, enriching \textit{data} reuse).
+For example, it can solve a problem like the one below:
+
+\begin{verbatim}
+IdDep (Fix (ListF A) (imapL A))
+  (λ xs. IFix Nat (VecF A) (imapV A) (foldM lenAlgM xs))
+\end{verbatim}
+Notice that \verb;fix2ifix; must return a \textit{dependent} identity
+function, because the index of the output vector is computed as the
+length (\verb;len;) of the input list (\verb;xs;).
+The type of \verb;fix2ifix; follows:
+
+\begin{verbatim}
+fix2ifix ◂ ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★). ∀ G : ★ ➔ ★. 
+  Π imapF : IIdMapping I F. 
+  Π imapG : IdMapping G.
+  Π ralg : AlgM G I. 
+  Π c : ∀ X : I ➔ ★. ∀ Y : ★. Π r : Y ➔ I. 
+    IdDep Y (λ y. X (r y)) ➔ 
+    IdDep (G Y) (λ xs. F X (ralg -Y r xs)).
+  IdDep (Fix G imapG) 
+    (λ x. IFix I F imapF (foldM ralg x))
+\end{verbatim}
+
+Both \verb;fix2ifix; and \verb;ifix2fix; (from \refsec{data:fog})
+share the same implicit arguments, namely \verb;I;, \verb;F;,
+and \verb;G;, and they also share the explicit \verb;imapF; and
+\verb;imapG; arguments. However, \verb;fix2ifix; has the following
+differing explicit arguments:
+
+\begin{itemize}
+\item The argument \verb;ralg; is the
+  \textit{refinement algebra} for the non-indexed scheme \verb;G;,
+  e.g. \verb;lenAlgM A; for \verb;ListF A;.
+
+\item The argument \verb;c; is the \textit{dependent identity algebra}. It
+  enriches the non-indexed subtype scheme (\verb;xs : G Y;)
+  to the indexed supertype scheme (\verb;F X (ralg r xs);),
+  while assuming
+  how to enrich the abstract non-indexed subtype (\verb;y : Y;) as
+  the abstract indexed supertype (\verb;X (r y);).
+\end{itemize}
+
+Similar to the \verb;c; of forgetful \verb;ifix2fix;,
+the \verb;c; of enriching \verb;fix2ifix; requires a
+\textit{non-recursive} identity function between schemes, while assuming
+access to an identity function between abstract ``recursive''
+positions. However, the identity function in \verb;c; for
+\verb;fix2ifix; are \textit{dependent}. Hence, the index of the
+assumed supertype (\verb;X;) is computed from the non-indexed
+subtype (\verb;y : Y;) by applying an abstract
+\textit{refinement function} (\verb;r;).
+Correspondingly, the index of the produced supertype
+(\verb;F X;) is computed from the non-indexed
+subtype (\verb;xs : G Y;) by applying the
+\textit{refinement algebra} (\verb;ralg r;), while using \verb;r; for
+the \verb;rec;(ursive) function of the Mendler-style algebra.
+
+The implementation of \verb;fix2ifix;, just like \verb;ifix2fix;,
+applies \verb;c; to each inductive level. The outcome is also similar,
+as \verb;fix2ifix; allows the user to define a \textit{non-recursive}
+identity algebra, and it produces a \textit{recursive} identity
+function between fixpoints. The primary difference is
+that \verb;fix2ifix; results in a dependent identity function. Hence,
+the index in the dependent result is computed by folding the
+the Mendler-style algebra (\verb;ralg;) over the inductive input
+\verb;x;. 
+
+\subsubsection{Data Reuse Example}
+
+Now we demonstrate zero-cost enriching reuse of list data as vector
+data. The dependent identity function (\verb;l2v;)
+from \verb;xs : List A; to \verb;Vec A (len xs); is defined by
+applying \verb;fix2ifix; to the identity mappings and the
+dependent identity algebra \verb;lf2vf;:
+
+\begin{verbatim}
+lf2vf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ Y : ★. 
+ Π f : Y ➔ Nat. 
+ IdDep Y (λ y. X (f y)) ➔ 
+ IdDep (ListF A Y ) (λ xs. VecF A X (lenAlgM f xs))
+  = λ c. elimListF
+  (pair nilVF β)
+  (λ x,xs. pair (consVF x (elimIdDep c xs) β)).
+ 
+l2v ◂ ∀ A : ★. IdDep (List A) (λ xs. Vec A (len xs))
+  = fix2ifix imapV imapL lenAlgM lf2vf.
+\end{verbatim}
+The Mendler-style algebra used by \verb;lf2vf; is our previously
+defined length algebra (\verb;lenAlgM;).
+The definition of \verb;lf2vf; is essentially the same as
+\verb;vf2lf; from \refsec{data:fog}, but now we eliminate a list
+scheme and produce vector scheme constructors. Because the vector and
+list scheme constructors erase to the same terms, the argument for why
+reflexivity (\verb;β;) suffices as identity evidence stays the same.
+Another difference is that the abstract tail is computed as a \textit{dependent}
+elimination (\verb;elimIdDep;, rather than \verb;elimId;).
+However, the dependent elimination is also erased
+(\verb;|elimIdDep c xs| = xs;).
+
+%% \section{Generic Refined Reuse}
+%% \labsec{ref}
+
+%% \section{Dependent Premise Enrichment}
+%% %% or Relational Remember Enrichment or Relational Enriching Reuse?
+%% \labsec{dep}
+
+\section{Related Work}
+\labsec{rel}
+
+\subsection{Subtyping}
+\labsec{rel:judg}
+%% miquel judgement but also barras coercion
+
+\citet{miquel01} shows that in a Curry-style type theory with implicit
+products, the subtyping \textit{judgement} can be derived as follows:
+$$
+\Gamma\vdash X \leq Y \triangleq \Gamma,x:X\vdash x:Y
+$$
+
+The \verb;Id; type can be seen as the internalization of this
+judgement, with \verb;IdDep; a corresponding dependent version
+(i.e. our informal syntax $(x:X) \leq Y~x$, not covered by Miquel).
+Miquel also showed that the subsumption rule of subtyping is
+admissible in the theory with the derived judgement, and our
+elimination rule \verb;elimId; corresponds to its internalization.
+Finally, all of our combinators can also be translated to admissible
+subtyping rules in his theory. Miquel covers several admissible
+subtyping rules, but not ones corresponding to our primary forgetful
+and enriching combinators for program, proof, and data reuse. Our data
+reuse combinators may be of particular interest to the subtyping
+community, as they corresponds to Mendler-style datatype-generic
+subtyping rules.
+
+Inspired by the internalized subtyping judgement of Miquel,
+\citet{barras:implicit} show how to derive zero-cost forgetful data
+reuse conversions for Church-encoded datatypes.
+This work was extended by \citet{diehl} to the enriching direction.
+In \refsec{prob:manual}, we derive zero-cost data reuse in terms of a
+linear time conversion and its extensional identity proof, using
+$\phi$. In contrast, the zero-cost conversions of
+\citet{barras:implicit} and \citet{diehl} require no extensional
+identity proof, as the conversions erase to the identity function by a
+clever exploitation of $\eta$-equality, without needing a rule like
+$\phi$. Our work can be seen as the generic version of their manual
+zero-cost reuse. When working generically with abstract combinator
+definitions, an abstraction like \verb;IdDep; is necessary,
+and hence also a rule like $\phi$ (used to eliminate it).
+
+%% \subsection{Coercive Subtyping}
+%% \labsec{rel:coe}
+
+%% Coercive subtyping~\cite{luo:coercive}
+%% extends the standard subtyping judgement with an
+%% extra argument $c$, which is an explicit coercion function to be used
+%% when translating between the subtypes.
+
+\subsection{Coercible in Haskell}
+
+Breitner et al. describe a GHC extension to Haskell (available
+starting with GHC 7.8) for a type class \verb|Coercible a b|, which
+allows casting from \verb|a| to \verb|b| when such a cast is indeed
+the identity function~\cite{breitner+16}.  The motivation is to support retyping of data
+defined using Haskell's \verb|newtype| statement, which is designed to
+give programmers the power to erect abstraction barriers that cannot
+be crossed outside of the module defining the \verb|newtype|.  Within
+such a module, however, \verb|Coercible a b| and the associated
+function \verb|coerce : a -> b| allow programmers to apply zero-cost
+casts to change between a \verb|newtype| and its definition.
+
+\verb|Coercible| had to be added as primitive to GHC, along with a
+rather complex system of \emph{roles} specifying how coercibility of
+application of type constructors follows from coercibility of
+arguments to those constructors.  In contrast, in the present work, we
+have shown how to derive zero-cost coercions
+within the existing type
+theory of Cedille (via \verb;IdDep;, also derived in Cedille, which
+is the dependent equivalent of \verb|Coercible|).
+On the other hand, much of the
+complexity of \verb|Coercible| in GHC arises from (1) how it
+interoperates with programmer-specified abstraction (via
+\verb|newtype|) and (2) the need to resolve \verb|Coercible a b| class
+constraints automatically, similarly to other class constraints in
+Haskell.  The present work does not address either issue.
+However, the present work does allow for dependent casts between
+indexed variants of datatypes, which \verb|Coercible| does not cover
+(because \verb|Coercible| is only equivalent to our non-dependent
+\verb;Id;).
+
+\subsection{Dependent Interoperability}
+
+The field of dependent interoperability is concerned with reusing code
+between non-dependent and dependent implementations of datatypes and
+functions. The goal is to support interaction between non-dependent
+and dependent languages, like extracted OCaml and Coq.
+The most similar work to ours in this field is that of
+\citet{dagand:interop}. Inspired by Homotopy Type Theory (HoTT),
+\citet{dagand:interop} formalize partial equivalence types,
+simultaneously representing the forgetful and enriching directions of reuse.
+
+They also develop combinators that are closed with respect to their
+partial equivalence type. For example, their \verb;HODepEquiv; combinator is
+quite like our forgetful program reuse combinator
+\verb;allArr2arr;. However, their work primarily focuses on the
+forgetful direction of reuse for total functions, as partial functions
+can be reused by inserting dynamic checks and failures using their
+\textit{partial} equivalence type. In contrast, we emphasize the
+\textit{total} reuse of functions in the enriching direction (like
+\verb;arr2allArrP;), using premises to make the total functions
+possible. Because they are primarily interested in program reuse, not
+proof reuse, they do not provide dependent versions of their reuse
+combinators. Additionally, they only provide combinators function
+types, not fixpoint types, as their work assumes manual solutions to
+the problem of data reuse.
+
+The class of datatypes reusable in their setting is larger, because
+isomorphic datatypes, with different representations, can be
+related. In contrast, our work requires the erasures of the
+constructors of related types to be the same untyped terms. However,
+for the price of a smaller class of reusable types, we gain the
+ability to perform conversions at zero-cost.
+
+Finally, \citet{dagand:interop} automates the assembly of combinators
+to reuse programs by registering them as instances of Coq's type
+class mechanism. Cedille does not currently have type classes, but we could
+employ the same automation strategy if type classes get added to
+Cedille in the future.
+
+\subsection{Ornaments}
+
+Ornaments~\cite{ornaments:original} are used to define refined
+version of types (e.g. \texttt{Vec}) from unrefined types
+(e.g. \texttt{List}) by ``ornamenting'' the unrefined type with extra
+index information. In contrast, our work establishes a relationship
+between \texttt{Vec} and \texttt{List} after-the-fact, by defining
+forgetful and enriching \verb;IdDep; values between the types.
+By \textit{defining} vectors as natural-number-ornamented lists,
+ornaments can be used to calculate the ``patch'' type necessary to adapt a
+function from one type to another type~\cite{ornaments:functional}.
+For example, ornaments could
+calculate that \texttt{LenDistAppL} is the premise necessary to adapt
+\texttt{appL} from lists to vectors (\texttt{appV}).
+
+Although ornaments can be used to derive conversions between
+types in an ornamental
+relationship~\cite{ornaments:original,ornaments:relational},
+they take linear time, rather than constant time (i.e. the conversions
+are not zero-cost).
+Besides refining the indices of existing datatypes, ornaments
+also allow data to be added to existing datatypes. For example, vectors can
+be index-refined lists, but lists can also be natural numbers with
+elements added. Our work only covers the index refinement aspect of
+ornaments.
+
+\subsection{Type Theory in Color}
+
+Type Theory in Color (TTC)~\cite{bernardy:color}
+generalizes the concept of erased arguments
+of types to various colors, which may be erased optionally and
+independently according to modalities in the type theory. In the vector
+datatype declaration, the index data can be colored. If a vector is
+passed to a function expecting a list (whose modality enforces the
+lack of the index data color), then a forgetful zero-cost conversion
+(using our parlance) is performed.
+
+Lists can also be used as vectors, via an enriching zero-cost
+conversion in the other direction. This works due to a mechanism to
+interpret lists as a predicate on natural numbers. The list predicate is
+generated as the erasure of its colored elements (like ornaments,
+colors can add data in addition to refining indices), which results in
+refining lists by the length \textit{function}.
+
+Our work can be used to define an enriching zero-cost conversion
+from natural numbers to the datatype of
+finite sets (\texttt{Fin}). This is not possible with colors, because
+\texttt{Fin} is indexed by successor (\texttt{suc}) in both of its
+constructors, which would require generating a predicate on the
+natural numbers from a non-deterministic function (or
+\textit{relation}). Colors allow zero-cost conversions to be
+generated and \textit{implicitly} applied because colors erase \textit{types}, as
+well as values, whereas implicit products only erase values
+(e.g. $\Lambda$ is erased, but not $\forall$).
+Thus, while zero-cost conversions
+need to be \textit{explicitly} crafted and applied in our setting, we
+are able to \textit{define} zero-cost conversions (like taking natural numbers to
+finite sets) for which there is no unique solution.
+
+\section{Extensions and Future Work}
+\labsec{future}
+
+\subsection{Auxiliary Combinators}
+
+Our program and proof reuse combinators expect index arguments to
+appear next to their indexed types in type signatures. For this
+reason, our combinators would not be directly applicable if we wrote
+the type signature of vector append with the natural number indices of
+both vector arguments at the beginning, followed by both
+vectors. However, it is straightforward to define an auxiliary combinator that
+flips argument order, which \citet{dagand:interop} do for their
+partial type equivalence abstraction.
+
+If a subsequent indexed type argument depends on the \textit{same}
+index as a previous argument, rather than a new one, it also prevents
+our combinators from being applicable. Consider the
+artificial example of vector append where both input vectors must be
+the same length. This can be solved via a
+straightforward auxiliary combinator that introduces a new index quantification,
+along with an equality that constrains the new index to equal the old index.
+
+\subsection{Index-Index Combinators}
+
+In this paper we only considered relating non-indexed types (e.g. list)
+to indexed types (e.g. vector). In general, we may want to relate
+an indexed type to a \textit{less indexed} type, like relating vectors
+to ordered vectors in the introduction. Our combinators
+straightforwardly generalize to 2 indexed types, \verb;X : I ➔ ★; and
+\verb;Y : J ➔ ★;, along with a function that translates
+the more refined index to the less refined index
+(of type \verb;I ➔ J;). In fact, our formalization is defined using this
+more general representation, and we derive the combinators of this
+paper using the \verb;Unit; type as the index type \verb;J; of family \verb;Y;.
+
+\subsection{Dependent Premise Combinators}
+
+The class of datatypes enrichable by our data reuse combinator \verb;fix2ifix;
+requires the index (\verb;I;) to be computable from the non-indexed
+type as a \textit{total} function (the refining function
+\verb;r;). This excludes reusing datatypes where the index can be
+computed as a \textit{partial} function from the non-indexed type,
+plus extra data. We believe this would be possible by defining an
+enhanced data enrichment combinator with an \textit{erased premise}, that
+the supertype could depend on. We leave this extension to future work,
+although we have already defined a dependent-premise version of
+enriching program and proof reuse.
+
+\section{Conclusion}
+
+We have demonstrated how to reuse programs, proofs, and types at
+zero-cost, in both the forgetful and enriching directions. We achieve
+this generically via combinators over the type of dependent identity
+functions (\verb;IdDep;). Because partially applying the elimination
+rule of \verb;IdDep; results in the term erasing to an identity
+function, any conversion making use of the result of \verb;elimIdDep;
+requires no runtime overhead.
+
+\labsec{conc}
+
+%% Bibliography
+\bibliography{generic-reuse}
+
+
+%% Appendix
+%% \appendix
+%% \section{Appendix}
+
+%% Text of appendix \ldots
+
+\end{document}

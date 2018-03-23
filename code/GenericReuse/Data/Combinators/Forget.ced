@@ -1,0 +1,42 @@
+module ReuseForgetful.
+
+import Id.
+import IIdMapping.
+import IFixIndM.
+import IInductionM.
+import Sigma.
+import Unit.
+import UnitLift.
+import FixIndM.
+
+Conv ◂ Π I : ★. Π J : ★. (I ➔ J) ➔ (J ➔ ★) ➔ (I ➔ ★)
+ = λ I : ★. λ J : ★. λ f : I ➔ J. λ jX : J ➔ ★. λ i : I . jX (f i).
+
+ifix2jfix ◂ ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★). Π fimap : IIdMapping · I · F.
+  ∀ J : ★. ∀ G : (J ➔ ★) ➔ (J ➔ ★). Π gimap : IIdMapping · J · G.
+  Π f : I ➔ J. 
+  (∀ X : I ➔ ★.  ∀ Y : J ➔ ★. (∀ i : I . Id · (X i) · (Y (f i))) ➔ ∀ i : I. Id · (F · X i) · (G · Y (f i) )) ➔
+  ∀ i : I. Id · (IFixIndM · I · F fimap i) · (IFixIndM · J · G gimap (f i)) =
+  Λ I. Λ F. λ fimap. 
+  Λ J. Λ G. λ gimap. 
+  λ f. λ ifg. Λ i. λ v.  induction · I · F -fimap ·  
+  (λ ii : I. λ y : IFixIndM · I · F fimap ii. Sigma · (IFixIndM · J · G gimap (f ii)) · (λ x : (IFixIndM · J · G gimap (f ii)).  {x ≃ y}))
+  (Λ R. Λ c. λ ih. Λ i. λ gr. 
+        pair · (IFixIndM · J · G gimap (f i)) · (λ x : IFixIndM · J · G gimap (f i) . ({x ≃ iinFixIndM gr})) 
+     (iinFixIndM · J · G -gimap -(f i) 
+         (elimId · (F · (Conv · I · J f · (IFixIndM · J · G gimap)) i) · (G · (IFixIndM · J · G gimap) (f i)) 
+           (ifg · (λ i : I. IFixIndM · J · G gimap (f i)) · (IFixIndM · J · G gimap) 
+               (Λ i : I. trivId · (IFixIndM · J · G gimap (f i))) -i)  
+           (elimId · (F · R i) · (F · (Conv · I · J f · (IFixIndM · J · G gimap)) i ) 
+           (fimap · R · (Conv · I · J f · (IFixIndM · J · G gimap)) ih -i) gr))) 
+     β) -i v.
+
+ifix2fix ◂ ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★).
+  Π fimap : IIdMapping · I · F.
+  ∀ G : ★ ➔ ★. Π gimap : IdMapping · G.
+  (∀ X : I ➔ ★.  ∀ Y : ★. (∀ i : I . Id · (X i) · Y) ➔ ∀ i : I. Id · (F · X i) · (G · Y)) ➔
+  ∀ i : I. Id · (IFixIndM · I · F fimap i) · (FixIndM · G gimap)
+  = Λ I. Λ F. λ fimap. Λ G. λ gimap. 
+  λ ifg. Λ i. λ v. ifix2jfix · I · F fimap · Unit · (UnitF · G) (ufimap · G gimap) (λ _. unit) 
+  (Λ X. Λ Y. λ f. Λ i. λ a. pair · (UnitF · G · Y unit ) · (λ b : UnitF · G · Y unit . { b ≃ a }) 
+   (elimId · (F · X i) · (G · (Y unit) ) (ifg · X · (Y unit) f -i) a) β) -i v.

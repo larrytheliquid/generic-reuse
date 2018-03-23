@@ -1,0 +1,15 @@
+import-directories  =
+ "/home/aneto/Desktop/ui/projects/free-proof-reuse/icfp2018/code"
+ "/home/aneto/Desktop/ui/projects/free-proof-reuse/icfp2018/code/Prelude"
+ "/home/aneto/Desktop/ui/projects/free-proof-reuse/icfp2018/code/IndexedMendlerInduction"
+ "/home/aneto/Desktop/ui/projects/free-proof-reuse/icfp2018/code/GenericReuse/Program"
+ "/home/aneto/Desktop/ui/projects/free-proof-reuse/icfp2018/code/GenericReuse/Program/Examples"
+ "/home/aneto/Desktop/ui/projects/free-proof-reuse/icfp2018/code/GenericReuse/Data/Combinators"
+ "/home/aneto/Desktop/ui/projects/free-proof-reuse/icfp2018/code/GenericReuse/Data/Examples"
+ .
+
+
+use-cede-files = false.
+make-rkt-files = false.
+generate-logs = false.
+show-qualified-vars = false.
