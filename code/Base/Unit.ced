@@ -8,14 +8,11 @@ UnitI ◂ UnitC ➔ ★ = λ uC : UnitC. ∀ P : UnitC ➔ ★. P unitC ➔ P uC
 Unit ◂ ★ = ι u : UnitC. UnitI u.
 unit ◂ Unit = [unitC, Λ P. λ p. p].
 
-toUnit ◂ UnitC ➔ Unit = λ u. u · Unit unit.
-toUnitId ◂ Π u : Unit. Eq · Unit (toUnit u.1) u
-  = λ u. u.2 · (λ uC : UnitC. HEq · Unit · UnitC (toUnit uC) uC) β.
-
 elimUnit ◂ ∀ P : Unit ➔ ★. P unit ➔ Π u : Unit. P u
-  = Λ P. λ p. λ u.
-  ρ ς (toUnitId u) -
-  (u.2 · (λ uC : UnitC. P (toUnit uC)) p).
+  = Λ P. λ p. λ u. (u.2 · (λ uC : UnitC.
+    ∀ C : ★. (Π u' : Unit. {uC ≃ u'} ➾ P u' ➔ C) ➔ C))
+  (Λ C. λ c. c unit -β p)
+  · (P u) (λ u'. Λ q. λ p. ρ q - p).
 
 etaUnit ◂ Π u : Unit. { u ≃ unit } =
   elimUnit · (λ u : Unit. { u ≃ unit }) β.
