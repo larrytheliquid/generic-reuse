@@ -9,13 +9,10 @@ pairC ◂ ∀ A : ★. ∀ B : A ➔ ★. Π a : A. B a ➔ SigmaC · A · B =
 SigmaI ◂ Π A : ★. Π B : A ➔ ★. SigmaC · A · B ➔ ★ =
   λ A : ★ . λ B : A ➔ ★. λ s : SigmaC · A · B.
   ∀ P : SigmaC · A · B ➔ ★. (Π a : A. Π b : B a. P (pairC · A · B a b)) ➔ P s.
-pairI ◂ ∀ A : ★. ∀ B : A ➔ ★. Π a : A. Π b : B a. SigmaI · A · B (pairC · A · B a b) =
- Λ A. Λ B. λ a. λ b. Λ P. λ p. p a b.
-
 Sigma ◂ Π A : ★. (A ➔ ★) ➔ ★ = λ A : ★. λ B : A ➔ ★.
   ι s : SigmaC · A · B. SigmaI · A · B s.
 pair ◂ ∀ A : ★. ∀ B : A ➔ ★. Π a : A. Π b : B a. Sigma · A · B
-  = Λ A. Λ B. λ a. λ b. [pairC · A · B a b, pairI · A · B a b].
+  = Λ A. Λ B. λ a. λ b. [pairC · A · B a b, Λ P. λ p. p a b].
 
 toSigma ◂ ∀ A : ★. ∀ B : A ➔ ★. SigmaC · A · B ➔ Sigma · A · B
   = Λ A. Λ B. λ s. s · (Sigma · A · B) (pair · A · B).

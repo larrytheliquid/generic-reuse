@@ -5,10 +5,8 @@ UnitC ◂ ★ = ∀ C : ★. C ➔ C.
 unitC ◂ UnitC = Λ C. λ c. c.
 
 UnitI ◂ UnitC ➔ ★ = λ uC : UnitC. ∀ P : UnitC ➔ ★. P unitC ➔ P uC.
-unitI ◂ UnitI unitC = Λ P. λ p. p.
-
 Unit ◂ ★ = ι u : UnitC. UnitI u.
-unit ◂ Unit = [unitC, unitI].
+unit ◂ Unit = [unitC, Λ P. λ p. p].
 
 toUnit ◂ UnitC ➔ Unit = λ u. u · Unit unit.
 toUnitId ◂ Π u : Unit. Eq · Unit (toUnit u.1) u
