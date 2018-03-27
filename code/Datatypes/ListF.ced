@@ -37,6 +37,6 @@ imapL ◂ ∀ A : ★. IdMapping · (ListF · A)
   = Λ A. Λ X. Λ Y. λ c. elimListF · A · X
   · (λ s : ListF · A · X. IdCod · (ListF · A · X) · (ListF · A · Y) s)
   (pairId · (ListF · A · X) · (ListF · A · Y) -(nilLF · A · X) (nilLF · A · Y) β)
-  (λ a. λ x. pairId · (ListF · A · X) · (ListF · A · Y) -(consLF · A · X a x)
-    (consLF · A · Y a (elimId · X · Y c x)) β).
+  (λ a. λ x. pairId · (ListF · A · X) · (ListF · A · Y)
+    -(consLF · A · X a x) (consLF · A · Y a (elimId · X · Y c x)) β).
 

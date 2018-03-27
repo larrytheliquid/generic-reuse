@@ -6,27 +6,44 @@ import IIdMapping.
 import Id.
 import IFixIndM.
 
-cVecF ◂ ★ ➔ (Nat ➔ ★) ➔ (Nat ➔ ★) = λ A : ★. λ X : Nat ➔ ★. λ n : Nat. ∀ C : ★. ({n ≃ zero} ➾ C) ➔ (∀ m : Nat. {n ≃ suc m} ➾ A ➔ X m ➔ C) ➔ C.
-cin1vf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. cVecF · A · X zero = Λ A. Λ X. Λ C. λ c. λ f. (c -β).
-cin2vf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ n : Nat. A ➔ X n ➔ cVecF · A · X (suc n) = Λ A. Λ X. Λ n. λ a. λ x. Λ C. λ c. λ f. (f -n -β a x).
+VecFC ◂ ★ ➔ (Nat ➔ ★) ➔ (Nat ➔ ★) = λ A : ★. λ X : Nat ➔ ★. λ n : Nat.
+  ∀ C : ★. ({n ≃ zero} ➾ C) ➔ (∀ m : Nat. {n ≃ suc m} ➾ A ➔ X m ➔ C) ➔ C.
+nilVFC ◂ ∀ A : ★. ∀ X : Nat ➔ ★. VecFC · A · X zero
+  = Λ A. Λ X. Λ C. λ cN. λ cC. (cN -β).
+consVFC ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ n : Nat. A ➔ X n ➔ VecFC · A · X (suc n)
+  = Λ A. Λ X. Λ n. λ a. λ x. Λ C. λ cN. λ cC. (cC -n -β a x).
 
+VecFI ◂ Π A : ★. Π X : Nat ➔ ★. Π n : Nat. VecFC · A · X n ➔ ★ 
+  = λ A : ★. λ X : Nat ➔ ★. λ n : Nat. λ s : VecFC · A · X n. ∀ P : Π m : Nat. VecFC · A · X m ➔ ★. 
+  P zero (nilVFC · A · X) ➔
+  (∀ m : Nat. Π a : A. Π x : X m. P (suc m) (consVFC · A · X -m a x)) ➔
+  P n s.
+VecF ◂ ★ ➔ (Nat ➔ ★) ➔ (Nat ➔ ★) = λ A : ★. λ X : Nat ➔ ★. λ n : Nat.
+  ι s : VecFC · A · X n. VecFI · A · X n s.
+nilVF ◂ ∀ A : ★. ∀ X : Nat ➔ ★. VecF · A · X zero
+  = Λ A. Λ X. [nilVFC · A · X, Λ A. λ pN. λ pC. pN].
+consVF ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ n : Nat. A ➔ X n ➔ VecF · A · X (suc n)
+  = Λ A. Λ X. Λ n. λ a. λ x. [consVFC · A · X -n a x, Λ C. λ pN. λ pC. pC -n a x].
 
-cVecFInd ◂ Π A : ★. Π X : Nat ➔ ★. Π n : Nat. cVecF · A · X n ➔ ★ 
- = λ A : ★. λ X : Nat ➔ ★. λ n : Nat. λ lf : cVecF · A · X n. ∀ Q : Π m : Nat. cVecF · A · X m ➔ ★. 
- Q zero (cin1vf · A · X) ➔ (∀ n : Nat. Π a : A. Π x : X n. Q (suc n) (cin2vf · A · X -n a x)) ➔ Q n lf.
+elimVecF ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ P : Π n : Nat. VecF · A · X n ➔ ★.
+  P zero (nilVF · A · X) ➔
+  (∀ n : Nat. Π a : A. Π x : X n. P (suc n) (consVF · A · X -n a x)) ➔ 
+  ∀ n : Nat. Π s : VecF · A · X n. P n s
+  = Λ A. Λ X. Λ P. λ pN. λ pC. Λ n. λ s. s.2 · (λ m : Nat. λ sC : VecFC · A · X m.
+    ∀ C : ★. (Π s' : VecF · A · X m . {sC ≃ s'} ➾ P m s' ➔ C) ➔ C) 
+  (Λ C. λ p. p (nilVF · A · X) -β pN)
+  (Λ m. λ a. λ x. Λ C. λ p. p (consVF · A · X -m a x) -β (pC -m a x))
+  · (P n s) (λ s'. Λ q. λ p. ρ q - p).
 
+VecFInd ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ n : Nat. Π s : VecF · A · X n. ∀ P : Π n : Nat. VecF · A · X n ➔ ★. 
+ (∀ n : Nat. Π a : A. Π x : X n. P (suc n) (consVF · A · X -n a x)) ➔ P zero (nilVF · A · X) ➔ P n s
+ = Λ A. Λ X. Λ n. λ s. Λ P. λ pC. λ pN.
+ elimVecF · A · X · P pN pC -n s.
 
-VecF ◂ ★ ➔ (Nat ➔ ★) ➔ (Nat ➔ ★) = λ A : ★. λ X : Nat ➔ ★. λ n : Nat. ι x : cVecF · A · X n. cVecFInd · A · X n x.
-in1vf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. VecF · A · X zero = Λ A. Λ X.  [  Λ C. λ c. λ f. (c -β) , Λ A. λ c1. λ c2. c1  ].
-in2vf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ n : Nat. A ➔ X n ➔ VecF · A · X (suc n) = Λ A. Λ X. Λ n. λ a. λ x. [ Λ C. λ c. λ f. f -n -β a x , Λ C. λ c. λ f. f -n a x ].
-
-
-VecFInd ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ n : Nat. Π lf : VecF · A · X n. ∀ Q : Π n : Nat. VecF · A · X n ➔ ★. 
- (∀ n : Nat. Π a : A. Π x : X n. Q (suc n) (in2vf · A · X -n a x)) ➔ Q zero (in1vf · A · X) ➔ Q n lf = Λ A. Λ X.  Λ n. λ lf. Λ Q. λ i2. λ i1.   
-  lf.2 · (λ m : Nat. λ x : cVecF · A · X m. ∀ Y : ★. (Π x' : VecF · A · X m. {x ≃ x'} ➔ Q m x' ➔ Y ) ➔ Y ) 
-  (Λ Y. λ q. q (in1vf · A · X) β i1)  (Λ m. λ a. λ x. Λ Y. λ q. q (in2vf · A · X -m a x) β (i2 -m a x)) · (Q n lf) (λ x'. λ e. λ u. ρ e - u).
-
-imapV ◂ ∀ A : ★. IIdMapping · Nat · (VecF · A) = Λ A. Λ X. Λ Y. λ c. Λ i. intrId · (VecF · A · X i)  · (VecF · A · Y i)
-   (λ lf. lf.1 · (VecF · A · Y i) (Λ pr. ρ pr - (in1vf · A · Y))  (Λ m. Λ p. λ a. λ xm. ρ p - (in2vf · A · Y -m a (elimId · (X m) · (Y m) (c -m) xm)) ) ) 
-    (λ z. (VecFInd · A · X -i z) · (λ q : Nat. λ z : VecF · A · X q. {z in1vf in2vf ≃ z})
-                  (Λ n'. λ a. λ x. β) β).
+imapV ◂ ∀ A : ★. IIdMapping · Nat · (VecF · A)
+  = Λ A. Λ X. Λ Y. λ c. Λ n. elimVecF · A · X
+  · (λ n : Nat. λ s : VecF · A · X n. IdCod · (VecF · A · X n) · (VecF · A · Y n) s)
+  (pairId · (VecF · A · X zero) · (VecF · A · Y zero) -(nilVF · A · X) (nilVF · A · Y) β)
+  (Λ m. λ a. λ x. pairId · (VecF · A · X (suc m)) · (VecF · A · Y (suc m))
+    -(consVF · A · X -m a x) (consVF · A · Y -m a (elimId · (X m) · (Y m) (c -m) x)) β)
+  -n.

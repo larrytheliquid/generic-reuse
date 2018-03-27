@@ -36,8 +36,8 @@ lf2vf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ Y : ★.
   · (VecF · A · X (lenAlgM · A · Y r xs))
   · (λ xs' : VecF · A · X (lenAlgM · A · Y r xs) . {xs' ≃ xs}) 
   (ListFInd · A · Y xs ·  (λ xs' : ListF · A · Y. VecF · A · X (lenAlgM · A · Y r xs'))
-    (λ a. λ y. in2vf · A · X -(r  y) a (elimIdDep · (Y) · (λ y : Y . X (r y)) c y))
-    (in1vf · A · X))
+    (λ a. λ y. consVF · A · X -(r  y) a (elimIdDep · (Y) · (λ y : Y . X (r y)) c y))
+    (nilVF · A · X))
   (rebList · A · Y xs).
  
 l2v ◂ ∀ A : ★. IdDep · (List · A) · (λ xs : List · A. Vec · A (len · A xs))
