@@ -46,6 +46,10 @@ and their schemes, defined using generic Mendler-style fixpoints:
 * [Vectors Scheme (`VecF`)](code/Datatypes/VecF.ced)
 * [Vectors (`Vec`)](code/Datatypes/Vec.ced)
 
+The derived definition of [`Nat`](code/Datatypes/Nat.ced)
+(in terms of the scheme [`NatF`](code/Datatypes/NatF.ced))
+also appears here.
+
 [IndexedMendlerInduction](code/IndexedMendlerInduction)
 -------------------------------------------------------
 
