@@ -8,3 +8,9 @@ import VecF.
 
 
 Vec ◂ ★ ➔ Nat ➔ ★ = λ A : ★. λ n : Nat. IFixIndM · Nat · (VecF · A) (imapV · A) n.
+nilV ◂ ∀ A : ★. Vec · A zero
+  = Λ A. iinFixIndM · Nat · (VecF · A) -(imapV · A) -zero
+  (nilVF · A · (Vec · A)).
+consV ◂ ∀ A : ★. ∀ n : Nat. A ➔ Vec · A n ➔ Vec · A (suc n)
+  = Λ A. Λ n. λ a. λ xs. iinFixIndM · Nat · (VecF · A) -(imapV · A) -(suc n)
+  (consVF · A · (Vec · A) -n a xs).
