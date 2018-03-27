@@ -9,15 +9,15 @@ import FixIndM.
 import Unit.
 import UnitLift.
 
-jfix2ifix' ◂ ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★). ∀ J : ★. ∀ G : (J ➔ ★) ➔ (J ➔ ★).
-  Π imapF : IIdMapping · I · F.
+jfix2ifix' ◂ ∀ J : ★. ∀ G : (J ➔ ★) ➔ (J ➔ ★). ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★).
   Π imapG : IIdMapping · J · G.
+  Π imapF : IIdMapping · I · F.
   Π ralg : (∀ R : J ➔ ★. (∀ j : J. R j ➔ I) ➔ ∀ j : J. G · R j ➔ I).
-  Π c : ∀ X : I ➔ ★. ∀ Y : J ➔ ★. Π r : ∀ j : J. Y j ➔ I. 
+  Π c : ∀ Y : J ➔ ★. ∀ X : I ➔ ★. Π r : ∀ j : J. Y j ➔ I. 
     (∀ j : J. IdDep · (Y j) · (λ y : Y j. X (r -j y)) ) ➔ ∀ j : J. IdDep · (G · Y j) · (λ gy : G · Y j. F · X (ralg · Y r -j gy)).
   ∀ j : J. Id · (IFixIndM · J · G imapG j)· 
   (ι gx : IFixIndM · J · G imapG j. IFixIndM · I · F imapF ((ifoldM · J · G · (λ j : J. I) ralg) -j gx.1))
-  =  Λ I. Λ F. Λ J. Λ G. λ imapF. λ imapG. λ ralg. λ ifg. Λ j. λ v. 
+  =  Λ J. Λ G. Λ I. Λ F. λ imapG. λ imapF. λ ralg. λ ifg. Λ j. λ v. 
   induction · J · G -imapG · (λ j : J. λ y : IFixIndM · J · G imapG j.  Sigma ·  (ι gx : IFixIndM · J · G imapG j. IFixIndM · I · F imapF ((ifoldM · J · G · (λ j : J. I) ralg) -j gx.1)) · 
     (λ x : (ι gx : IFixIndM · J · G imapG j. IFixIndM · I · F imapF ((ifoldM · J · G · (λ j : J. I) ralg) -j gx.1)).  {x ≃ y}) )
      (Λ R. Λ c. λ ih. Λ j. λ gr. 
@@ -32,8 +32,8 @@ jfix2ifix' ◂ ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★). ∀ J : ★. �
                                                (elimId · (G · (λ i : J. ι gx : (IFixIndM · J · G imapG i) .  (IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J . I) ralg -i gx.1)) ) j) · (G · (IFixIndM · J · G imapG) j) (imapG · (λ i : J. ι gx : (IFixIndM · J · G imapG i) .  (IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J . I) ralg -i gx.1)) ) · (IFixIndM · J · G imapG) 
                                        (Λ j2. intrId · (ι gx : (IFixIndM · J · G imapG j2) .  (IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J . I) ralg -j2 gx.1)) )
                                                       · (IFixIndM · J · G imapG j2) (λ v. v.1) (λ _. β)) -j) grr)).1 )) 
-                                   (λ aa. ifg · (IFixIndM · I · F imapF)   
-                                              · (λ i : J. ι gx : (IFixIndM · J · G imapG i) .  (IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J . I) ralg -i gx.1)) ) 
+                                   (λ aa. ifg · (λ i : J. ι gx : (IFixIndM · J · G imapG i) .  (IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J . I) ralg -i gx.1))) 
+                                              · (IFixIndM · I · F imapF)
                                                (Λ j3. λ v3. (ifoldM · J · G · (λ j' : J . I) ralg -j3 v3.1.1))  (Λ j. λ a. pair · (IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J . I) ralg -j a.1.1) )    ·  (λ b : IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J . I) ralg -j a.1.1). {b ≃ a}) a.2 β) -j aa) 
       (elimId · (G · R j) · (G · (λ i : J. ι gx : (IFixIndM · J · G imapG i) .  (IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J . I) ralg -i gx.1)) ) j) 
           (imapG · R · (λ i : J. ι gx : (IFixIndM · J · G imapG i) .  (IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J . I) ralg -i gx.1)) ) 
@@ -41,28 +41,28 @@ jfix2ifix' ◂ ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★). ∀ J : ★. �
       -j) gr)) ] β) -j v.
 
 
-jfix2ifix ◂ ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★). ∀ J : ★. ∀ G : (J ➔ ★) ➔ (J ➔ ★).
-  Π imapF : IIdMapping · I · F.
+jfix2ifix ◂ ∀ J : ★. ∀ G : (J ➔ ★) ➔ (J ➔ ★). ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★).
   Π imapG : IIdMapping · J · G.
+  Π imapF : IIdMapping · I · F.
   Π ralg : IAlgM · J · G · (λ _ : J. I). 
-  Π c : ∀ X : I ➔ ★. ∀ Y : J ➔ ★. Π r : ∀ j : J. Y j ➔ I. 
+  Π c : ∀ Y : J ➔ ★. ∀ X : I ➔ ★. Π r : ∀ j : J. Y j ➔ I. 
     (∀ j : J. IdDep · (Y j) · (λ y : Y j. X (r -j y))) ➔ 
     ∀ j : J. IdDep · (G · Y j) · (λ gy : G · Y j. F · X (ralg · Y r -j gy)).
   ∀ j : J. IdDep · (IFixIndM · J · G imapG j)
     · (λ v : (IFixIndM · J · G imapG j). IFixIndM · I · F imapF ((ifoldM · J · G · (λ j : J. I) ralg) -j v.1))
-  = Λ I. Λ F. Λ J. Λ G. λ imapF. λ imapG. λ ralg. λ ifg. Λ j. λ v. pair
+  = Λ J. Λ G. Λ I. Λ F. λ imapG. λ imapF. λ ralg. λ ifg. Λ j. λ v. pair
   · (IFixIndM · I · F imapF ((ifoldM · J · G · (λ j : J. I) ralg) -j v.1)) 
   · (λ x : IFixIndM · I · F imapF ((ifoldM · J · G · (λ j : J. I) ralg) -j v.1). {x ≃ v.1})
   (elimId · (IFixIndM · J · G imapG j) · (ι gx : IFixIndM · J · G imapG j. IFixIndM · I · F imapF ((ifoldM · J · G · (λ j : J. I) ralg) -j gx.1))
-    (jfix2ifix' · I · F · J · G imapF imapG ralg ifg -j) v).2 β.
+    (jfix2ifix' · J · G · I · F imapG imapF ralg ifg -j) v).2 β.
 
-fix2ifix ◂ ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★). ∀ G : ★ ➔ ★. 
-  Π imapF : IIdMapping · I · F.
+fix2ifix ◂ ∀ G : ★ ➔ ★. ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★).
   Π imapG : IdMapping · G.
+  Π imapF : IIdMapping · I · F.
   Π ralg : AlgM · G · I. 
-  (∀ X : I ➔ ★. ∀ Y : ★. Π r : Y ➔ I. IdDep · Y · (λ y : Y. X (r y)) ➔ IdDep · (G · Y) · (λ gy : G · Y. F · X (ralg · Y r gy))) ➔
+  (∀ Y : ★. ∀ X : I ➔ ★. Π r : Y ➔ I. IdDep · Y · (λ y : Y. X (r y)) ➔ IdDep · (G · Y) · (λ gy : G · Y. F · X (ralg · Y r gy))) ➔
   IdDep · (FixIndM · G imapG) · (λ v : FixIndM · G imapG. IFixIndM · I · F imapF ((foldM · G -imapG · I ralg) v))
-  = Λ I. Λ F. Λ G. λ imapF. λ imapG. λ ralg. λ ifg. λ v.
-  jfix2ifix · I · F · Unit · (UnitF · G) imapF (uimapF · G imapG) (convAlg · G -imapG · I ralg)   
-  (Λ X. Λ Y. λ r. λ g. Λ j. λ a. pair · (F · X (convAlg · G -imapG · I ralg · Y r -unit a)) · (λ b : F · X (convAlg · G -imapG · I ralg · Y r -unit a) . { b ≃ a }) 
-    (elimIdDep · (G · (Y unit)) · (λ a : (G · (Y unit)). F · X (ralg · (Y unit) (r -unit)  a)) (ifg · X · (Y unit) (r -unit) (g -unit)) a) β) -unit v. 
+  = Λ G. Λ I. Λ F. λ imapG. λ imapF. λ ralg. λ ifg. λ v.
+  jfix2ifix · Unit · (UnitF · G) · I · F (uimapF · G imapG) imapF (convAlg · G -imapG · I ralg)   
+  (Λ Y. Λ X. λ r. λ g. Λ j. λ a. pair · (F · X (convAlg · G -imapG · I ralg · Y r -unit a)) · (λ b : F · X (convAlg · G -imapG · I ralg · Y r -unit a) . { b ≃ a }) 
+    (elimIdDep · (G · (Y unit)) · (λ a : (G · (Y unit)). F · X (ralg · (Y unit) (r -unit)  a)) (ifg · (Y unit) · X (r -unit) (g -unit)) a) β) -unit v. 

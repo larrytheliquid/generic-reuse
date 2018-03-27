@@ -1871,11 +1871,11 @@ length (\verb;len;) of the input list (\verb;xs;).
 The type of \verb;fix2ifix; follows:
 
 \begin{verbatim}
-fix2ifix ◂ ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★). ∀ G : ★ ➔ ★. 
-  Π imapF : IIdMapping I F. 
+fix2ifix ◂ ∀ G : ★ ➔ ★. ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★).
   Π imapG : IdMapping G.
+  Π imapF : IIdMapping I F. 
   Π ralg : AlgM G I. 
-  Π c : ∀ X : I ➔ ★. ∀ Y : ★. Π r : Y ➔ I. 
+  Π c : ∀ Y : ★. ∀ X : I ➔ ★. Π r : Y ➔ I. 
     IdDep Y (λ y. X (r y)) ➔ 
     IdDep (G Y) (λ xs. F X (ralg -Y r xs)).
   IdDep (Fix G imapG) 
@@ -1935,7 +1935,7 @@ applying \verb;fix2ifix; to the identity mappings and the
 dependent identity algebra \verb;lf2vf;:
 
 \begin{verbatim}
-lf2vf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ Y : ★. 
+lf2vf ◂ ∀ A : ★. ∀ Y : ★. ∀ X : Nat ➔ ★.
  Π r : Y ➔ Nat. 
  Π c : IdDep Y (λ y. X (r y)).
  IdDep (ListF A Y ) (λ xs. VecF A X (lenAlgM r xs))
@@ -1944,7 +1944,7 @@ lf2vf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ Y : ★.
   (λ x,xs. pair (consVF x (elimIdDep c xs) β)).
  
 l2v ◂ ∀ A : ★. IdDep (List A) (λ xs. Vec A (len xs))
-  = fix2ifix imapV imapL lenAlgM lf2vf.
+  = fix2ifix imapL imapV lenAlgM lf2vf.
 \end{verbatim}
 The Mendler-style algebra used by \verb;lf2vf; is our previously
 defined length algebra (\verb;lenAlgM;).
