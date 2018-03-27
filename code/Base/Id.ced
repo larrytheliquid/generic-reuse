@@ -23,7 +23,7 @@ intrIdDep ◂ ∀ X : ★. ∀ Y : X ➔ ★. Π f : (Π x : X. Y x). (Π z : X.
  = Λ X. Λ Y. λ if. λ p. λ a. pair · (Y a) · (λ y : (Y a). {y ≃ a}) (if a) (p a).
 
 pairIdDep ◂ ∀ A : ★. ∀ B : A ➔ ★. ∀ a : A.
-  Π b : B a. { b ≃ a } ➔ Sigma · (B a) · (λ b : B a. { b ≃ a })
+  Π b : B a. { b ≃ a } ➔ IdDepCod · A · B a
   = Λ A. Λ B. Λ a. λ b. λ q.
   pair · (B a) · (λ x : B a. { x ≃ a }) b q .
 

@@ -28,11 +28,6 @@ elimListF ◂ ∀ A : ★. ∀ X : ★. ∀ P : ListF · A · X ➔ ★.
   (λ a. λ x. Λ C. λ p. p (consLF · A · X a x) -β (pC a x))
   · (P s) (λ s'. Λ q. λ p. ρ q - p).
 
-ListFInd ◂ ∀ A : ★. ∀ X : ★. Π s : ListF · A · X. ∀ P : ListF · A · X ➔ ★. 
-  (Π a : A. Π x : X. P (consLF · A · X a x)) ➔ P (nilLF · A · X) ➔ P s
-  = Λ A. Λ X. λ s. Λ P. λ pC. λ pN.
-  elimListF · A · X · P pN pC s.
-
 imapL ◂ ∀ A : ★. IdMapping · (ListF · A) 
   = Λ A. Λ X. Λ Y. λ c. elimListF · A · X
   · (λ s : ListF · A · X. IdCod · (ListF · A · X) · (ListF · A · Y) s)
