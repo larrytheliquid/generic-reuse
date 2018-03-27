@@ -1,0 +1,17 @@
+module Nat.
+
+import Id.
+import IIdMapping.
+import FixIndM.
+import NatF.
+import IFixM.
+import Unit.
+
+Nat ◂ ★ = FixIndM · NatF imapN.
+zero ◂ Nat = inFixIndM · NatF -imapN (zeroF · Nat).
+suc ◂ Nat ➔ Nat = λ n. inFixIndM · NatF -imapN (sucF · Nat n).
+
+addAlgM ◂ AlgM · NatF · (Nat ➔ Nat)
+  = Λ R. λ rec. λ s. λ m . s.1 · Nat m (λ r. suc (rec r m)).
+add ◂ Nat ➔ Nat ➔ Nat = foldM · NatF -imapN · (Nat ➔ Nat) addAlgM.
+

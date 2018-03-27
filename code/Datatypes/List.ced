@@ -17,7 +17,7 @@ consL ◂ ∀ A : ★. A ➔ List · A ➔ List · A
   (consLF · A · (List · A) a xs).
 
 lenAlgM ◂ ∀ A : ★. AlgM · (ListF · A) · Nat 
- = Λ A. Λ R. λ rec. λ lf. lf.1 · Nat zero (λ x. λ xs. suc (rec xs)).
+ = Λ A. Λ R. λ rec. λ s. s.1 · Nat zero (λ a. λ r. suc (rec r)).
 len ◂ ∀ A : ★. List · A ➔ Nat 
  = Λ A. foldM · (ListF · A) -(imapL · A) · Nat (lenAlgM · A).
 
