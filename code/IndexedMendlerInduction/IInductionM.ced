@@ -36,7 +36,7 @@ convIH ◂ ∀ I : ★. ∀ F : ((I ➔ ★) ➔ (I ➔ ★)). ∀ imap : IIdMap
  -i  gr)).
 
 
-induction ◂ ∀ I : ★. ∀ F : ((I ➔ ★) ➔ (I ➔ ★)). ∀ imap : IIdMapping · I · F.
+iindFixIndM ◂ ∀ I : ★. ∀ F : ((I ➔ ★) ➔ (I ➔ ★)). ∀ imap : IIdMapping · I · F.
  ∀ Q : Π i : I. IFixIndM · I · F imap i ➔ ★.
  IPrfAlgM · I · F imap · (IFixIndM · I · F imap) · Q (iinFixIndM · I · F -imap) ➔
  ∀ i : I. Π e : IFixIndM · I · F imap i. Q i e
@@ -52,6 +52,6 @@ induction ◂ ∀ I : ★. ∀ F : ((I ➔ ★) ➔ (I ➔ ★)). ∀ imap : IId
 
 
 ioutFixIndM ◂ ∀ I : ★. ∀ F : ((I ➔ ★) ➔ (I ➔ ★)). ∀ imap : IIdMapping · I · F. ∀ i : I.
- IFixIndM · I · F imap i ➔ F · (IFixIndM · I · F imap) i = Λ I. Λ F. Λ imap. Λ i. λ v. induction · I · F -imap · 
+ IFixIndM · I · F imap i ➔ F · (IFixIndM · I · F imap) i = Λ I. Λ F. Λ imap. Λ i. λ v. iindFixIndM · I · F -imap · 
  (λ j : I. λ _ : IFixIndM · I · F imap j. F · (IFixIndM · I · F imap) j) (Λ R. Λ c. λ ih. Λ j. λ fr. elimId~ · (F · R j) · (F · (IFixIndM · I · F imap) j) 
   -(imap · (R ) · (IFixIndM · I · F imap) c -j  )  fr  ) -i v.

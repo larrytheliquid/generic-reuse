@@ -23,10 +23,13 @@ elimListF ◂ ∀ A : ★. ∀ X : ★. ∀ P : ListF · A · X ➔ ★.
   P (nilLF · A · X) ➔ (Π a : A. Π x : X. P (consLF · A · X a x)) ➔
   Π s : ListF · A · X. P s
   = Λ A. Λ X. Λ P. λ pN. λ pC. λ s. s.2 · (λ sC : ListFC · A · X.
-    ∀ C : ★. (Π s' : ListF · A · X . {sC ≃ s'} ➾ P s' ➔ C) ➔ C) 
+  ∀ C : ★. (Π s' : ListF · A · X . {sC ≃ s'} ➾ P s' ➔ C) ➔ C) 
   (Λ C. λ p. p (nilLF · A · X) -β pN)
   (λ a. λ x. Λ C. λ p. p (consLF · A · X a x) -β (pC a x))
   · (P s) (λ s'. Λ q. λ p. ρ q - p).
+foldListF ◂ ∀ A : ★. ∀ X : ★. ∀ C : ★.
+  C ➔ (A ➔ X ➔ C) ➔ ListF · A · X ➔ C
+  = Λ A. Λ X. Λ C. elimListF · A · X · (λ s : ListF · A · X. C).
 
 imapL ◂ ∀ A : ★. IdMapping · (ListF · A) 
   = Λ A. Λ X. Λ Y. λ c. elimListF · A · X

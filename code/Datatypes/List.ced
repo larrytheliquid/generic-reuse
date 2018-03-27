@@ -16,8 +16,24 @@ consL ◂ ∀ A : ★. A ➔ List · A ➔ List · A
   = Λ A. λ a. λ xs. inFixIndM · (ListF · A) -(imapL · A)
   (consLF · A · (List · A) a xs).
 
+elimList ◂ ∀ A : ★. ∀ P : List · A ➔ ★.
+  P (nilL · A) ➔
+  (Π a : A. Π xs : List · A. P xs ➔ P (consL · A a xs)) ➔
+  Π xs : List · A. P xs
+  = Λ A. Λ P. λ pN. λ pC. indFixIndM · (ListF · A) -(imapL · A) · P
+  (Λ R. Λ c. λ ih. elimListF · A · R
+    · (λ s : ListF · A · R. P (inFixIndM · (ListF · A) -(imapL · A)
+        (elimId · (ListF · A · R) · (ListF · A · (List · A))
+        (imapL · A · R · (List · A) c) s)
+      ))
+    pN
+    (λ a. λ r. pC a (elimId~ · R · (List · A) -c r) (ih r))
+  ).
+foldList ◂ ∀ A : ★. ∀ C : ★. C ➔ (A ➔ List · A ➔ C ➔ C) ➔ List · A ➔ C
+  = Λ A. Λ C. elimList · A · (λ xs : List · A. C).
+
 lenAlgM ◂ ∀ A : ★. AlgM · (ListF · A) · Nat 
- = Λ A. Λ R. λ rec. λ s. s.1 · Nat zero (λ a. λ r. suc (rec r)).
+ = Λ A. Λ R. λ rec. λ s. foldListF · A · R · Nat zero (λ a. λ r. suc (rec r)) s.
 len ◂ ∀ A : ★. List · A ➔ Nat 
  = Λ A. foldM · (ListF · A) -(imapL · A) · Nat (lenAlgM · A).
 

@@ -18,7 +18,7 @@ jfix2ifix' ◂ ∀ J : ★. ∀ G : (J ➔ ★) ➔ (J ➔ ★). ∀ I : ★. �
   ∀ j : J. Id · (IFixIndM · J · G imapG j)· 
   (ι gx : IFixIndM · J · G imapG j. IFixIndM · I · F imapF ((ifoldM · J · G · (λ j : J. I) ralg) -j gx.1))
   =  Λ J. Λ G. Λ I. Λ F. λ imapG. λ imapF. λ ralg. λ ifg. Λ j. λ v. 
-  induction · J · G -imapG · (λ j : J. λ y : IFixIndM · J · G imapG j.  Sigma ·  (ι gx : IFixIndM · J · G imapG j. IFixIndM · I · F imapF ((ifoldM · J · G · (λ j : J. I) ralg) -j gx.1)) · 
+  iindFixIndM · J · G -imapG · (λ j : J. λ y : IFixIndM · J · G imapG j.  Sigma ·  (ι gx : IFixIndM · J · G imapG j. IFixIndM · I · F imapF ((ifoldM · J · G · (λ j : J. I) ralg) -j gx.1)) · 
     (λ x : (ι gx : IFixIndM · J · G imapG j. IFixIndM · I · F imapF ((ifoldM · J · G · (λ j : J. I) ralg) -j gx.1)).  {x ≃ y}) )
      (Λ R. Λ c. λ ih. Λ j. λ gr. 
      pair · (ι gx : IFixIndM · J · G imapG j. IFixIndM · I · F imapF ((ifoldM · J · G · (λ j : J. I) ralg) -j gx.1)) · 

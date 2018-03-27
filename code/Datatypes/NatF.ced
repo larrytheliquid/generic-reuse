@@ -23,10 +23,13 @@ elimNatF ◂ ∀ X : ★. ∀ P : NatF · X ➔ ★.
  P (zeroF · X) ➔ (Π x : X. P (sucF · X x)) ➔
  Π s : NatF · X. P s
  = Λ X. Λ P. λ pZ. λ pS. λ s. s.2 · (λ sC : NatFC · X.
-  ∀ C : ★. (Π s' : NatF · X . {sC ≃ s'} ➾ P s' ➔ C) ➔ C) 
+ ∀ C : ★. (Π s' : NatF · X . {sC ≃ s'} ➾ P s' ➔ C) ➔ C) 
  (Λ C. λ p. p (zeroF · X) -β pZ)
  (λ x. Λ C. λ p. p (sucF · X x) -β (pS x))
  · (P s) (λ s'. Λ q. λ p. ρ q - p).
+foldNatF ◂ ∀ X : ★. ∀ C : ★.
+ C ➔ (X ➔ C) ➔ NatF · X ➔ C
+ = Λ X. Λ C. elimNatF · X · (λ s : NatF · X. C).
 
 imapN ◂ IdMapping · (NatF) 
  = Λ X. Λ Y. λ c. elimNatF · X

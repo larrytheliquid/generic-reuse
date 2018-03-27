@@ -11,7 +11,17 @@ Nat ◂ ★ = FixIndM · NatF imapN.
 zero ◂ Nat = inFixIndM · NatF -imapN (zeroF · Nat).
 suc ◂ Nat ➔ Nat = λ n. inFixIndM · NatF -imapN (sucF · Nat n).
 
-addAlgM ◂ AlgM · NatF · (Nat ➔ Nat)
-  = Λ R. λ rec. λ s. λ m . s.1 · Nat m (λ r. suc (rec r m)).
-add ◂ Nat ➔ Nat ➔ Nat = foldM · NatF -imapN · (Nat ➔ Nat) addAlgM.
+elimNat ◂ ∀ P : Nat ➔ ★. P zero ➔ (Π n : Nat. P n ➔ P (suc n)) ➔ Π n : Nat. P n
+  = Λ P. λ pZ. λ pS. indFixIndM · NatF -imapN · P
+  (Λ R. Λ c. λ ih. elimNatF · R
+    · (λ s : NatF · R. P (inFixIndM · NatF -imapN (elimId · (NatF · R) · (NatF · Nat)
+      (imapN · R · Nat c) s)))
+    pZ
+    (λ r. pS (elimId~ · R · Nat -c r) (ih r))
+  ).
+foldNat ◂ ∀ C : ★. C ➔ (Nat ➔ C ➔ C) ➔ Nat ➔ C
+  = Λ C. elimNat · (λ n : Nat. C).
 
+addAlgM ◂ AlgM · NatF · (Nat ➔ Nat)
+  = Λ R. λ rec. λ s. λ m . foldNatF · R · Nat m (λ r. suc (rec r m)) s.
+add ◂ Nat ➔ Nat ➔ Nat = foldM · NatF -imapN · (Nat ➔ Nat) addAlgM.

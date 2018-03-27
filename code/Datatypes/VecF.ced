@@ -34,6 +34,10 @@ elimVecF ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ P : Π n : Nat. VecF · A · 
   (Λ C. λ p. p (nilVF · A · X) -β pN)
   (Λ m. λ a. λ x. Λ C. λ p. p (consVF · A · X -m a x) -β (pC -m a x))
   · (P n s) (λ s'. Λ q. λ p. ρ q - p).
+foldVecF ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ C : Nat ➔ ★.
+  C zero ➔ (∀ n : Nat. A ➔ X n ➔ C (suc n)) ➔ 
+  ∀ n : Nat. VecF · A · X n ➔ C n
+  = Λ A. Λ X. Λ C. elimVecF · A · X · (λ n : Nat. λ s : VecF · A · X n. C n).
 
 imapV ◂ ∀ A : ★. IIdMapping · Nat · (VecF · A)
   = Λ A. Λ X. Λ Y. λ c. Λ n. elimVecF · A · X
