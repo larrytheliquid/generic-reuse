@@ -1,5 +1,4 @@
 module Unit.
-import Eq.
 
 UnitC ◂ ★ = ∀ C : ★. C ➔ C.
 unitC ◂ UnitC = Λ C. λ c. c.

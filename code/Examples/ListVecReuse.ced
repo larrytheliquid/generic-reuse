@@ -17,8 +17,8 @@ vf2lf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ Y :  ★.
   ∀ n : Nat. Id · (VecF · A · X n) · (ListF · A · Y) 
   = Λ A. Λ X. Λ Y. λ c. Λ n. λ v. pair
   · (ListF · A · Y) · (λ b : ListF · A · Y . {b ≃ v})
-  (v.1 · (ListF · A · Y ) (Λ p. in1lf · A · Y)
-  (Λ m. Λ p. λ a. λ x. in2lf · A · Y a (elimId · (X m) · (Y ) (c -m) x)))
+  (v.1 · (ListF · A · Y ) (Λ p. nilLF · A · Y)
+  (Λ m. Λ p. λ a. λ x. consLF · A · Y a (elimId · (X m) · (Y ) (c -m) x)))
   (rebVec · A · X -n v).
 
 v2l ◂ ∀ A : ★. ∀ n : Nat. Id · (Vec · A n) · (List · A)

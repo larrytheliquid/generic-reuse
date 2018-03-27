@@ -1659,29 +1659,29 @@ and \verb;imapV; (for \verb;VecF;), whose definitions only differ by
 which eliminator is used:
 
 \begin{verbatim}
-imapL ◂ ∀ A : ★. IdMapping (ListF A) = λ f. elimListF
+imapL ◂ ∀ A : ★. IdMapping (ListF A) = λ c. elimListF
   (pair nilLF β)
-  (λ x,xs. pair (consLF x (elimId f xs) β)).
+  (λ x,xs. pair (consLF x (elimId c xs) β)).
 
-imapV ◂ ∀ A : ★. IIdMapping Nat (VecF A) = λ f. elimVecF
+imapV ◂ ∀ A : ★. IIdMapping Nat (VecF A) = λ c. elimVecF
   (pair nilVF β)
-  (λ x,xs. pair (consVF x (elimId f xs) β)).
+  (λ x,xs. pair (consVF x (elimId c xs) β)).
 \end{verbatim}
 The returned value is \verb;Sigma;-type the codomain of \verb;Id; from
 \refsec{prog:id}, where the first component is the supertype and
 second component is the equality witness. For both \verb;imapL; and
 \verb;imapV;, we mostly rebuild the term with constructors. The
-interesting subterm is the tail argument (\verb;elimId f xs;) of the
+interesting subterm is the tail argument (\verb;elimId c xs;) of the
 cons rebuilding (for both \verb;consLF; and \verb;consVF;).
 In the nil cases, the second component of the pair (constructing
 \verb;Sigma;) is obviously reflexivity (\verb;β;) when rebuilding
 \verb;nilLF; with itself and \verb;nilVF; with itself. However, in the
 cons cases, the second component is also \verb;β;. This is because the
-\textit{identity} function being mapped (\verb;f;) is erased when
-zero-cost converting (i.e. \verb;|elimId f xs| = xs;).
+\textit{identity} function being mapped (\verb;c;) is erased when
+zero-cost converting (i.e. \verb;|elimId c xs| = xs;).
 Hence, \verb;β; is evidence of the
-cons rebuilding cases because \verb;|consLF x (elimId f xs)| = |consLF| x xs;,
-and \verb;|consVF x (elimId f xs)| = |consVF| x xs;.
+cons rebuilding cases because \verb;|consLF x (elimId c xs)| = |consLF| x xs;,
+and \verb;|consVF x (elimId c xs)| = |consVF| x xs;.
 
 \subsection{Forgetful Reuse}
 \labsec{data:fog}

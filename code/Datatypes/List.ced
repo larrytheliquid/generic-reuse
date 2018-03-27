@@ -16,7 +16,7 @@ lenAlgM ◂ ∀ A : ★. AlgM · (ListF · A) · Nat
 len ◂ ∀ A : ★. List · A ➔ Nat 
  = Λ A. foldM · (ListF · A) -(imapL · A) · Nat (lenAlgM · A).
 
-rebList ◂ ∀ A : ★. ∀ X : ★. Π z : ListF · A · X. {ListFInd z in2lf in1lf ≃ z}
+rebList ◂ ∀ A : ★. ∀ X : ★. Π z : ListF · A · X. {ListFInd z consLF nilLF ≃ z}
  = Λ A. Λ X. λ z. θ<z> (ListFInd · A · X z) (λ a. λ x. β) β.
 
 

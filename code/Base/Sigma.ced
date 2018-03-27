@@ -1,5 +1,4 @@
 module Sigma.
-import Eq.
 
 SigmaC ◂ Π A : ★. (A ➔ ★) ➔ ★ = λ A : ★. λ B : A ➔ ★.
   ∀ C : ★. (Π a : A. B a ➔ C) ➔ C.
