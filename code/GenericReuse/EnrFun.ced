@@ -7,7 +7,7 @@ arr2allArrP ◂ ∀ Y : ★. ∀ Y' : ★. ∀ P : Y ➔ Y' ➔ ★.
   ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : I ➔ ★.
   Π r : Y ➔ I.
   Π c1 : ∀ i : I. Id · (X i) · Y.
-  (∀ i : I. Π x : X i. {i ≃ r x}) ➔
+  Π c1' : ∀ i : I. Π x : X i. {i ≃ r x}.
   (Π y : Y. IdDep · Y' · (λ y' : Y'. P y y' ➾ X' (r y))) ➔
   IdDep · (Y ➔ Y') · (λ f : Y ➔ Y'.
     (Π y : Y. P y (f y)) ➾
@@ -25,7 +25,7 @@ pi2allPiP ◂ ∀ Y : ★. ∀ Y' : Y ➔ ★. ∀ P : Π y : Y. Y' y ➔ ★.
   ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★.
   Π r : Y ➔ I.
   Π c1 : ∀ i : I. Id · (X i) · Y.
-  (∀ i : I. Π x : X i. {i ≃ r x}) ➔
+  Π c1' : ∀ i : I. Π x : X i. {i ≃ r x}.
   Π c2 : IdDep · Y · (λ y : Y. X (r y)).
   (Π y : Y. IdDep · (Y' y) · (λ y' : Y' y. P y y' ➾ X' (r y) (elimIdDep · Y · (λ y : Y. X (r y)) c2 y))) ➔
   IdDep · (Π y : Y. Y' y) · (λ f : Π y : Y. Y' y.

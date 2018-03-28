@@ -1,4 +1,4 @@
-module EnrFun.
+module FogFun.
 import Id.
 
 allArr2arr ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : I ➔ ★. ∀ Y : ★. ∀ Y' : ★.

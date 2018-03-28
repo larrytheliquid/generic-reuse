@@ -30,7 +30,7 @@ pairIdDep ◂ ∀ A : ★. ∀ B : A ➔ ★. ∀ a : A.
 IdCod ◂ Π A : ★. Π B : ★. A ➔ ★ = λ A : ★. λ B : ★.
  IdDepCod · A · (λ _ : A. B).
 
-Id ◂ Π A : ★. Π B : ★. ★ = λ A : ★. λ B : ★. IdDep · A · (λ _ : A. B).
+Id ◂ Π A : ★. Π B : ★. ★ = λ A : ★. λ B : ★. Π a : A. IdCod · A · B a.
 
 elimId~ ◂ ∀ A : ★ . ∀ B : ★ . Id · A · B ➾ Π a : A . B =
   Λ A . Λ B . elimIdDep~ · A · (λ a : A. B) .
