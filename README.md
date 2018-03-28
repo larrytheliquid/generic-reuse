@@ -60,6 +60,9 @@ This directory imports the generic datatype development
 * [Indexed Fixpoints (`IFixIndM`)](code/IndexedMendlerInduction/IFixIndM.ced)
 * [Identity Mappings (`IIdMapping`)](code/IndexedMendlerInduction/IIdMapping.ced)
 
+It also includes the generic derivation of [induction (`iindFixIndM`)](code/IndexedMendlerInduction/IInductionM.ced),
+as well as other technical devices.
+
 [Base](code/Base)
 -----------------
 
