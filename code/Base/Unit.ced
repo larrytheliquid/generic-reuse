@@ -12,6 +12,8 @@ elimUnit ◂ ∀ P : Unit ➔ ★. P unit ➔ Π u : Unit. P u
     ∀ C : ★. (Π u' : Unit. {uC ≃ u'} ➾ P u' ➔ C) ➔ C))
   (Λ C. λ c. c unit -β p)
   · (P u) (λ u'. Λ q. λ p. ρ q - p).
+foldUnit ◂ ∀ C : ★. C ➔ Unit ➔ C
+  = Λ C. elimUnit · (λ u : Unit. C).
 
 etaUnit ◂ Π u : Unit. { u ≃ unit } =
   elimUnit · (λ u : Unit. { u ≃ unit }) β.
