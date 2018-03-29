@@ -3,6 +3,30 @@ import Unit.
 import Id.
 import Aux.
 
+jallPi2iallPiP' ◂ ∀ J : ★. ∀ Y : J ➔ ★. ∀ Y' : Π j : J. Y j ➔ ★.
+  ∀ P : Π j : J. Π y : Y j. Y' j y ➔ ★.
+  ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★.
+  Π e : I ➔ J.
+  Π c1 : ∀ i : I. Id · (X i) · (Y (e i)).
+  Π c2 : ∀ i : I. Π x : X i. IdDep · (Y' (e i) (elimId · (X i) · (Y (e i)) (c1 -i) x))
+    · (λ y' : Y' (e i) (elimId · (X i) · (Y (e i)) (c1 -i) x).
+      P (e i) (elimId · (X i) · (Y (e i)) (c1 -i) x) y' ➾ X' i x).
+  IdDep · (∀ j : J. Π y : Y j. Y' j y) · (λ f : ∀ j : J. Π y : Y j. Y' j y.
+    (∀ j : J. Π y : Y j. P j y (f -j y)) ➾
+    ∀ i : I. Π x : X i. X' i x)
+  = Λ J. Λ Y. Λ Y'. Λ P. Λ I. Λ X. Λ X'. λ e. λ c1. λ c2. λ f. pairIdDep
+   · (∀ j : J. Π y : Y j. Y' j y)
+   · (λ f : ∀ j : J. Π y : Y j. Y' j y.
+     (∀ j : J. Π y : Y j. P j y (f -j y)) ➾ ∀ i : I. Π x : X i. X' i x) -f
+   (Λ p. Λ i. λ x. elimIdDep
+   · (Y' (e i) (elimId · (X i) · (Y (e i)) (c1 -i) x))
+   · (λ y' : Y' (e i) (elimId · (X i) · (Y (e i)) (c1 -i) x).
+      P (e i) (elimId · (X i) · (Y (e i)) (c1 -i) x) y' ➾ X' i x)
+   (c2 -i x)
+   (f -(e i) (elimId · (X i) · (Y (e i)) (c1 -i) x))
+   -(p -(e i) (elimId · (X i) · (Y (e i)) (c1 -i) x))
+   ) β.
+
 pi2allPiP' ◂ ∀ Y : ★. ∀ Y' : Y ➔ ★. ∀ P : Π y : Y. Y' y ➔ ★.
   ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★.
   Π c1 : ∀ i : I. Id · (X i) · Y.
@@ -11,16 +35,14 @@ pi2allPiP' ◂ ∀ Y : ★. ∀ Y' : Y ➔ ★. ∀ P : Π y : Y. Y' y ➔ ★.
   IdDep · (Π y : Y. Y' y) · (λ f : Π y : Y. Y' y.
     (Π y : Y. P y (f y)) ➾
     ∀ i : I. Π x : X i. X' i x)
-  = Λ Y. Λ Y'. Λ P. Λ I. Λ X. Λ X'. λ c1. λ c2. λ f. pairIdDep
-  · (Π y : Y. Y' y)
-  · (λ f : Π y : Y. Y' y. (Π y : Y. P y (f y)) ➾ ∀ i : I. Π x : X i. X' i x) -f
-  (Λ p. Λ i. λ x. elimIdDep
-  · (Y' (elimId · (X i) · Y (c1 -i) x))
-  · (λ y' : Y' (elimId · (X i) · Y (c1 -i) x). P (elimId · (X i) · Y (c1 -i) x) y' ➾ X' i x)
-  (c2 -i x)
-  (f (elimId · (X i) · Y (c1 -i) x))
-  -(p (elimId · (X i) · Y (c1 -i) x))
-  ) β.
+  = Λ Y. Λ Y'. Λ P. Λ I. Λ X. Λ X'. λ c1. λ c2. insertPrem
+  · Unit · (Π y : Y. Y' y)
+  · (λ f : Π y : Y. Y' y. Π y : Y. P y (f y))
+  · (∀ i : I. Π x : X i. X' i x)
+  (jallPi2iallPiP' · Unit · (λ u : Unit. Y) · (λ u : Unit. λ y : Y. Y' y)
+    · (λ u : Unit. λ y : Y. λ y' : Y' y. P y y') · I · X · X'
+    (λ i. unit) c1 c2
+  ).
 
 arr2allArrP' ◂ ∀ Y : ★. ∀ Y' : ★. ∀ P : Y ➔ Y' ➔ ★.
   ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : I ➔ ★.

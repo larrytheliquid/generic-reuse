@@ -21,6 +21,16 @@ supplyPrem ◂ ∀ Y : ★. ∀ P : ★. ∀ X : ★.
   (elimId · Y · (P ➾ X) c y -p)
   β.
 
+insertPrem ◂ ∀ Q : ★. ∀ Y : ★. ∀ P : Y ➔ ★. ∀ X : ★.
+  IdDep · (Q ➾ Y) · (λ y : Q ➾ Y. (∀ q : Q. P (y -q)) ➾ X) ➔
+  IdDep · Y · (λ y : Y. P y ➾ X)
+  = Λ Q. Λ Y. Λ P. Λ X. λ c. λ y. pairIdDep
+  · Y · (λ y : Y. P y ➾ X) -y
+  (Λ p. elimIdDep · (Q ➾ Y) · (λ y : Q ➾ Y. (∀ q : Q. P (y -q)) ➾ X)
+    c (Λ q. y) -(Λ q. p)
+  )
+  β.
+
 skipPrem ◂ ∀ Y : ★. ∀ P : ★. ∀ X : ★.
   Id · Y · X ➔
   Id · Y · (P ➾ X)

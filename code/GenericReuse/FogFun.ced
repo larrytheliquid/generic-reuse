@@ -1,17 +1,37 @@
 module FogFun.
+import Unit.
 import Id.
+import Aux.
+
+iallPi2jallPi' ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★.
+  ∀ J : ★. ∀ Y : J ➔ ★. ∀ Y' : Π j : J. Y j ➔ ★.
+  Π r : ∀ j : J. Y j ➔ I.
+  Π c1 : ∀ j : J. IdDep · (Y j) · (λ y : Y j. X (r -j y)).
+  Π c2 : ∀ j : J. Π y : Y j. Id
+    · (X' (r -j y) (elimIdDep · (Y j) · (λ y : Y j. X (r -j y)) (c1 -j) y))
+    · (Y' j y).
+  Id · (∀ i : I. Π x : X i. X' i x) · (∀ j : J. Π y : Y j. Y' j y)
+  = Λ I. Λ X. Λ X'. Λ J. Λ Y. Λ Y'. λ r. λ c1. λ c2. λ f. pairId
+  · (∀ i : I. Π x : X i. X' i x) · (∀ j : J. Π y : Y j. Y' j y) -f
+  (Λ j. λ y. elimId
+  · (X' (r -j y) (elimIdDep · (Y j) · (λ y : Y j. X (r -j y)) (c1 -j) y))
+  · (Y' j y)
+  (c2 -j y)
+  (f -(r -j y) (elimIdDep · (Y j) · (λ y : Y j. X (r -j y)) (c1 -j) y))
+  ) β.
 
 allPi2pi' ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★. ∀ Y : ★. ∀ Y' : Y ➔ ★.
   Π r : Y ➔ I.
   Π c1 : IdDep · Y · (λ y : Y. X (r y)).
   Π c2 : Π y : Y. Id · (X' (r y) (elimIdDep · Y · (λ y : Y. X (r y)) c1 y)) · (Y' y).
   Id · (∀ i : I. Π x : X i. X' i x) · (Π y : Y. Y' y)
-  = Λ I. Λ X. Λ X'. Λ Y. Λ Y'. λ r. λ c1. λ c2. λ f. pairId
-  · (∀ i : I. Π x : X i. X' i x) · (Π y : Y. Y' y) -f
-  (λ y. elimId · (X' (r y) (elimIdDep · Y · (λ y : Y. X (r y)) c1 y)) · (Y' y)
-  (c2 y)
-  (f -(r y) (elimIdDep · Y · (λ y : Y. X (r y)) c1 y))
-  ) β.
+  = Λ I. Λ X. Λ X'. Λ Y. Λ Y'. λ r. λ c1. λ c2. supplyPrem
+  · (∀ i : I. Π x : X i. X' i x)
+  · Unit · (Π y : Y. Y' y) unit
+  (iallPi2jallPi' · I · X · X'
+    · Unit · (λ u : Unit. Y) · (λ u : Unit. λ y : Y. Y' y)
+    (Λ u. r) (Λ u. c1) (Λ u. c2)
+  ).
 
 allArr2arr' ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : I ➔ ★. ∀ Y : ★. ∀ Y' : ★.
   Π r : Y ➔ I.
