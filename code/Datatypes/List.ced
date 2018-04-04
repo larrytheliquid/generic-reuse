@@ -9,6 +9,8 @@ import IFixM.
 import Unit.
 
 List ◂ ★ ➔ ★ = λ A : ★. FixIndM · (ListF · A) (imapL · A).
+inL ◂ ∀ A : ★. ListF · A · (List · A)  ➔ List · A
+  = Λ A. inFixIndM · (ListF · A) -(imapL · A).
 nilL ◂ ∀ A : ★. List · A
   = Λ A. inFixIndM · (ListF · A) -(imapL · A)
   (nilLF · A · (List · A)).

@@ -66,3 +66,18 @@ fix2ifix ◂ ∀ G : ★ ➔ ★. ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ �
   jfix2ifix · Unit · (UnitF · G) · I · F (uimapF · G imapG) imapF (convAlg · G -imapG · I ralg)   
   (Λ Y. Λ X. λ r. λ g. Λ j. λ a. pair · (F · X (convAlg · G -imapG · I ralg · Y r -unit a)) · (λ b : F · X (convAlg · G -imapG · I ralg · Y r -unit a) . { b ≃ a }) 
     (elimIdDep · (G · (Y unit)) · (λ a : (G · (Y unit)). F · X (ralg · (Y unit) (r -unit)  a)) (ifg · (Y unit) · X (r -unit) (g -unit)) a) β) -unit v. 
+
+Fix2IFixP ◂ ★ = ∀ G : ★ ➔ ★. ∀ I : ★.
+  ∀ F : (I ➔ ★) ➔ (I ➔ ★).
+  Π imapG : IdMapping · G.
+  Π imapF : IIdMapping · I · F.
+  ∀ P : I ➔ FixIndM · G imapG ➔ ★.
+  (∀ Y : ★. ∀ X : I ➔ ★.
+    Π c1 : Id · Y · (FixIndM · G imapG).
+    Π c2 : ∀ i : I. IdDep · Y · (λ y : Y. P i (elimId · Y · (FixIndM · G imapG) c1 y) ➾ X i).
+    ∀ i : I. IdDep · (G · Y) · (λ ys : G · Y.
+      P i (inFixIndM · G -imapG (elimId · (G · Y) · (G · (FixIndM · G imapG)) (imapG · Y · (FixIndM · G imapG) c1) ys))
+      ➾ F · X i)
+  ) ➔
+  ∀ i : I. IdDep · (FixIndM · G imapG) · (λ y : FixIndM · G imapG. P i y ➾ IFixIndM · I · F imapF i)
+.
