@@ -1,0 +1,60 @@
+module Desc.
+import Id.
+import Sigma.
+import IIdMapping.
+import FixIndM.
+import DescF.
+
+Desc ◂ Π U : ★. Π El : U ➔ ★. Π I : ★. ★
+  = λ U : ★. λ El : U ➔ ★. λ I : ★.
+  FixIndM · (DescF · U · El · I) (imapD · U · El · I).
+
+End ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★. I ➔ Desc · U · El · I
+  = Λ U. Λ El. Λ I. λ i. inFixIndM
+  · (DescF · U · El · I) -(imapD · U · El · I)
+  (EndF · U · El · I · (Desc · U · El · I) i).
+Rec ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★. I ➔ Desc · U · El · I ➔ Desc · U · El · I
+  = Λ U. Λ El. Λ I. λ i. λ D. inFixIndM
+  · (DescF · U · El · I) -(imapD · U · El · I)
+  (RecF · U · El · I · (Desc · U · El · I) i D).
+Arg ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★. Π A : U. (El A ➔ Desc · U · El · I) ➔ Desc · U · El · I
+  = Λ U. Λ El. Λ I. λ A. λ D. inFixIndM
+  · (DescF · U · El · I) -(imapD · U · El · I)
+  (ArgF · U · El · I · (Desc · U · El · I) A D).
+IArg ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★. Π A : U. (El A ➔ Desc · U · El · I) ➔ Desc · U · El · I
+  = Λ U. Λ El. Λ I. λ A. λ D. inFixIndM
+  · (DescF · U · El · I) -(imapD · U · El · I)
+  (IArgF · U · El · I · (Desc · U · El · I) A D).
+
+elimDesc ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★.
+  ∀ P : Desc · U · El · I ➔ ★.
+  Π pE : Π i : I. P (End · U · El · I i).
+  Π pR : Π i : I. Π D : Desc · U · El · I. P D ➔ P (Rec · U · El · I i D).
+  Π pA : Π A : U. Π D : El A ➔ Desc · U · El · I.
+    (Π a : El A. P (D a)) ➔ P (Arg · U · El · I A D).
+  Π pIA : Π A : U. Π D : El A ➔ Desc · U · El · I.
+    (Π a : El A. P (D a)) ➔ P (IArg · U · El · I A D).
+  Π D : Desc · U · El · I. P D
+  = Λ U. Λ El. Λ I. Λ P. λ pE. λ pR. λ pA. λ pIA.
+  indFixIndM · (DescF · U · El · I) -(imapD · U · El · I) · P
+  (Λ R. Λ c. λ ih. elimDescF · U · El · I · R
+    · (λ s : DescF · U · El · I · R.
+        P (inFixIndM · (DescF · U · El · I) -(imapD · U · El · I)
+          (elimId · (DescF · U · El · I · R) · (DescF · U · El · I · (Desc · U · El · I))
+          (imapD · U · El · I · R · (Desc · U · El · I) c) s)
+      ))
+    pE
+    (λ i. λ r. pR i (elimId~ · R · (Desc · U · El · I) -c r) (ih r))
+    (λ u. λ f. pA u (λ v. elimId~ · R · (Desc · U · El · I) -c (f v)) (λ v. ih (f v)))
+    (λ u. λ f. pIA u (λ v. elimId~ · R · (Desc · U · El · I) -c (f v)) (λ v. ih (f v)))
+  ).
+foldDesc ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★. ∀ C : ★.
+  Π cE : Π i : I. C.
+  Π cR : Π i : I. Π D : Desc · U · El · I. C ➔ C.
+  Π cA : Π A : U. Π D : El A ➔ Desc · U · El · I.
+    (Π a : El A. C) ➔ C.
+  Π cIA : Π A : U. Π D : El A ➔ Desc · U · El · I.
+    (Π a : El A. C) ➔ C.
+  Desc · U · El · I ➔ C
+  = Λ U. Λ El. Λ I. Λ C. elimDesc · U · El · I · (λ D : Desc · U · El · I. C).
+
