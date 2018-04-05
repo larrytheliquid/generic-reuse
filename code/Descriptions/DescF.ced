@@ -1,9 +1,10 @@
-module DescF (U : ★) (El : U ➔ ★).
+module DescF.
 import Id.
 import Sigma.
 import IIdMapping.
 
-DescFC ◂ Π I : ★. Π X : ★. ★ = λ I : ★. λ X : ★.
+DescFC ◂ Π U : ★. Π El : U ➔ ★. Π I : ★. Π X : ★. ★ =
+  λ U : ★. λ El : U ➔ ★. λ I : ★. λ X : ★.
   ∀ C : ★.
   Π cE : I ➔ C.
   Π cR : I ➔ X ➔ C.
@@ -11,80 +12,82 @@ DescFC ◂ Π I : ★. Π X : ★. ★ = λ I : ★. λ X : ★.
   Π cIA : Π u : U. (El u ➔ X) ➔ C.
   C.
 
-EndFC ◂ ∀ I : ★. ∀ X : ★. I ➔ DescFC · I · X
-  = Λ I. Λ X. λ i.
+EndFC ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★. ∀ X : ★. I ➔ DescFC · U · El · I · X
+  = Λ U. Λ El. Λ I. Λ X. λ i.
   Λ C. λ cE. λ cR. λ cA. λ cIA.
   cE i.
-RecFC ◂ ∀ I : ★. ∀ X : ★. I ➔ X ➔ DescFC · I · X
-  = Λ I. Λ X. λ i. λ x.
+RecFC ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★. ∀ X : ★. I ➔ X ➔ DescFC · U · El · I · X
+  = Λ U. Λ El. Λ I. Λ X. λ i. λ x.
   Λ C. λ cE. λ cR. λ cA. λ cIA.
   cR i x.
-ArgFC ◂ ∀ I : ★. ∀ X : ★. Π u : U. (El u ➔ X) ➔ DescFC · I · X
-  = Λ I. Λ X. λ u. λ f.
+ArgFC ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★. ∀ X : ★. Π u : U. (El u ➔ X) ➔ DescFC · U · El · I · X
+  = Λ U. Λ El. Λ I. Λ X. λ u. λ f.
   Λ C. λ cE. λ cR. λ cA. λ cIA.
   cA u f.
-IArgFC ◂ ∀ I : ★. ∀ X : ★. Π u : U. (El u ➔ X) ➔ DescFC · I · X
-  = Λ I. Λ X. λ u. λ f.
+IArgFC ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★. ∀ X : ★. Π u : U. (El u ➔ X) ➔ DescFC · U · El · I · X
+  = Λ U. Λ El. Λ I. Λ X. λ u. λ f.
   Λ C. λ cE. λ cR. λ cA. λ cIA.
   cIA u f.
 
 
-DescFI ◂ Π I : ★. Π X : ★. DescFC · I · X ➔ ★
-  = λ I : ★. λ X : ★. λ s : DescFC · I · X. ∀ P : DescFC · I · X ➔ ★.
-  Π pE : Π i : I. P (EndFC · I · X i).
-  Π pR : Π i : I. Π x : X. P (RecFC · I · X i x).
-  Π pA : Π u : U. Π f : El u ➔ X. P (ArgFC · I · X u f).
-  Π pIA : Π u : U. Π f : El u ➔ X. P (IArgFC · I · X u f).
+DescFI ◂ Π U : ★. Π El : U ➔ ★. Π I : ★. Π X : ★. DescFC · U · El · I · X ➔ ★
+  = λ U : ★. λ El : U ➔ ★. λ I : ★. λ X : ★. λ s : DescFC · U · El · I · X.
+  ∀ P : DescFC · U · El · I · X ➔ ★.
+  Π pE : Π i : I. P (EndFC · U · El · I · X i).
+  Π pR : Π i : I. Π x : X. P (RecFC · U · El · I · X i x).
+  Π pA : Π u : U. Π f : El u ➔ X. P (ArgFC · U · El · I · X u f).
+  Π pIA : Π u : U. Π f : El u ➔ X. P (IArgFC · U · El · I · X u f).
   P s.
-DescF ◂ Π I : ★. Π X : ★. ★ = λ I : ★. λ X : ★.
-  ι s : DescFC · I · X. DescFI · I · X s.
+DescF ◂ Π U : ★. Π El : U ➔ ★. Π I : ★. Π X : ★. ★
+  = λ U : ★. λ El : U ➔ ★. λ I : ★. λ X : ★.
+  ι s : DescFC · U · El · I · X. DescFI · U · El · I · X s.
 
-EndF ◂ ∀ I : ★. ∀ X : ★. I ➔ DescF · I · X
-  = Λ I. Λ X. λ i.
-  [EndFC · I · X i, Λ C. λ pE. λ pR. λ pA. λ pIA. pE i].
-RecF ◂ ∀ I : ★. ∀ X : ★. I ➔ X ➔ DescF · I · X
-  = Λ I. Λ X. λ i. λ x.
-  [RecFC · I · X i x, Λ C. λ pE. λ pR. λ pA. λ pIA. pR i x].
-ArgF ◂ ∀ I : ★. ∀ X : ★. Π u : U. (El u ➔ X) ➔ DescF · I · X
-  = Λ I. Λ X. λ u. λ f.
-  [ArgFC · I · X u f, Λ C. λ pE. λ pR. λ pA. λ pIA. pA u f].
-IArgF ◂ ∀ I : ★. ∀ X : ★. Π u : U. (El u ➔ X) ➔ DescF · I · X
-  = Λ I. Λ X. λ u. λ f.
-  [IArgFC · I · X u f, Λ C. λ pE. λ pR. λ pA. λ pIA. pIA u f].
+EndF ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★. ∀ X : ★. I ➔ DescF · U · El · I · X
+  = Λ U. Λ El. Λ I. Λ X. λ i.
+  [EndFC · U · El · I · X i, Λ C. λ pE. λ pR. λ pA. λ pIA. pE i].
+RecF ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★. ∀ X : ★. I ➔ X ➔ DescF · U · El · I · X
+  = Λ U. Λ El. Λ I. Λ X. λ i. λ x.
+  [RecFC · U · El · I · X i x, Λ C. λ pE. λ pR. λ pA. λ pIA. pR i x].
+ArgF ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★. ∀ X : ★. Π u : U. (El u ➔ X) ➔ DescF · U · El · I · X
+  = Λ U. Λ El. Λ I. Λ X. λ u. λ f.
+  [ArgFC · U · El · I · X u f, Λ C. λ pE. λ pR. λ pA. λ pIA. pA u f].
+IArgF ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★. ∀ X : ★. Π u : U. (El u ➔ X) ➔ DescF · U · El · I · X
+  = Λ U. Λ El. Λ I. Λ X. λ u. λ f.
+  [IArgFC · U · El · I · X u f, Λ C. λ pE. λ pR. λ pA. λ pIA. pIA u f].
 
-elimDescF ◂ ∀ I : ★. ∀ X : ★.
-  ∀ P : DescF · I · X ➔ ★.
-  Π pE : Π i : I. P (EndF · I · X i).
-  Π pR : Π i : I. Π x : X. P (RecF · I · X i x).
-  Π pA : Π u : U. Π f : El u ➔ X. P (ArgF · I · X u f).
-  Π pIA : Π u : U. Π f : El u ➔ X. P (IArgF · I · X u f).
-  Π s : DescF · I · X. P s
-  = Λ I. Λ X. Λ P. λ pE. λ pR. λ pA. λ pIA. λ s. s.2
-  · (λ sC : DescFC · I · X.
-    ∀ C : ★. (Π s' : DescF · I · X . {sC ≃ s'} ➾ P s' ➔ C) ➔ C)
-  (λ i. Λ C. λ p. p (EndF · I · X i) -β (pE i))
-  (λ i. λ x. Λ C. λ p. p (RecF · I · X i x) -β (pR i x))
-  (λ u. λ f. Λ C. λ p. p (ArgF · I · X u f) -β (pA u f))
-  (λ u. λ f. Λ C. λ p. p (IArgF · I · X u f) -β (pIA u f))
+elimDescF ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★. ∀ X : ★.
+  ∀ P : DescF · U · El · I · X ➔ ★.
+  Π pE : Π i : I. P (EndF · U · El · I · X i).
+  Π pR : Π i : I. Π x : X. P (RecF · U · El · I · X i x).
+  Π pA : Π u : U. Π f : El u ➔ X. P (ArgF · U · El · I · X u f).
+  Π pIA : Π u : U. Π f : El u ➔ X. P (IArgF · U · El · I · X u f).
+  Π s : DescF · U · El · I · X. P s
+  = Λ U. Λ El. Λ I. Λ X. Λ P. λ pE. λ pR. λ pA. λ pIA. λ s. s.2
+  · (λ sC : DescFC · U · El · I · X.
+    ∀ C : ★. (Π s' : DescF · U · El · I · X . {sC ≃ s'} ➾ P s' ➔ C) ➔ C)
+  (λ i. Λ C. λ p. p (EndF · U · El · I · X i) -β (pE i))
+  (λ i. λ x. Λ C. λ p. p (RecF · U · El · I · X i x) -β (pR i x))
+  (λ u. λ f. Λ C. λ p. p (ArgF · U · El · I · X u f) -β (pA u f))
+  (λ u. λ f. Λ C. λ p. p (IArgF · U · El · I · X u f) -β (pIA u f))
   · (P s) (λ s'. Λ q. λ p. ρ q - p).
-foldDescF ◂ ∀ I : ★. ∀ X : ★. ∀ C : ★.
+foldDescF ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★. ∀ X : ★. ∀ C : ★.
   Π cE : I ➔ C.
   Π cR : I ➔ X ➔ C.
   Π cA : Π u : U. (El u ➔ X) ➔ C.
   Π cIA : Π u : U. (El u ➔ X) ➔ C.
-  DescF · I · X ➔ C
-  = Λ I. Λ X. Λ C. elimDescF · I · X · (λ s : DescF · I · X. C).
+  DescF · U · El · I · X ➔ C
+  = Λ U. Λ El. Λ I. Λ X. Λ C. elimDescF · U · El · I · X · (λ s : DescF · U · El · I · X. C).
 
-imapD ◂ ∀ I : ★. IdMapping · (DescF · I)
-  = Λ I. Λ X. Λ Y. λ c. elimDescF · I · X
-  · (λ s : DescF · I · X. IdCod · (DescF · I · X) · (DescF · I · Y) s)
-  (λ i. pairId · (DescF · I · X) · (DescF · I · Y)
-    -(EndF · I · X i) (EndF · I · Y i) β)
-  (λ i. λ x. pairId · (DescF · I · X) · (DescF · I · Y)
-    -(RecF · I · X i x) (RecF · I · Y i (elimId · X · Y c x)) β)
-  (λ u. λ f. pairId · (DescF · I · X) · (DescF · I · Y)
-    -(ArgF · I · X u f) (ArgF · I · Y u (λ v. elimId · X · Y c (f v))) β)
-  (λ u. λ f. pairId · (DescF · I · X) · (DescF · I · Y)
-    -(IArgF · I · X u f) (IArgF · I · Y u (λ v. elimId · X · Y c (f v))) β)
+imapD ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★. IdMapping · (DescF · U · El · I)
+  = Λ U. Λ El. Λ I. Λ X. Λ Y. λ c. elimDescF · U · El · I · X
+  · (λ s : DescF · U · El · I · X. IdCod · (DescF · U · El · I · X) · (DescF · U · El · I · Y) s)
+  (λ i. pairId · (DescF · U · El · I · X) · (DescF · U · El · I · Y)
+    -(EndF · U · El · I · X i) (EndF · U · El · I · Y i) β)
+  (λ i. λ x. pairId · (DescF · U · El · I · X) · (DescF · U · El · I · Y)
+    -(RecF · U · El · I · X i x) (RecF · U · El · I · Y i (elimId · X · Y c x)) β)
+  (λ u. λ f. pairId · (DescF · U · El · I · X) · (DescF · U · El · I · Y)
+    -(ArgF · U · El · I · X u f) (ArgF · U · El · I · Y u (λ v. elimId · X · Y c (f v))) β)
+  (λ u. λ f. pairId · (DescF · U · El · I · X) · (DescF · U · El · I · Y)
+    -(IArgF · U · El · I · X u f) (IArgF · U · El · I · Y u (λ v. elimId · X · Y c (f v))) β)
 .
 

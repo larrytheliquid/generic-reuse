@@ -5,7 +5,6 @@ import IIdMapping.
 import FixIndM.
 import ListF.
 import Nat.
-import IFixM.
 import Unit.
 
 List ◂ ★ ➔ ★ = λ A : ★. FixIndM · (ListF · A) (imapL · A).
