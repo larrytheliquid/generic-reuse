@@ -7,11 +7,11 @@ import Id.
 import IFixIndM.
 
 FinFC ◂ (Nat ➔ ★) ➔ (Nat ➔ ★) = λ X : Nat ➔ ★. λ n : Nat.
-  ∀ C : ★. (∀ m : Nat. {n ≃ suc m} ➾ C) ➔ (∀ m : Nat. {n ≃ suc m} ➾ X m ➔ C) ➔ C.
+  ∀ C : ★. (∀ m : Nat. {n ≃ suc m} ➾ C) ➔ (∀ m : Nat. X m ➔ {n ≃ suc m} ➾ C) ➔ C.
 hereFC ◂ ∀ X : Nat ➔ ★. ∀ n : Nat. FinFC · X (suc n)
   = Λ X. Λ n. Λ C. λ cH. λ cT. (cH -n -β).
 thereFC ◂ ∀ X : Nat ➔ ★. ∀ n : Nat. X n ➔ FinFC · X (suc n)
-  = Λ X. Λ n. λ x. Λ C. λ cH. λ cT. (cT -n -β x).
+  = Λ X. Λ n. λ x. Λ C. λ cH. λ cT. (cT -n x -β).
 
 FinFI ◂ Π X : Nat ➔ ★. Π n : Nat. FinFC · X n ➔ ★ 
   = λ X : Nat ➔ ★. λ n : Nat. λ s : FinFC · X n. ∀ P : Π m : Nat. FinFC · X m ➔ ★. 

@@ -7,11 +7,11 @@ import Id.
 import IFixIndM.
 
 VecFC ◂ ★ ➔ (Nat ➔ ★) ➔ (Nat ➔ ★) = λ A : ★. λ X : Nat ➔ ★. λ n : Nat.
-  ∀ C : ★. ({n ≃ zero} ➾ C) ➔ (∀ m : Nat. {n ≃ suc m} ➾ A ➔ X m ➔ C) ➔ C.
+  ∀ C : ★. ({n ≃ zero} ➾ C) ➔ (∀ m : Nat. A ➔ X m ➔ {n ≃ suc m} ➾ C) ➔ C.
 nilVFC ◂ ∀ A : ★. ∀ X : Nat ➔ ★. VecFC · A · X zero
   = Λ A. Λ X. Λ C. λ cN. λ cC. (cN -β).
 consVFC ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ n : Nat. A ➔ X n ➔ VecFC · A · X (suc n)
-  = Λ A. Λ X. Λ n. λ a. λ x. Λ C. λ cN. λ cC. (cC -n -β a x).
+  = Λ A. Λ X. Λ n. λ a. λ x. Λ C. λ cN. λ cC. (cC -n a x -β).
 
 VecFI ◂ Π A : ★. Π X : Nat ➔ ★. Π n : Nat. VecFC · A · X n ➔ ★ 
   = λ A : ★. λ X : Nat ➔ ★. λ n : Nat. λ s : VecFC · A · X n. ∀ P : Π m : Nat. VecFC · A · X m ➔ ★. 
