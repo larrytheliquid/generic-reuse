@@ -1,0 +1,36 @@
+module Fin.
+
+import Nat.
+import Id.
+import IIdMapping.
+import IFixIndM.
+import IInductionM.
+import FinF.
+
+Fin ◂ Nat ➔ ★ = λ n : Nat. IFixIndM · Nat · FinF imapI n.
+here ◂ ∀ n : Nat. Fin (suc n)
+  = Λ n. iinFixIndM · Nat · FinF -imapI -(suc n)
+  (hereF · Fin -n).
+there ◂ ∀ n : Nat. Fin n ➔ Fin (suc n)
+  = Λ n. λ xs. iinFixIndM · Nat · FinF -imapI -(suc n)
+  (thereF · Fin -n xs).
+
+elimFin ◂ ∀ P : Π n : Nat. Fin n ➔ ★.
+  (∀ n : Nat. P (suc n) (here -n)) ➔
+  (∀ n : Nat. Π xs : Fin n. P n xs ➔ P (suc n) (there -n xs)) ➔
+  ∀ n : Nat. Π xs : Fin n. P n xs
+  = Λ P. λ pH. λ pT. iindFixIndM · Nat · FinF -imapI · P
+  (Λ R. Λ c. λ ih. elimFinF · R
+    · (λ n : Nat. λ s : FinF · R n. P n (iinFixIndM · Nat · FinF -imapI -n
+        (elimId · (FinF · R n) · (FinF · Fin n)
+        (imapI · R · Fin c -n) s)
+      ))
+    (Λ n. pH -n)
+    (Λ n . λ r. pT -n (elimId~ · (R n) · (Fin n) -(c -n) r) (ih -n r))
+  ).
+foldFin ◂ ∀ C : Nat ➔ ★.
+  Π cH : ∀ n : Nat. C (suc n).
+  Π cT : ∀ n : Nat. Fin n ➔ C n ➔ C (suc n).
+  ∀ n : Nat. Fin n ➔ C n
+  = Λ C. elimFin · (λ n : Nat. λ xs : Fin n. C n).
+

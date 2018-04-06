@@ -1,0 +1,48 @@
+module FinF.
+
+import Nat.
+import Sigma.
+import IIdMapping.
+import Id.
+import IFixIndM.
+
+FinFC ◂ (Nat ➔ ★) ➔ (Nat ➔ ★) = λ X : Nat ➔ ★. λ n : Nat.
+  ∀ C : ★. (∀ m : Nat. {n ≃ suc m} ➾ C) ➔ (∀ m : Nat. {n ≃ suc m} ➾ X m ➔ C) ➔ C.
+hereFC ◂ ∀ X : Nat ➔ ★. ∀ n : Nat. FinFC · X (suc n)
+  = Λ X. Λ n. Λ C. λ cH. λ cT. (cH -n -β).
+thereFC ◂ ∀ X : Nat ➔ ★. ∀ n : Nat. X n ➔ FinFC · X (suc n)
+  = Λ X. Λ n. λ x. Λ C. λ cH. λ cT. (cT -n -β x).
+
+FinFI ◂ Π X : Nat ➔ ★. Π n : Nat. FinFC · X n ➔ ★ 
+  = λ X : Nat ➔ ★. λ n : Nat. λ s : FinFC · X n. ∀ P : Π m : Nat. FinFC · X m ➔ ★. 
+  (∀ m : Nat. P (suc m) (hereFC · X -m)) ➔
+  (∀ m : Nat. Π x : X m. P (suc m) (thereFC · X -m x)) ➔
+  P n s.
+FinF ◂ (Nat ➔ ★) ➔ (Nat ➔ ★) = λ X : Nat ➔ ★. λ n : Nat.
+  ι s : FinFC · X n. FinFI · X n s.
+hereF ◂ ∀ X : Nat ➔ ★. ∀ n : Nat. FinF · X (suc n)
+  = Λ X. Λ n. [hereFC · X -n, Λ C. λ pH. λ pT. pH -n].
+thereF ◂ ∀ X : Nat ➔ ★. ∀ n : Nat. X n ➔ FinF · X (suc n)
+  = Λ X. Λ n. λ x. [thereFC · X -n x, Λ C. λ pH. λ pT. pT -n x].
+
+elimFinF ◂ ∀ X : Nat ➔ ★. ∀ P : Π n : Nat. FinF · X n ➔ ★.
+  (∀ n : Nat. P (suc n) (hereF · X -n)) ➔
+  (∀ n : Nat. Π x : X n. P (suc n) (thereF · X -n x)) ➔ 
+  ∀ n : Nat. Π s : FinF · X n. P n s
+  = Λ X. Λ P. λ pH. λ pT. Λ n. λ s. s.2 · (λ m : Nat. λ sC : FinFC · X m.
+    ∀ C : ★. (Π s' : FinF · X m . {sC ≃ s'} ➾ P m s' ➔ C) ➔ C) 
+  (Λ m. Λ C. λ p. p (hereF · X -m) -β (pH -m))
+  (Λ m. λ x. Λ C. λ p. p (thereF · X -m x) -β (pT -m x))
+  · (P n s) (λ s'. Λ q. λ p. ρ q - p).
+foldFinF ◂ ∀ X : Nat ➔ ★. ∀ C : Nat ➔ ★.
+  (∀ n : Nat. C (suc n)) ➔ (∀ n : Nat. X n ➔ C (suc n)) ➔ 
+  ∀ n : Nat. FinF · X n ➔ C n
+  = Λ X. Λ C. elimFinF · X · (λ n : Nat. λ s : FinF · X n. C n).
+
+imapI ◂ IIdMapping · Nat · FinF
+  = Λ X. Λ Y. λ c. Λ n. elimFinF · X
+  · (λ n : Nat. λ s : FinF · X n. IdCod · (FinF · X n) · (FinF · Y n) s)
+  (Λ m. pairId · (FinF · X (suc m)) · (FinF · Y (suc m)) -(hereF · X -m) (hereF · Y -m) β)
+  (Λ m. λ x. pairId · (FinF · X (suc m)) · (FinF · Y (suc m))
+    -(thereF · X -m x) (thereF · Y -m (elimId · (X m) · (Y m) (c -m) x)) β)
+  -n.
