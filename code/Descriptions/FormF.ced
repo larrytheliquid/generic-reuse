@@ -1,0 +1,19 @@
+module FormF.
+import Id.
+import Sigma.
+import IIdMapping.
+import FixIndM.
+import Desc.
+
+BranchFC ◂ Π U : ★. Π El : U ➔ ★. Π I : ★.  Π C : ★.
+  Desc · U · El · I ➔ (I ➔ ★) ➔ (I ➔ ★)
+  = λ U : ★. λ El : U ➔ ★. λ I : ★. λ C : ★.
+  λ t : Desc · U · El · I. λ X : I ➔ ★. λ i : I.
+  (↑ S . cataDesc · U · El · I · S t :
+    ((I ➔↑ ☆) ➔↑ (I ➔↑ ☆ ➔↑ ☆) ➔↑ (Π↑ A : U . (El A ➔↑ ☆) ➔↑ ☆) ➔↑
+      (Π↑ A : U . (El A ➔↑ ☆) ➔↑ ☆) ➔↑ ☆))
+  · (λ j : I. {i ≃ j} ➾ C)
+  · (λ j : I. λ D : ★. X j ➔ D)
+  · (λ A : U. λ D : El A ➔ ★. Π a : El A. D a)
+  · (λ A : U. λ D : El A ➔ ★. ∀ a : El A. D a)
+  .

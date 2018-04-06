@@ -57,4 +57,14 @@ foldDesc ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★. ∀ C : ★.
     (Π a : El A. C) ➔ C.
   Desc · U · El · I ➔ C
   = Λ U. Λ El. Λ I. Λ C. elimDesc · U · El · I · (λ D : Desc · U · El · I. C).
+cataDesc ◂ ∀ U : ★. ∀ El : U ➔ ★. ∀ I : ★.
+  ∀ C : ★. Desc · U · El · I ➔
+  Π cE : Π i : I. C.
+  Π cR : Π i : I. C ➔ C.
+  Π cA : Π A : U. (Π a : El A. C) ➔ C.
+  Π cIA : Π A : U. (Π a : El A. C) ➔ C.
+  C
+  = Λ U. Λ El. Λ I. Λ C. λ D. λ cE. λ cR. λ cA. λ cIA.
+  foldDesc · U · El · I · C cE (λ i. λ _. cR i) (λ A. λ _. cA A) (λ A. λ _. cIA A) D.
+  
 

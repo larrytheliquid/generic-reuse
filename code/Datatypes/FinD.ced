@@ -1,0 +1,22 @@
+module FinD.
+
+import Unit.
+import Nat.
+import IIdMapping.
+import Id.
+import IFixIndM.
+import Desc.
+
+KNat ◂ Unit ➔ ★ = λ _ : Unit. Nat.
+
+HereD ◂ Desc · Unit · KNat · Nat
+  = IArg · Unit · KNat · Nat unit (λ n.
+  End · Unit · KNat · Nat (suc n)
+  ).
+
+ThereD ◂ Desc · Unit · KNat · Nat
+  = IArg · Unit · KNat · Nat unit (λ n.
+  Rec · Unit · KNat · Nat n (
+  End · Unit · KNat · Nat (suc n)
+  )).
+
