@@ -21,7 +21,7 @@ ifix2jfix ◂ ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★). ∀ J : ★. ∀
   = Λ I. Λ F. Λ J. Λ G. λ imapF. λ imapG. λ fog. λ c1. iindFixIndM · I · F -imapF
   · (λ i : I. IdCod · (IFixIndM · I · F imapF i) · (IFixIndM · J · G imapG (fog i)))
   (Λ R. Λ c2. λ ih. Λ i. λ rs. pair
-  · (IFixIndM · J · G imapG (fog i)) · (λ y : IFixIndM · J · G imapG (fog i). {y ≃ iinFixIndM rs})
+  · (IFixIndM · J · G imapG (fog i)) · (λ v : IFixIndM · J · G imapG (fog i). {v ≃ iinFixIndM rs})
   (iinFixIndM · J · G -imapG -(fog i)
     (elimId · (F · (Comp · I · J · (IFixIndM · J · G imapG) fog) i) · (G · (IFixIndM · J · G imapG) (fog i))
       (c1 · (λ i' : I. IFixIndM · J · G imapG (fog i')) · (IFixIndM · J · G imapG)
