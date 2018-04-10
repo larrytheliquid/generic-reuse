@@ -22,24 +22,24 @@ jfix2ifix' ◂ ∀ J : ★. ∀ G : (J ➔ ★) ➔ (J ➔ ★). ∀ I : ★. �
   (ι gx : IFixIndM · J · G imapG j. IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -j gx.1))
   = Λ J. Λ G. Λ I. Λ F. λ imapG. λ imapF. λ ralg. λ c1. iindFixIndM · J · G -imapG
   · (λ j : J. λ y : IFixIndM · J · G imapG j.  Sigma · (ι gx : IFixIndM · J · G imapG j. IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -j gx.1))
-    · (λ x : (ι gx : IFixIndM · J · G imapG j. IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -j gx.1)).  {x ≃ y}))
+    · (λ x : ι gx : IFixIndM · J · G imapG j. IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -j gx.1).  {x ≃ y}))
   (Λ R. Λ c2. λ ih. Λ j. λ gr. pair
   · (ι gx : IFixIndM · J · G imapG j. IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -j gx.1))
-  · (λ x : (ι gx : IFixIndM · J · G imapG j. IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -j gx.1)).  {x ≃ iinFixIndM gr})
-  [ iinFixIndM · J · G -imapG -j ((elimId~ · (G · R j) · (G · (IFixIndM · J · G imapG) j) -(imapG · R · (IFixIndM · J · G imapG) c2 -j) gr))
+  · (λ x : ι gx : IFixIndM · J · G imapG j. IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -j gx.1).  {x ≃ iinFixIndM gr})
+  [ iinFixIndM · J · G -imapG -j (elimId~ · (G · R j) · (G · (IFixIndM · J · G imapG) j) -(imapG · R · (IFixIndM · J · G imapG) c2 -j) gr)
   , iinFixIndM · I · F -imapF
     -(ifoldM · J · G · (Const · I · J) ralg -j
-      (iinFixIndM · J · G -imapG -j ((elimId · (G · R j) · (G · (IFixIndM · J · G imapG) j) (imapG · R · (IFixIndM · J · G imapG) c2 -j) gr))).1)
-    (elimIdDep · (G · (λ i : J. ι gx : IFixIndM · J · G imapG i. IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J. I) ralg -i gx.1)) j) 
-      · (λ grr : G · (λ i : J. ι gx : IFixIndM · J · G imapG i. IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J. I) ralg -i gx.1)) j.
+      (iinFixIndM · J · G -imapG -j (elimId · (G · R j) · (G · (IFixIndM · J · G imapG) j) (imapG · R · (IFixIndM · J · G imapG) c2 -j) gr)).1)
+    (elimIdDep · (G · (λ i : J. ι gx : IFixIndM · J · G imapG i. IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -i gx.1)) j) 
+      · (λ grr : G · (λ i : J. ι gx : IFixIndM · J · G imapG i. IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -i gx.1)) j.
         F · (IFixIndM ·  I · F imapF)
           (ifoldM · J · G · (Const · I · J) ralg -j
             (iinFixIndM · J · G -imapG -j
-              (elimId · (G · (λ i : J. ι gx : IFixIndM · J · G imapG i. IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J. I) ralg -i gx.1)) j)
+              (elimId · (G · (λ i : J. ι gx : IFixIndM · J · G imapG i. IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -i gx.1)) j)
                 · (G · (IFixIndM · J · G imapG) j)
-                (imapG · (λ i : J. ι gx : IFixIndM · J · G imapG i. IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J. I) ralg -i gx.1))
+                (imapG · (λ i : J. ι gx : IFixIndM · J · G imapG i. IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -i gx.1))
                   · (IFixIndM · J · G imapG) 
-                  (Λ j2. intrId · (ι gx : IFixIndM · J · G imapG j2. IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J. I) ralg -j2 gx.1))
+                  (Λ j2. intrId · (ι gx : IFixIndM · J · G imapG j2. IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -j2 gx.1))
                     · (IFixIndM · J · G imapG j2)
                     (λ v. v.1)
                     (λ _. β)
@@ -48,22 +48,22 @@ jfix2ifix' ◂ ∀ J : ★. ∀ G : (J ➔ ★) ➔ (J ➔ ★). ∀ I : ★. �
               )
             ).1
           )
-        )
-    (λ aa. c1 · (λ i : J. ι gx : IFixIndM · J · G imapG i. IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J. I) ralg -i gx.1))
-      · (IFixIndM · I · F imapF)
-      (Λ j3. λ v3. ifoldM · J · G · (λ j' : J. I) ralg -j3 v3.1.1)
-      (Λ j. λ a. pair · (IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J. I) ralg -j a.1.1))
-        · (λ b : IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J. I) ralg -j a.1.1). {b ≃ a})
-        a.2 β
-      ) -j aa
-    )
-    (elimId · (G · R j)
-      · (G · (λ i : J. ι gx : IFixIndM · J · G imapG i. IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J. I) ralg -i gx.1)) j)
-      (imapG · R
-        · (λ i : J. ι gx : IFixIndM · J · G imapG i.  IFixIndM · I · F imapF (ifoldM · J · G · (λ j' : J. I) ralg -i gx.1))
-        ih -j
-      ) gr
-    )
+      )
+      (λ aa. c1 · (λ i : J. ι gx : IFixIndM · J · G imapG i. IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -i gx.1))
+        · (IFixIndM · I · F imapF)
+        (Λ j3. λ v3. ifoldM · J · G · (Const · I · J) ralg -j3 v3.1.1)
+        (Λ j. λ a. pair · (IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -j a.1.1))
+          · (λ b : IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -j a.1.1). {b ≃ a})
+          a.2 β
+        ) -j aa
+      )
+      (elimId · (G · R j)
+        · (G · (λ i : J. ι gx : IFixIndM · J · G imapG i. IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -i gx.1)) j)
+        (imapG · R
+          · (λ i : J. ι gx : IFixIndM · J · G imapG i.  IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -i gx.1))
+          ih -j
+        ) gr
+      )
    )
   ] β).
 
