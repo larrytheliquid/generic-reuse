@@ -49,8 +49,6 @@ iindFixIndM ◂ ∀ I : ★. ∀ F : ((I ➔ ★) ➔ (I ➔ ★)). ∀ imap : I
     (LiftProp3 · I · F -imap · Q) 
     (LiftProp4 · I · F -imap · Q) q)).
 
-
-
 ioutFixIndM ◂ ∀ I : ★. ∀ F : ((I ➔ ★) ➔ (I ➔ ★)). ∀ imap : IIdMapping · I · F. ∀ i : I.
  IFixIndM · I · F imap i ➔ F · (IFixIndM · I · F imap) i = Λ I. Λ F. Λ imap. Λ i. λ v. iindFixIndM · I · F -imap · 
  (λ j : I. λ _ : IFixIndM · I · F imap j. F · (IFixIndM · I · F imap) j) (Λ R. Λ c. λ ih. Λ j. λ fr. elimId~ · (F · R j) · (F · (IFixIndM · I · F imap) j) 

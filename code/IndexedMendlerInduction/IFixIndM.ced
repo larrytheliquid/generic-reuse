@@ -9,12 +9,12 @@ import Empty.
 IPrfAlgM ◂ Π I : ★. Π F : ((I ➔ ★) ➔ (I ➔ ★)). Π imap : IIdMapping · I · F. Π X : I ➔ ★. (Π i : I. X i ➔ ★) ➔
    (∀ i : I. F · X i ➔ X i) ➔ ★ = 
   λ I : ★. 
-  λ F : ((I ➔ ★) ➔ (I ➔ ★)).
+  λ F : (I ➔ ★) ➔ (I ➔ ★).
   λ imap : IIdMapping · I · F.
   λ X : I ➔ ★.
-  λ Q : (Π i : I. X i ➔ ★).
-  λ alg : (∀ i : I. F · X i ➔ X i). 
- ∀ R : I ➔ ★. ∀ c : (∀ i : I. Id · (R i) · (X i)). 
+  λ Q : Π i : I. X i ➔ ★.
+  λ alg : ∀ i : I. F · X i ➔ X i. 
+ ∀ R : I ➔ ★. ∀ c : ∀ i : I. Id · (R i) · (X i). 
  (∀ i : I. Π r : R i. Q i (elimId~ · (R i) · (X i) -(c -i) r)) ➔
  ∀ i : I. Π gr : F · R i.  Q i (alg -i (elimId~ · (F · R i) · (F · X i) -(imap · R · X  c -i) gr) ). 
 

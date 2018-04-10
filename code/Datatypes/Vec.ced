@@ -23,7 +23,7 @@ elimVec ◂ ∀ A : ★. ∀ P : Π n : Nat. Vec · A n ➔ ★.
   (Λ R. Λ c. λ ih. elimVecF · A · R
     · (λ n : Nat. λ s : VecF · A · R n. P n (iinFixIndM · Nat · (VecF · A) -(imapV · A) -n
         (elimId · (VecF · A · R n) · (VecF · A · (Vec · A) n)
-        (imapV · A · R · (Vec · A) c -n) s)
+          (imapV · A · R · (Vec · A) c -n) s)
       ))
     pN
     (Λ n . λ a. λ r. pC -n a (elimId~ · (R n) · (Vec · A n) -(c -n) r) (ih -n r))

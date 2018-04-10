@@ -41,8 +41,6 @@ elimId ◂ ∀ A : ★ . ∀ B : ★ . Id · A · B ➔ Π a : A . B =
 intrId ◂ ∀ X : ★. ∀ Y : ★. Π f : X ➔ Y. (Π z : X. {f z ≃ z}) ➔ Id · X · Y 
  = Λ X. Λ Y. λ if. λ p. λ a. pair · Y · (λ y : Y. {y ≃ a}) (if a) (p a).
 
-trivId ◂ ∀ A : ★. Id · A · A = Λ A. λ a. pair · A · (λ a1 : A. {a1 ≃ a}) a β.
-
 pairId ◂ ∀ A : ★. ∀ B : ★. ∀ a : A.
   Π b : B. { b ≃ a } ➔ IdCod · A · B a
   = Λ A. Λ B. pairIdDep · A · (λ a : A. B) .

@@ -71,17 +71,17 @@ JFix2IFixP ◂ ★ = ∀ J : ★. ∀ G : (J ➔ ★) ➔ (J ➔ ★).
   ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★).
   Π imapG : IIdMapping · J · G.
   Π imapF : IIdMapping · I · F.
-  Π r : I ➔ J. 
-  ∀ P : Π i : I. IFixIndM · J · G imapG (r i) ➔ ★.
+  Π f : I ➔ J. 
+  ∀ P : Π i : I. IFixIndM · J · G imapG (f i) ➔ ★.
   (∀ Y : J ➔ ★. ∀ X : I ➔ ★.
     Π c1 : ∀ j : J. Id · (Y j) · (IFixIndM · J · G imapG j).
-    Π c2 : ∀ i : I. IdDep · (Y (r i)) · (λ y : (Y (r i)). P i (elimId · (Y (r i)) · (IFixIndM · J · G imapG (r i)) (c1 -(r i)) y) ➾ X i).
-    ∀ i : I. IdDep · (G · Y (r i)) · (λ ys : G · Y (r i).
-      P i (iinFixIndM · J · G -imapG -(r i)
-        (elimId · (G · Y (r i)) · (G · (IFixIndM · J · G imapG) (r i)) (imapG · Y · (IFixIndM · J · G imapG) c1 -(r i)) ys))
+    Π c2 : ∀ i : I. IdDep · (Y (f i)) · (λ y : (Y (f i)). P i (elimId · (Y (f i)) · (IFixIndM · J · G imapG (f i)) (c1 -(f i)) y) ➾ X i).
+    ∀ i : I. IdDep · (G · Y (f i)) · (λ ys : G · Y (f i).
+      P i (iinFixIndM · J · G -imapG -(f i)
+        (elimId · (G · Y (f i)) · (G · (IFixIndM · J · G imapG) (f i)) (imapG · Y · (IFixIndM · J · G imapG) c1 -(f i)) ys))
       ➾ F · X i)
   ) ➔
-  ∀ i : I. IdDep · (IFixIndM · J · G imapG (r i)) · (λ y : IFixIndM · J · G imapG (r i). P i y ➾ IFixIndM · I · F imapF i)
+  ∀ i : I. IdDep · (IFixIndM · J · G imapG (f i)) · (λ y : IFixIndM · J · G imapG (f i). P i y ➾ IFixIndM · I · F imapF i)
 .
 
 Fix2IFixP ◂ ★ = ∀ G : ★ ➔ ★. ∀ I : ★.
