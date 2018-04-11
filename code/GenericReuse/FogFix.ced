@@ -9,9 +9,6 @@ import Unit.
 import UnitLift.
 import FixIndM.
 
-Comp ◂ Π I : ★. Π J : ★. (J ➔ ★) ➔ (I ➔ J) ➔ (I ➔ ★)
- = λ I : ★. λ J : ★. λ G : J ➔ ★. λ fog : I ➔ J. λ i : I . G (fog i).
-
 ifix2jfix ◂ ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★). ∀ J : ★. ∀ G : (J ➔ ★) ➔ (J ➔ ★).
   Π imapF : IIdMapping · I · F.
   Π imapG : IIdMapping · J · G.
@@ -20,18 +17,15 @@ ifix2jfix ◂ ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★). ∀ J : ★. ∀
   ∀ i : I. Id · (IFixIndM · I · F imapF i) · (IFixIndM · J · G imapG (fog i))
   = Λ I. Λ F. Λ J. Λ G. λ imapF. λ imapG. λ fog. λ c1. iindFixIndM · I · F -imapF
   · (λ i : I. IdCod · (IFixIndM · I · F imapF i) · (IFixIndM · J · G imapG (fog i)))
-  (Λ R. Λ c2. λ ih. Λ i. λ rs. pair
-  · (IFixIndM · J · G imapG (fog i)) · (λ v : IFixIndM · J · G imapG (fog i). {v ≃ iinFixIndM rs})
+  (Λ R. Λ c2. λ ih. Λ i. λ rs. pairId
+  · (IFixIndM · I · F imapF i) · (IFixIndM · J · G imapG (fog i))
+  -(iinFixIndM · I · F -imapF -i
+    (elimId~ · (F · R i) · (F · (IFixIndM · I · F imapF) i) -(imapF · R · (IFixIndM · I · F imapF) c2 -i) rs))
   (iinFixIndM · J · G -imapG -(fog i)
-    (elimId · (F · (Comp · I · J · (IFixIndM · J · G imapG) fog) i) · (G · (IFixIndM · J · G imapG) (fog i))
-      (c1 · (λ i' : I. IFixIndM · J · G imapG (fog i')) · (IFixIndM · J · G imapG)
-        (Λ i'. id · (IFixIndM · J · G imapG (fog i'))) -i)
-      (elimId · (F · R i) · (F · (Comp · I · J · (IFixIndM · J · G imapG) fog) i)
-        (imapF · R · (Comp · I · J · (IFixIndM · J · G imapG) fog) ih -i)
-        rs)
-    )
+    (elimId · (F · R i) · (G · (IFixIndM · J · G imapG) (fog i))
+      (c1 · R · (IFixIndM · J · G imapG) ih -i) rs)
   ) β).
-  
+
 ifix2fix ◂ ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★). ∀ G : ★ ➔ ★. 
   Π imapF : IIdMapping · I · F.
   Π imapG : IdMapping · G.
