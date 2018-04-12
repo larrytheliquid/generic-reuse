@@ -19,25 +19,25 @@ jfix2ifix ◂ ∀ J : ★. ∀ G : (J ➔ ★) ➔ (J ➔ ★). ∀ I : ★. ∀
     (∀ j : J. IdDep · (Y j) · (λ y : Y j. X (rfun -j y))) ➔ 
     ∀ j : J. IdDep · (G · Y j) · (λ ys : G · Y j. F · X (ralg · Y rfun -j ys)).
   ∀ j : J. IdDep · (IFixIndM · J · G imapG j)
-    · (λ y : IFixIndM · J · G imapG j. IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -j y.1))
+    · (λ y : IFixIndM · J · G imapG j. IFixIndM · I · F imapF (ifoldFixM · J · G · (Const · I · J) ralg -j y.1))
   = Λ J. Λ G. Λ I. Λ F. λ imapG. λ imapF. λ ralg. λ c1. iindFixIndM · J · G -imapG
   · (λ j : J. IdDepCod · (IFixIndM · J · G imapG j)
-    · (λ y : IFixIndM · J · G imapG j. IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -j y.1)))
+    · (λ y : IFixIndM · J · G imapG j. IFixIndM · I · F imapF (ifoldFixM · J · G · (Const · I · J) ralg -j y.1)))
   (Λ R. Λ c2. λ ih. Λ j. λ rs. pairIdDep
   · (IFixIndM · J · G imapG j)
-  · (λ y : IFixIndM · J · G imapG j. IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -j y.1))
+  · (λ y : IFixIndM · J · G imapG j. IFixIndM · I · F imapF (ifoldFixM · J · G · (Const · I · J) ralg -j y.1))
   -(iinFixIndM · J · G -imapG -j
     (elimId · (G · R j) · (G · (IFixIndM · J · G imapG) j) (imapG · R · (IFixIndM · J · G imapG) c2 -j) rs))
   (iinFixIndM · I · F -imapF
-    -(ifoldM · J · G · (Const · I · J) ralg -j (iinFixIndM · J · G -imapG -j
+    -(ifoldFixM · J · G · (Const · I · J) ralg -j (iinFixIndM · J · G -imapG -j
       (elimId · (G · R j) · (G · (IFixIndM · J · G imapG) j) (imapG · R · (IFixIndM · J · G imapG) c2 -j) rs)).1)
     (elimIdDep · (G · R j) · (λ rs' : G · R j.
       F · (IFixIndM · I · F imapF)
-        (ifoldM · J · G · (Const · I · J) ralg -j (iinFixIndM · J · G -imapG -j
+        (ifoldFixM · J · G · (Const · I · J) ralg -j (iinFixIndM · J · G -imapG -j
           (elimId · (G · R j) · (G · (IFixIndM · J · G imapG) j) (imapG · R · (IFixIndM · J · G imapG) c2 -j) rs')).1)
       )
       (c1 · R · (IFixIndM · I · F imapF)
-        (Λ j'. λ r. ifoldM · J · G · (Const · I · J) ralg -j' (elimId~ · (R j') · (IFixIndM · J · G imapG j') -(c2 -j') r).1)
+        (Λ j'. λ r. ifoldFixM · J · G · (Const · I · J) ralg -j' (elimId~ · (R j') · (IFixIndM · J · G imapG j') -(c2 -j') r).1)
         ih -j) rs)
   ) β).  
 
@@ -46,7 +46,7 @@ fix2ifix ◂ ∀ G : ★ ➔ ★. ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ �
   Π imapF : IIdMapping · I · F.
   Π ralg : AlgM · G · I. 
   Π c : ∀ Y : ★. ∀ X : I ➔ ★. Π rfun : Y ➔ I. IdDep · Y · (λ y : Y. X (rfun y)) ➔ IdDep · (G · Y) · (λ ys : G · Y. F · X (ralg · Y rfun ys)).
-  IdDep · (FixIndM · G imapG) · (λ y : FixIndM · G imapG. IFixIndM · I · F imapF (foldM · G -imapG · I ralg y))
+  IdDep · (FixIndM · G imapG) · (λ y : FixIndM · G imapG. IFixIndM · I · F imapF (foldFixIndM · G -imapG · I ralg y))
   = Λ G. Λ I. Λ F. λ imapG. λ imapF. λ ralg. λ c1. jfix2ifix
   · Unit · (UnitF · G) · I · F (uimap · G imapG) imapF (ualg · G -imapG · I ralg)
   (Λ Y. Λ X. λ rfun. λ c2. Λ j. λ ys. pairIdDep

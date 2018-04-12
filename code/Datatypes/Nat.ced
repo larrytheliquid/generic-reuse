@@ -24,4 +24,4 @@ foldNat ◂ ∀ C : ★. C ➔ (Nat ➔ C ➔ C) ➔ Nat ➔ C
 
 addAlgM ◂ AlgM · NatF · (Nat ➔ Nat)
   = Λ R. λ rec. λ s. λ m . foldNatF · R · Nat m (λ r. suc (rec r m)) s.
-add ◂ Nat ➔ Nat ➔ Nat = foldM · NatF -imapN · (Nat ➔ Nat) addAlgM.
+add ◂ Nat ➔ Nat ➔ Nat = foldFixIndM · NatF -imapN · (Nat ➔ Nat) addAlgM.
