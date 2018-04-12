@@ -53,3 +53,10 @@ iinFixIndM ◂ ∀ I : ★. ∀ F : ((I ➔ ★) ➔ (I ➔ ★)). ∀ imap : II
  [ tc1 · I · F -imap -i v, tc2 · I · F -imap -i v ].
 
 
+ifoldFixIndM ◂ ∀ I : ★. ∀ F : ((I ➔ ★) ➔ (I ➔ ★)). ∀ imap : IIdMapping · I · F.
+  ∀ C : I ➔ ★. IAlgM · I · F · C ➔ ∀ i : I. IFixIndM · I · F imap i ➔ C i
+  = Λ I. Λ F. Λ imap. Λ C. λ alg. Λ i. λ x.
+  ifoldFixM · I · F · C alg -i x.1.
+
+
+

@@ -35,7 +35,6 @@ convIH ◂ ∀ I : ★. ∀ F : ((I ➔ ★) ➔ (I ➔ ★)). ∀ imap : IIdMap
     (λ _. β))) r) (ih -i r))
  -i  gr)).
 
-
 iindFixIndM ◂ ∀ I : ★. ∀ F : ((I ➔ ★) ➔ (I ➔ ★)). ∀ imap : IIdMapping · I · F.
  ∀ Q : Π i : I. IFixIndM · I · F imap i ➔ ★.
  IPrfAlgM · I · F imap · (IFixIndM · I · F imap) · Q (iinFixIndM · I · F -imap) ➔
