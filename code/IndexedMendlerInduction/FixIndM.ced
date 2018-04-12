@@ -35,11 +35,11 @@ inFixIndM ◂ ∀ F : ★ ➔ ★. ∀ imap : IdMapping · F.
  F · (FixIndM · F imap) ➔ FixIndM · F imap  
  = Λ F. Λ imap. iinFixIndM · Unit · (UnitF · F) -(uimapF · F imap) -unit.
 
-convAlg ◂ ∀ F : ★ ➔ ★. ∀ imap : IdMapping · F. ∀ A : ★. AlgM · F · A ➔ IAlgM · Unit · (UnitF · F) · (λ u : Unit. A) 
+ualg ◂ ∀ F : ★ ➔ ★. ∀ imap : IdMapping · F. ∀ A : ★. AlgM · F · A ➔ IAlgM · Unit · (UnitF · F) · (λ u : Unit. A) 
  = Λ F. Λ imap. Λ A. λ alg. Λ R. λ r. Λ i. λ un. alg · (R unit) (r -unit) un .
 
 foldM ◂ ∀ F : ★ ➔ ★. ∀ imap : IdMapping · F. ∀ A : ★. AlgM · F · A ➔ FixIndM · F imap ➔ A
- = Λ F. Λ imap. Λ A. λ alg. λ fix. ifoldM · Unit · (UnitF · F) · (λ u : Unit. A) (convAlg · F -imap · A alg) -unit fix.1.
+ = Λ F. Λ imap. Λ A. λ alg. λ fix. ifoldM · Unit · (UnitF · F) · (λ u : Unit. A) (ualg · F -imap · A alg) -unit fix.1.
 
 
 indFixIndM ◂ ∀ F : ★ ➔ ★. ∀ imap : IdMapping · F.
