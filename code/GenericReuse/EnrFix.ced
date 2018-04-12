@@ -56,34 +56,3 @@ fix2ifix ◂ ∀ G : ★ ➔ ★. ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ �
     (c1 · (Y unit) · X (rfun -unit) (c2 -unit)) ys)
   β) -unit.
 
-JFix2IFixP ◂ ★ = ∀ J : ★. ∀ G : (J ➔ ★) ➔ (J ➔ ★).
-  ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★).
-  Π imapG : IIdMapping · J · G.
-  Π imapF : IIdMapping · I · F.
-  Π fog : I ➔ J. 
-  ∀ P : Π i : I. IFixIndM · J · G imapG (fog i) ➔ ★.
-  (∀ Y : J ➔ ★. ∀ X : I ➔ ★.
-    Π c1 : ∀ j : J. Id · (Y j) · (IFixIndM · J · G imapG j).
-    Π c2 : ∀ i : I. IdDep · (Y (fog i)) · (λ y : (Y (fog i)). P i (elimId · (Y (fog i)) · (IFixIndM · J · G imapG (fog i)) (c1 -(fog i)) y) ➾ X i).
-    ∀ i : I. IdDep · (G · Y (fog i)) · (λ ys : G · Y (fog i).
-      P i (iinFixIndM · J · G -imapG -(fog i)
-        (elimId · (G · Y (fog i)) · (G · (IFixIndM · J · G imapG) (fog i)) (imapG · Y · (IFixIndM · J · G imapG) c1 -(fog i)) ys))
-      ➾ F · X i)
-  ) ➔
-  ∀ i : I. IdDep · (IFixIndM · J · G imapG (fog i)) · (λ y : IFixIndM · J · G imapG (fog i). P i y ➾ IFixIndM · I · F imapF i)
-.
-
-Fix2IFixP ◂ ★ = ∀ G : ★ ➔ ★. ∀ I : ★.
-  ∀ F : (I ➔ ★) ➔ (I ➔ ★).
-  Π imapG : IdMapping · G.
-  Π imapF : IIdMapping · I · F.
-  ∀ P : I ➔ FixIndM · G imapG ➔ ★.
-  (∀ Y : ★. ∀ X : I ➔ ★.
-    Π c1 : Id · Y · (FixIndM · G imapG).
-    Π c2 : ∀ i : I. IdDep · Y · (λ y : Y. P i (elimId · Y · (FixIndM · G imapG) c1 y) ➾ X i).
-    ∀ i : I. IdDep · (G · Y) · (λ ys : G · Y.
-      P i (inFixIndM · G -imapG (elimId · (G · Y) · (G · (FixIndM · G imapG)) (imapG · Y · (FixIndM · G imapG) c1) ys))
-      ➾ F · X i)
-  ) ➔
-  ∀ i : I. IdDep · (FixIndM · G imapG) · (λ y : FixIndM · G imapG. P i y ➾ IFixIndM · I · F imapF i)
-.
