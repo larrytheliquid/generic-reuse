@@ -27,14 +27,14 @@ jfix2ifix ◂ ∀ J : ★. ∀ G : (J ➔ ★) ➔ (J ➔ ★). ∀ I : ★. ∀
   · (IFixIndM · J · G imapG j)
   · (λ y : IFixIndM · J · G imapG j. IFixIndM · I · F imapF (ifoldM · J · G · (Const · I · J) ralg -j y.1))
   -(iinFixIndM · J · G -imapG -j
-    (elimId~ · (G · R j) · (G · (IFixIndM · J · G imapG) j) -(imapG · R · (IFixIndM · J · G imapG) c2 -j) rs))
+    (elimId · (G · R j) · (G · (IFixIndM · J · G imapG) j) (imapG · R · (IFixIndM · J · G imapG) c2 -j) rs))
   (iinFixIndM · I · F -imapF
     -(ifoldM · J · G · (Const · I · J) ralg -j (iinFixIndM · J · G -imapG -j
-      (elimId~ · (G · R j) · (G · (IFixIndM · J · G imapG) j) -(imapG · R · (IFixIndM · J · G imapG) c2 -j) rs)).1)
+      (elimId · (G · R j) · (G · (IFixIndM · J · G imapG) j) (imapG · R · (IFixIndM · J · G imapG) c2 -j) rs)).1)
     (elimIdDep · (G · R j) · (λ rs' : G · R j.
       F · (IFixIndM · I · F imapF)
         (ifoldM · J · G · (Const · I · J) ralg -j (iinFixIndM · J · G -imapG -j
-          (elimId~ · (G · R j) · (G · (IFixIndM · J · G imapG) j) -(imapG · R · (IFixIndM · J · G imapG) c2 -j) rs')).1)
+          (elimId · (G · R j) · (G · (IFixIndM · J · G imapG) j) (imapG · R · (IFixIndM · J · G imapG) c2 -j) rs')).1)
       )
       (c1 · R · (IFixIndM · I · F imapF)
         (Λ j'. λ r. ifoldM · J · G · (Const · I · J) ralg -j' (elimId~ · (R j') · (IFixIndM · J · G imapG j') -(c2 -j') r).1)
