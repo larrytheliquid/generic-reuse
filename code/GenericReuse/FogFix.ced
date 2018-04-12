@@ -32,7 +32,7 @@ ifix2fix ◂ ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★). ∀ G : ★ ➔ �
   Π c : ∀ X : I ➔ ★.  ∀ Y : ★. (∀ i : I . Id · (X i) · Y) ➔ ∀ i : I. Id · (F · X i) · (G · Y).
   ∀ i : I. Id · (IFixIndM · I · F imapF i) · (FixIndM · G imapG)
   = Λ I. Λ F. Λ G. λ imapF. λ imapG. λ c1. ifix2jfix
-  · I · F · Unit · (UnitF · G) imapF (uimapF · G imapG) (λ _. unit) 
+  · I · F · Unit · (UnitF · G) imapF (uimap · G imapG) (λ _. unit) 
   (Λ X. Λ Y. λ c2. Λ i. λ xs. pairId
   · (F · X i) · (UnitF · G · Y unit) -xs
   (elimId · (F · X i) · (G · (Y unit))
