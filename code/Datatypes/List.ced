@@ -37,5 +37,5 @@ foldList ◂ ∀ A : ★. ∀ C : ★. C ➔ (A ➔ List · A ➔ C ➔ C) ➔ L
 lenAlgM ◂ ∀ A : ★. AlgM · (ListF · A) · Nat 
  = Λ A. Λ R. λ rec. λ s. foldListF · A · R · Nat zero (λ a. λ r. suc (rec r)) s.
 len ◂ ∀ A : ★. List · A ➔ Nat 
- = Λ A. foldM · (ListF · A) -(imapL · A) · Nat (lenAlgM · A).
+ = Λ A. foldFixIndM · (ListF · A) -(imapL · A) · Nat (lenAlgM · A).
 
