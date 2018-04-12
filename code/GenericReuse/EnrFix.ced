@@ -48,7 +48,7 @@ fix2ifix ◂ ∀ G : ★ ➔ ★. ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ �
   Π c : ∀ Y : ★. ∀ X : I ➔ ★. Π rfun : Y ➔ I. IdDep · Y · (λ y : Y. X (rfun y)) ➔ IdDep · (G · Y) · (λ ys : G · Y. F · X (ralg · Y rfun ys)).
   IdDep · (FixIndM · G imapG) · (λ y : FixIndM · G imapG. IFixIndM · I · F imapF (foldM · G -imapG · I ralg y))
   = Λ G. Λ I. Λ F. λ imapG. λ imapF. λ ralg. λ c1. jfix2ifix
-  · Unit · (UnitF · G) · I · F (uimapF · G imapG) imapF (ualg · G -imapG · I ralg)
+  · Unit · (UnitF · G) · I · F (uimap · G imapG) imapF (ualg · G -imapG · I ralg)
   (Λ Y. Λ X. λ rfun. λ c2. Λ j. λ ys. pairIdDep
   · (UnitF · G · Y j)
   · (λ ys' : UnitF · G · Y j. F · X (ualg · G -imapG · I ralg · Y rfun -unit ys')) -ys

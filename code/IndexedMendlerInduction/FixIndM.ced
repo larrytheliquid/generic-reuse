@@ -28,12 +28,12 @@ PrfAlgM ◂ Π F : ★ ➔ ★. Π imap : IdMapping · F. Π X : ★. (X ➔ ★
 
 
 FixIndM ◂ Π F : ★ ➔ ★. IdMapping · F ➔ ★ 
- = λ F : ★ ➔ ★. λ imap : IdMapping · F. IFixIndM · Unit · (UnitF · F) (uimapF · F imap) unit.
+ = λ F : ★ ➔ ★. λ imap : IdMapping · F. IFixIndM · Unit · (UnitF · F) (uimap · F imap) unit.
 
 
 inFixIndM ◂ ∀ F : ★ ➔ ★. ∀ imap : IdMapping · F.
  F · (FixIndM · F imap) ➔ FixIndM · F imap  
- = Λ F. Λ imap. iinFixIndM · Unit · (UnitF · F) -(uimapF · F imap) -unit.
+ = Λ F. Λ imap. iinFixIndM · Unit · (UnitF · F) -(uimap · F imap) -unit.
 
 ualg ◂ ∀ F : ★ ➔ ★. ∀ imap : IdMapping · F. ∀ A : ★. AlgM · F · A ➔ IAlgM · Unit · (UnitF · F) · (λ u : Unit. A) 
  = Λ F. Λ imap. Λ A. λ alg. Λ R. λ r. Λ i. λ un. alg · (R unit) (r -unit) un .
@@ -46,7 +46,7 @@ indFixIndM ◂ ∀ F : ★ ➔ ★. ∀ imap : IdMapping · F.
  ∀ Q : FixIndM · F imap ➔ ★.
  PrfAlgM · F imap · (FixIndM · F imap) · Q (inFixIndM · F -imap) ➔
  Π e : FixIndM · F imap. Q e
- = Λ F. Λ imap. Λ Q. λ q. λ e. iindFixIndM · Unit · (UnitF · F) -(uimapF · F imap) · (λ i : Unit. λ v : IFixIndM · Unit · (UnitF · F) (uimapF · F imap) i. Q (ρ ς (etaUnit i) - v)) 
+ = Λ F. Λ imap. Λ Q. λ q. λ e. iindFixIndM · Unit · (UnitF · F) -(uimap · F imap) · (λ i : Unit. λ v : IFixIndM · Unit · (UnitF · F) (uimap · F imap) i. Q (ρ ς (etaUnit i) - v)) 
   (Λ R. Λ ic. λ ih. Λ i. λ gr. q · (R unit) -(ic -unit) (λ r. ih -unit r) gr) 
   -unit e .
  
