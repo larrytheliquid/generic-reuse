@@ -1,0 +1,21 @@
+import Eq.
+module Func
+  (F : ★ ➔ ★)
+  (fmap : ∀ X : ★. ∀ Y : ★. (X ➔ Y) ➔ (F · X ➔ F · Y))
+  (idLaw : ∀ X : ★. ∀ xs : F · X. Eq · (F · X) (fmap · X · X (λ x. x) xs) xs)
+  (compLaw : ∀ X : ★. ∀ Y : ★. ∀ Z : ★.
+    ∀ f : X ➔ Y. ∀ g : Y ➔ Z.
+    ∀ xs : F · X. Eq · (F · Z)
+      (fmap · X · Z (λ x. g (f x)) xs)
+      (fmap · Y · Z g (fmap · X · Y f xs)))
+.
+import Id.
+import IIdMapping.
+
+imap ◂ IdMapping · F
+  = Λ X. Λ Y. λ c. λ xs. pairId · (F · X) · (F · Y) -xs
+  (fmap · X · Y (elimId~ · X · Y -c) xs)
+  (idLaw · X -xs).
+
+
+
