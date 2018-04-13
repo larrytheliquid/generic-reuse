@@ -1,0 +1,36 @@
+module Cont.
+import Sigma.
+import Product.
+import Id.
+import IIdMapping.
+import FixIndM.
+
+WF ◂ Π A : ★. Π B : A ➔ ★. ★ ➔ ★
+  = λ A : ★. λ B : A ➔ ★. λ X : ★.
+  Sigma · A · (λ a : A. B a ➔ X).
+
+imapW ◂ ∀ A : ★. ∀ B : A ➔ ★. IdMapping · (WF · A · B)
+  = Λ A. Λ B. Λ X. Λ Y. λ c. λ xs. pairId
+  · (WF · A · B · X) · (WF · A · B · Y) -xs
+  (pair · A · (λ a : A. B a ➔ Y)
+    (proj1 · A · (λ a : A. B a ➔ X) xs)
+    (λ b. elimId · X · Y c (proj2 · A · (λ a : A. B a ➔ X) xs b))
+  )
+  (etaSigma · A · (λ a : A. B a ➔ X) xs).
+
+W ◂ Π A : ★. Π B : A ➔ ★. ★
+  = λ A : ★. λ B : A ➔ ★. FixIndM · (WF · A · B) (imapW · A · B).
+
+sup ◂ ∀ A : ★. ∀ B : A ➔ ★. Π a : A. (B a ➔ W · A · B) ➔ W · A · B
+  = Λ A. Λ B. λ a. λ bf. inFixIndM · (WF · A · B) -(imapW · A · B)
+  (pair · A · (λ a : A. B a ➔ W · A · B) a bf).
+
+elimW ◂ ∀ A : ★. ∀ B : A ➔ ★. ∀ P : W · A · B ➔ ★.
+  Π p : Π a : A. Π bf : B a ➔ W · A · B. (Π b : B a. P (bf b)) ➔ P (sup · A · B a bf).
+  Π w : W · A · B. P w
+  = Λ A. Λ B. Λ P. λ p. indFixIndM · (WF · A · B) -(imapW · A · B) · P
+  (Λ R. Λ c. λ ih. λ rs. θ<rs> (elimSigma~ · A · (λ a : A. B a ➔ R) rs)
+    (λ a. λ bf. p a
+      (λ b. elimId~ · R · (FixIndM · (WF · A · B) (imapW · A · B)) -c (bf b))
+      (λ b. ih (bf b)))
+  ).

@@ -19,6 +19,9 @@ elimSigma ◂ ∀ A : ★. ∀ B : A ➔ ★. ∀ P : Sigma · A · B ➔ ★.
     ∀ C : ★. (Π s' : Sigma · A · B. {sC ≃ s'} ➾ P s' ➔ C) ➔ C))
   (λ a. λ b. Λ C. λ c. c (pair · A · B a b) -β (p a b))
   · (P s) (λ s'. Λ q. λ p. ρ q - p).
+elimSigma~ ◂ ∀ A : ★. ∀ B : A ➔ ★. Π s : Sigma · A · B. ∀ P : Sigma · A · B ➔ ★.
+  (Π a : A. Π b : B a. P (pair · A · B a b)) ➔ P s
+  = Λ A. Λ B. λ s. Λ P. λ p. elimSigma · A · B · P p s.
 foldSigma ◂ ∀ A : ★. ∀ B : A ➔ ★. ∀ C : ★.
   (Π a : A. B a ➔ C) ➔ Sigma · A · B ➔ C
   = Λ A. Λ B. Λ C. elimSigma · A · B · (λ s : Sigma · A · B. C).
