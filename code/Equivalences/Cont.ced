@@ -1,0 +1,18 @@
+module Cont.
+import Sigma.
+import Product.
+import Id.
+import IIdMapping.
+
+ElCont ◂ Π S : ★. Π P : S ➔ ★. ★ ➔ ★
+  = λ S : ★. λ P : S ➔ ★. λ X : ★.
+  Sigma · S · (λ s : S. P s ➔ X).
+
+imapCont ◂ ∀ S : ★. ∀ P : S ➔ ★. IdMapping · (ElCont · S · P)
+  = Λ S. Λ P. Λ X. Λ Y. λ c. λ xs. pairId
+  · (ElCont · S · P · X) · (ElCont · S · P · Y) -xs
+  (pair · S · (λ s : S. P s ➔ Y)
+    (proj1 · S · (λ s : S. P s ➔ X) xs)
+    (λ p. elimId · X · Y c (proj2 · S · (λ s : S. P s ➔ X) xs p))
+  )
+  (etaSigma · S · (λ s : S. P s ➔ X) xs).

@@ -1,0 +1,17 @@
+module ICont.
+import Sigma.
+import Product.
+
+ElICont ◂ Π I : ★. Π O : ★. Π S : O ➔ ★. Π P : Π o : O. S o ➔ ★.
+  Π n : Π o : O. Π s : S o. P o s ➔ I. (I ➔ ★) ➔ (O ➔ ★)
+  = λ I : ★. λ O : ★. λ S : O ➔ ★. λ P : Π o : O. S o ➔ ★.
+  λ n : Π o : O. Π s : S o. P o s ➔ I. λ X : I ➔ ★. λ o : O.
+  Sigma · (S o) · (λ s : S o. Sigma · (P o s) · (λ p : P o s. X (n o s p))).
+
+
+
+
+
+
+
+
