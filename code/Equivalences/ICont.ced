@@ -1,13 +1,85 @@
 module ICont.
 import Sigma.
 import Product.
+import Id.
+import IIdMapping.
+import IFixIndM.
+import IInductionM.
 
-ElICont ◂ Π I : ★. Π O : ★. Π S : O ➔ ★. Π P : Π o : O. S o ➔ ★.
-  Π n : Π o : O. Π s : S o. P o s ➔ I. (I ➔ ★) ➔ (O ➔ ★)
-  = λ I : ★. λ O : ★. λ S : O ➔ ★. λ P : Π o : O. S o ➔ ★.
-  λ n : Π o : O. Π s : S o. P o s ➔ I. λ X : I ➔ ★. λ o : O.
-  Sigma · (S o) · (λ s : S o. Sigma · (P o s) · (λ p : P o s. X (n o s p))).
+-- not used, just a polarized map type for fun
+IOIdMapping ◂ Π I : ★. Π O : ★. Π k : I ➔ O. ((I ➔ ★) ➔ (O ➔ ★)) ➔ ★ =
+  λ I : ★. λ O : ★. λ k : I ➔ O.
+  λ F : (I ➔ ★) ➔ (O ➔ ★).
+  ∀ X : I ➔ ★. ∀ Y : O ➔ ★.
+  (∀ i : I. Id · (X i) · (Y (k i))) ➔
+  ∀ i : I. Id · (F · X (k i)) · (F · (λ i' : I. Y (k i')) (k i)).
 
+-- polarized
+IOWF ◂ Π I : ★. Π O : ★.
+  Π A : O ➔ ★. Π B : Π o : O. A o ➔ ★.
+  -- ∀ o just to avoid index dependence, but this is not necessary
+  Π n : ∀ o : O. Π a : A o. B o a ➔ I.
+  (I ➔ ★) ➔ (O ➔ ★)
+  = λ I : ★. λ O : ★. λ A : O ➔ ★. λ B : Π o : O. A o ➔ ★.
+  λ n : ∀ o : O. Π a : A o. B o a ➔ I. λ X : I ➔ ★. λ o : O.
+  Sigma · (A o) · (λ a : A o. Π b : B o a. X (n -o a b)).
+
+-- unpolarized
+IWF ◂ Π I : ★. Π A : I ➔ ★. Π B : Π i : I. A i ➔ ★.
+  Π n : ∀ i : I. Π a : A i. B i a ➔ I.
+  (I ➔ ★) ➔ (I ➔ ★)
+  = λ I : ★. λ A : I ➔ ★. λ B : Π i : I. A i ➔ ★.
+  λ n : ∀ i : I. Π a : A i. B i a ➔ I. λ X : I ➔ ★. λ i : I.
+  IOWF · I · I · A · B n · X i.
+
+imapIW ◂ ∀ I : ★. ∀ A : I ➔ ★. ∀ B : Π i : I. A i ➔ ★.
+  ∀ n : ∀ i : I. Π a : A i. B i a ➔ I.
+  IIdMapping · I · (IWF · I · A · B n)
+  = Λ I. Λ A. Λ B. Λ n. Λ X. Λ Y. λ c. Λ i. λ s. pairId
+  · (IWF · I · A · B n · X i) · (IWF · I · A · B n · Y i) -s
+  (pair · (A i) · (λ a : A i. Π b : B i a. Y (n -i a b))
+    (proj1 · (A i) · (λ a : A i. Π b : B i a. X (n -i a b)) s)
+    (λ b. elimId
+      · (X (n -i (proj1 · (A i) · (λ a : A i. Π b : B i a. X (n -i a b)) s) b))
+      · (Y (n -i (proj1 · (A i) · (λ a : A i. Π b : B i a. X (n -i a b)) s) b))
+      (c -(n -i (proj1 · (A i) · (λ a : A i. Π b : B i a. X (n -i a b)) s) b))
+      (proj2 · (A i) · (λ a : A i. Π b : B i a. X (n -i a b)) s b))
+  )
+  (etaSigma · (A i) · (λ a : A i. Π b : B i a. X (n -i a b)) s).
+
+IW ◂ Π I : ★. Π A : I ➔ ★. Π B : Π i : I. A i ➔ ★.
+  Π n : ∀ i : I. Π a : A i. B i a ➔ I. I ➔ ★
+  = λ I : ★. λ A : I ➔ ★. λ B : Π i : I. A i ➔ ★.
+  λ n : ∀ i : I. Π a : A i. B i a ➔ I.
+  IFixIndM · I · (IWF · I · A · B n) (imapIW · I · A · B -n).
+
+isup ◂ ∀ I : ★. ∀ A : I ➔ ★. ∀ B : Π i : I. A i ➔ ★.
+  ∀ n : ∀ i : I. Π a : A i. B i a ➔ I. ∀ i : I.
+  Π a : A i.
+  Π bf : Π b : B i a. IW · I · A · B n (n -i a b).
+  IW · I · A · B n i
+  = Λ I. Λ A. Λ B. Λ n. Λ i. λ a. λ bf. iinFixIndM
+  · I · (IWF · I · A · B n) -(imapIW · I · A · B -n) -i
+  (pair · (A i) · (λ a : A i.
+    Π b : B i a. IW · I · A · B n (n -i a b)) a bf).
+
+elimIW ◂ ∀ I : ★. ∀ A : I ➔ ★. ∀ B : Π i : I. A i ➔ ★.
+  ∀ n : ∀ i : I. Π a : A i. B i a ➔ I. 
+  ∀ P : Π i : I. IW · I · A · B n i ➔ ★.
+  Π p : ∀ i : I. Π a : A i.
+    Π bf : Π b : B i a. IW · I · A · B n (n -i a b).
+    (Π b : B i a. P (n -i a b) (bf b)) ➔
+    P i (isup · I · A · B -n -i a bf).
+  ∀ i : I. Π w : IW · I · A · B n i. P i w
+  = Λ I. Λ A. Λ B. Λ n. Λ P. λ p. iindFixIndM
+  · I · (IWF · I · A · B n) -(imapIW · I · A · B -n) · P
+  (Λ R. Λ c. λ ih. Λ i. λ rs.
+    θ<rs> (elimSigma~ · (A i) · (λ a : A i. Π b : B i a. R (n -i a b)) rs)
+    (λ a. λ bf. p -i a
+      (λ b. elimId~ · (R (n -i a b)) · (IW · I · A · B n (n -i a b)) -(c -(n -i a b)) (bf b))
+      (λ b. ih -(n -i a b) (bf b))
+    )
+  ).
 
 
 

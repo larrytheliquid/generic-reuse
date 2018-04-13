@@ -10,13 +10,13 @@ WF ◂ Π A : ★. Π B : A ➔ ★. ★ ➔ ★
   Sigma · A · (λ a : A. B a ➔ X).
 
 imapW ◂ ∀ A : ★. ∀ B : A ➔ ★. IdMapping · (WF · A · B)
-  = Λ A. Λ B. Λ X. Λ Y. λ c. λ xs. pairId
-  · (WF · A · B · X) · (WF · A · B · Y) -xs
+  = Λ A. Λ B. Λ X. Λ Y. λ c. λ s. pairId
+  · (WF · A · B · X) · (WF · A · B · Y) -s
   (pair · A · (λ a : A. B a ➔ Y)
-    (proj1 · A · (λ a : A. B a ➔ X) xs)
-    (λ b. elimId · X · Y c (proj2 · A · (λ a : A. B a ➔ X) xs b))
+    (proj1 · A · (λ a : A. B a ➔ X) s)
+    (λ b. elimId · X · Y c (proj2 · A · (λ a : A. B a ➔ X) s b))
   )
-  (etaSigma · A · (λ a : A. B a ➔ X) xs).
+  (etaSigma · A · (λ a : A. B a ➔ X) s).
 
 W ◂ Π A : ★. Π B : A ➔ ★. ★
   = λ A : ★. λ B : A ➔ ★. FixIndM · (WF · A · B) (imapW · A · B).
@@ -31,6 +31,6 @@ elimW ◂ ∀ A : ★. ∀ B : A ➔ ★. ∀ P : W · A · B ➔ ★.
   = Λ A. Λ B. Λ P. λ p. indFixIndM · (WF · A · B) -(imapW · A · B) · P
   (Λ R. Λ c. λ ih. λ rs. θ<rs> (elimSigma~ · A · (λ a : A. B a ➔ R) rs)
     (λ a. λ bf. p a
-      (λ b. elimId~ · R · (FixIndM · (WF · A · B) (imapW · A · B)) -c (bf b))
+      (λ b. elimId~ · R · (W · A · B) -c (bf b))
       (λ b. ih (bf b)))
   ).
