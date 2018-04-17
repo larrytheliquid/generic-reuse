@@ -57,12 +57,12 @@ copyTypeP ◂ ∀ F : ★ ➔ ★. ∀ P : Π A : ★. F · A ➔ ★. ∀ G : �
   ) β.
 
 iuncurryP ◂ ∀ Y : ★. ∀ I : ★. ∀ X : I ➔ ★. ∀ P : I ➔ Y ➔ ★. 
-  Π c : ∀ i : I. IdDep · Y · (λ y : Y. P i y ➾ X i).
+  Π c : IdDep · Y · (λ y : Y. ∀ i : I. P i y ➾ X i).
   IdDep · Y · (λ y : Y. ∀ p : Sigma · I · (λ i : I. P i y). X (proj1 · I · (λ i : I. P i y) p))
   = Λ Y. Λ I. Λ X. Λ P. λ c. λ y.
   pairIdDep · Y · (λ y : Y. ∀ p : Sigma · I · (λ i : I. P i y). X (proj1 · I · (λ i : I. P i y) p)) -y
-  (Λ p. elimIdDep · Y · (λ y' : Y. P (proj1 · I · (λ i : I. P i y) p) y' ➾ X (proj1 · I · (λ i : I. P i y) p))
-  (c -(proj1 · I · (λ i : I. P i y) p))
-  y -(proj2 · I · (λ i : I. P i y) p)
+  (Λ p. elimIdDep · Y · (λ y' : Y. ∀ i : I. P i y' ➾ X i) -- (λ y' : Y. P (proj1 · I · (λ i : I. P i y) p) y' ➾ X (proj1 · I · (λ i : I. P i y) p))
+    c y -(proj1 · I · (λ i : I. P i y) p) -(proj2 · I · (λ i : I. P i y) p)
   ) β.
+
 
