@@ -27,3 +27,15 @@ module RawTermReuse
   (invAppFun : ∀ G : Ctx. ∀ B : Tp. ∀ f : Raw. ∀ a : Raw. Π p : Typed (pairCtxTp G B) (app f a).
     Typed (pairCtxTp G (Arr (invAppDom -G -B -f -a p) B)) f)
 .
+
+rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
+  Π c1 : Id · Y · Raw.
+  Π c2 : IdDep · Y · (λ y : Y. ∀ GA : CtxTp. Typed GA (elimId · Y · Raw c1 y) ➾ X GA).
+  IdDep · (RawF · Y) · (λ ys : RawF · Y. ∀ GA : CtxTp.
+    Typed GA (inRaw (elimId · (RawF · Y) · (RawF · Raw) (imapRaw · Y · Raw c1) ys))
+    ➾ TermF · X GA)
+  = ●.
+
+r2tP ◂ IdDep · Raw · (λ t : Raw. ∀ GA : CtxTp. Typed GA t ➾ Term GA)
+  = fix2ifixP · RawF · CtxTp · TermF imapRaw imapTerm · Typed rf2tfP.
+

@@ -7,9 +7,11 @@ import Nat.
 import IFixM.
 
 Raw ◂ ★ = FixIndM · RawF imapRaw.
-var ◂ Nat ➔ Raw = λ n. inFixIndM · RawF -imapRaw (varF · Raw n).
-lam ◂ Raw ➔ Raw = λ b. inFixIndM · RawF -imapRaw (lamF · Raw b).
-app ◂ Raw ➔ Raw ➔ Raw = λ f. λ a. inFixIndM · RawF -imapRaw (appF · Raw f a).
+inRaw ◂ RawF · Raw ➔ Raw
+  = inFixIndM · RawF -imapRaw.
+var ◂ Nat ➔ Raw = λ n. inRaw (varF · Raw n).
+lam ◂ Raw ➔ Raw = λ b. inRaw (lamF · Raw b).
+app ◂ Raw ➔ Raw ➔ Raw = λ f. λ a. inRaw (appF · Raw f a).
 
 elimRaw ◂ ∀ P : Raw ➔ ★.
   Π pV : Π n : Nat. P (var n).
@@ -18,7 +20,7 @@ elimRaw ◂ ∀ P : Raw ➔ ★.
   Π t : Raw. P t
   = Λ P. λ pV. λ pL. λ pA. indFixIndM · RawF -imapRaw · P
   (Λ R. Λ c. λ ih. elimRawF · R
-    · (λ s : RawF · R. P (inFixIndM · RawF -imapRaw (elimId · (RawF · R) · (RawF · Raw)
+    · (λ s : RawF · R. P (inRaw (elimId · (RawF · R) · (RawF · Raw)
       (imapRaw · R · Raw c) s)))
     pV
     (λ r. pL (elimId~ · R · Raw -c r) (ih r))
