@@ -1,0 +1,29 @@
+import Sigma.
+import IIdMapping.
+import Eq.
+import Id.
+import FixIndM.
+import IFixIndM.
+import FogFix.
+import EnrFix.
+import Nat.
+import Ctx.
+import Tp.
+import RawF.
+import Raw.
+import TermF.
+import Term.
+module RawTermReuse
+  (Typed : CtxTp ➔ Raw ➔ ★)
+
+  (invLamDom : ∀ G : Ctx. ∀ C : Tp. ∀ b : Raw. Typed (pairCtxTp G C) (lam b) ➔ Tp)
+  (invLamCod : ∀ G : Ctx. ∀ C : Tp. ∀ b : Raw. Typed (pairCtxTp G C) (lam b) ➔ Tp)
+  (invLamEq : ∀ G : Ctx. ∀ C : Tp. ∀ b : Raw. Π p : Typed (pairCtxTp G C) (lam b).
+    {C ≃ Arr (invLamDom -G -C -b p) (invLamCod -G -C -b p)})
+  (invLamBod : ∀ G : Ctx. ∀ C : Tp. ∀ b : Raw. Π p : Typed (pairCtxTp G C) (lam b).
+    Typed (pairCtxTp (ext G (invLamDom -G -C -b p)) (invLamCod -G -C -b p)) b)
+
+  (invAppDom : ∀ G : Ctx. ∀ B : Tp. ∀ f : Raw. ∀ a : Raw. Typed (pairCtxTp G B) (app f a) ➔ Tp)
+  (invAppFun : ∀ G : Ctx. ∀ B : Tp. ∀ f : Raw. ∀ a : Raw. Π p : Typed (pairCtxTp G B) (app f a).
+    Typed (pairCtxTp G (Arr (invAppDom -G -B -f -a p) B)) f)
+.
