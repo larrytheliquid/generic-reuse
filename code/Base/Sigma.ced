@@ -28,3 +28,9 @@ proj1 ◂ ∀ A : ★. ∀ B : A ➔ ★. Sigma · A · B  ➔  A
 proj2 ◂ ∀ A : ★. ∀ B : A ➔ ★. Π s : Sigma · A · B. B (proj1 · A · B s) 
  = Λ A. Λ B. λ s. elimSigma · A · B
  · (λ s' : Sigma · A · B. B (proj1 · A · B s')) (λ a. λ b. b) s.
+
+etaSigma ◂ ∀ A : ★. ∀ B : A ➔ ★. Π xs : Sigma · A · B.
+  { xs ≃ pair (proj1 xs) (proj2 xs) } =
+  Λ A. Λ B. elimSigma · A · B
+  · (λ xs : Sigma · A · B. { xs ≃ pair (proj1 xs) (proj2 xs) })
+  (λ a. λ b. β).

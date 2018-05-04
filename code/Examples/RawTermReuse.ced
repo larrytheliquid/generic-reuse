@@ -13,19 +13,21 @@ import RawF.
 import Raw.
 import TermF.
 import Term.
-module RawTermReuse
+module RawTermReuse2
   (Typed : CtxTp ➔ Raw ➔ ★)
 
-  (invLamDom : ∀ G : Ctx. ∀ C : Tp. ∀ b : Raw. Typed (pairCtxTp G C) (lam b) ➔ Tp)
-  (invLamCod : ∀ G : Ctx. ∀ C : Tp. ∀ b : Raw. Typed (pairCtxTp G C) (lam b) ➔ Tp)
-  (invLamEq : ∀ G : Ctx. ∀ C : Tp. ∀ b : Raw. Π p : Typed (pairCtxTp G C) (lam b).
-    {C ≃ Arr (invLamDom -G -C -b p) (invLamCod -G -C -b p)})
-  (invLamBod : ∀ G : Ctx. ∀ C : Tp. ∀ b : Raw. Π p : Typed (pairCtxTp G C) (lam b).
-    Typed (pairCtxTp (ext G (invLamDom -G -C -b p)) (invLamCod -G -C -b p)) b)
+  (invLamDom : ∀ GC : CtxTp. ∀ b : Raw. Typed GC (lam b) ➔ Tp)
+  (invLamCod : ∀ GC : CtxTp. ∀ b : Raw. Typed GC (lam b) ➔ Tp)
+  (invLamEq : ∀ GC : CtxTp. ∀ b : Raw. Π p : Typed GC (lam b).
+    {projTp GC ≃ Arr (invLamDom -GC -b p) (invLamCod -GC -b p)})
+  (invLamBod : ∀ GC : CtxTp. ∀ b : Raw. Π p : Typed GC (lam b).
+    Typed (pairCtxTp (ext (projCtx GC) (invLamDom -GC -b p)) (invLamCod -GC -b p)) b)
 
-  (invAppDom : ∀ G : Ctx. ∀ B : Tp. ∀ f : Raw. ∀ a : Raw. Typed (pairCtxTp G B) (app f a) ➔ Tp)
-  (invAppFun : ∀ G : Ctx. ∀ B : Tp. ∀ f : Raw. ∀ a : Raw. Π p : Typed (pairCtxTp G B) (app f a).
-    Typed (pairCtxTp G (Arr (invAppDom -G -B -f -a p) B)) f)
+  (invAppDom : ∀ GB : CtxTp. ∀ f : Raw. ∀ a : Raw. Typed GB (app f a) ➔ Tp)
+  (invAppFun : ∀ GB : CtxTp. ∀ f : Raw. ∀ a : Raw. Π p : Typed GB (app f a).
+    Typed (pairCtxTp (projCtx GB) (Arr (invAppDom -GB -f -a p) (projTp GB))) f)
+  (invAppArg : ∀ GB : CtxTp. ∀ f : Raw. ∀ a : Raw. Π p : Typed GB (app f a).
+    Typed (pairCtxTp (projCtx GB) (invAppDom -GB -f -a p)) a)
 .
 
 rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
@@ -34,7 +36,50 @@ rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
   IdDep · (RawF · Y) · (λ ys : RawF · Y. ∀ GA : CtxTp.
     Typed GA (inRaw (elimId · (RawF · Y) · (RawF · Raw) (imapRaw · Y · Raw c1) ys))
     ➾ TermF · X GA)
-  = ●.
+  = Λ Y. Λ X. λ c1. λ c2. elimRawF · Y
+  · (IdDepCod · (RawF · Y) · (λ ys : RawF · Y. ∀ GA : CtxTp.
+    Typed GA (inRaw (elimId · (RawF · Y) · (RawF · Raw) (imapRaw · Y · Raw c1) ys))
+    ➾ TermF · X GA))
+  (λ n. pairId · (RawF · Y) · (∀ GA : CtxTp. Typed GA (var n) ➾ TermF · X GA)
+    -(varF · Y n)
+    (Λ GA. Λ p.
+      ρ (etaCtxTp GA) -
+      ivarF · X -(projCtx GA) -(projTp GA) n
+    )
+    β)
+  (λ y. pairId · (RawF · Y) · (∀ GA : CtxTp. Typed GA (lam (elimId · Y · Raw c1 y)) ➾ TermF · X GA)
+    -(lamF · Y y)
+    (Λ GC. Λ p.
+      ρ (etaCtxTp GC) -
+      ρ (invLamEq -GC -(elimId · Y · Raw c1 y) p) -
+      ilamF · X -(projCtx GC) -(invLamDom -GC -(elimId · Y · Raw c1 y) p) -(invLamCod -GC -(elimId · Y · Raw c1 y) p)
+        (elimIdDep · Y · (λ y : Y. ∀ GA : CtxTp. Typed GA (elimId · Y · Raw c1 y) ➾ X GA)
+          c2 y
+          -(pairCtxTp (ext (projCtx GC) (invLamDom -GC -(elimId · Y · Raw c1 y) p)) (invLamCod -GC -(elimId · Y · Raw c1 y) p))
+          -(invLamBod -GC -(elimId · Y · Raw c1 y) p)
+        )
+    )
+    β
+  )
+  (λ y1. λ y2. pairId · (RawF · Y) · (∀ GA : CtxTp. Typed GA (app (elimId · Y · Raw c1 y1) (elimId · Y · Raw c1 y2)) ➾ TermF · X GA)
+    -(appF · Y y1 y2)
+    (Λ GB. Λ p.
+      ρ (etaCtxTp GB) -
+      iappF · X -(projCtx GB) -(invAppDom -GB -(elimId · Y · Raw c1 y1) -(elimId · Y · Raw c1 y2) p) -(projTp GB)
+        (elimIdDep · Y · (λ y : Y. ∀ GA : CtxTp. Typed GA (elimId · Y · Raw c1 y) ➾ X GA)
+          c2 y1
+          -(pairCtxTp (projCtx GB) (Arr (invAppDom -GB -(elimId · Y · Raw c1 y1) -(elimId · Y · Raw c1 y2) p) (projTp GB)))
+          -(invAppFun -GB -(elimId · Y · Raw c1 y1) -(elimId · Y · Raw c1 y2) p)
+        )
+        (elimIdDep · Y · (λ y : Y. ∀ GA : CtxTp. Typed GA (elimId · Y · Raw c1 y) ➾ X GA)
+          c2 y2
+          -(pairCtxTp (projCtx GB) (invAppDom -GB -(elimId · Y · Raw c1 y1) -(elimId · Y · Raw c1 y2) p))
+          -(invAppArg -GB -(elimId · Y · Raw c1 y1) -(elimId · Y · Raw c1 y2) p)
+        )
+    )
+    β
+  )
+.
 
 r2tP ◂ IdDep · Raw · (λ t : Raw. ∀ GA : CtxTp. Typed GA t ➾ Term GA)
   = fix2ifixP · RawF · CtxTp · TermF imapRaw imapTerm · Typed rf2tfP.
