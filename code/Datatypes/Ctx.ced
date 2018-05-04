@@ -1,0 +1,12 @@
+module Ctx.
+import Tp.
+import List.
+import Product.
+
+Ctx ◂ ★ = List · Tp.
+emp ◂ Ctx = nilL · Tp.
+ext ◂ Ctx ➔ Tp ➔ Ctx = λ G. λ A. consL · Tp A G.
+
+CtxTp ◂ ★ = Product · Ctx · Tp.
+
+pairCtxTp ◂ Ctx ➔ Tp ➔ CtxTp = pairProd · Ctx · Tp.

@@ -40,9 +40,9 @@ foldVecF ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ C : Nat ➔ ★.
   = Λ A. Λ X. Λ C. elimVecF · A · X · (λ n : Nat. λ s : VecF · A · X n. C n).
 
 imapV ◂ ∀ A : ★. IIdMapping · Nat · (VecF · A)
-  = Λ A. Λ X. Λ Y. λ c. Λ n. elimVecF · A · X
+  = Λ A. Λ X. Λ Y. λ c. elimVecF · A · X
   · (λ n : Nat. λ s : VecF · A · X n. IdCod · (VecF · A · X n) · (VecF · A · Y n) s)
   (pairId · (VecF · A · X zero) · (VecF · A · Y zero) -(nilVF · A · X) (nilVF · A · Y) β)
   (Λ m. λ a. λ x. pairId · (VecF · A · X (suc m)) · (VecF · A · Y (suc m))
     -(consVF · A · X -m a x) (consVF · A · Y -m a (elimId · (X m) · (Y m) (c -m) x)) β)
-  -n.
+  .
