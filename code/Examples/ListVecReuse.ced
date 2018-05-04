@@ -18,7 +18,7 @@ vf2lf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ Y :  ★.
   Π c : ∀ n : Nat. Id · (X n) · Y.
   ∀ n : Nat. Id · (VecF · A · X n) · (ListF · A · Y) 
   = Λ A. Λ X. Λ Y. λ c. elimVecF · A · X
-  · (λ n : Nat. λ s : VecF · A · X n. IdCod · (VecF · A · X n) · (ListF · A · Y) s)
+  · (λ n : Nat. IdCod · (VecF · A · X n) · (ListF · A · Y))
   (pairId · (VecF · A · X zero) · (ListF · A · Y) -(nilVF · A · X) (nilLF · A · Y) β)
   (Λ m. λ a. λ x. pairId · (VecF · A · X (suc m)) · (ListF · A · Y)
     -(consVF · A · X -m a x) (consLF · A · Y a (elimId · (X m) · Y (c -m) x)) β).
@@ -34,7 +34,7 @@ lf2vf ◂ ∀ A : ★. ∀ Y : ★. ∀ X : Nat ➔ ★.
   Π c : IdDep · Y · (λ y : Y . X (r y)).
   IdDep · (ListF · A · Y) · (λ xs : ListF · A · Y . VecF · A · X (lenAlgM · A · Y r xs))
   = Λ A. Λ Y. Λ X. λ r. λ c. elimListF · A · Y
-  · (λ s : ListF · A · Y. IdDepCod · (ListF · A · Y) · (λ xs : ListF · A · Y . VecF · A · X (lenAlgM · A · Y r xs)) s)
+  · (IdDepCod · (ListF · A · Y) · (λ xs : ListF · A · Y . VecF · A · X (lenAlgM · A · Y r xs)))
   (pairId · (ListF · A · Y) · (VecF · A · X zero) -(nilLF · A · Y) (nilVF · A · X) β)
   (λ a. λ y. pairId · (ListF · A · Y) · (VecF · A · X (lenAlgM · A r (consLF · A · Y a y)))
     -(consLF · A · Y a y) (consVF · A · X -(r y) a (elimIdDep · Y · (λ y : Y . X (r y)) c y)) β).
@@ -53,9 +53,9 @@ lf2vfP ◂ ∀ A : ★. ∀ Y : ★. ∀ X : Nat ➔ ★.
     Eq · Nat n (len · A (inL (elimId · (ListF · A · Y) · (ListF · A · (List · A)) (imapL · A · Y · (List · A) c1) ys)))
     ➾ VecF · A · X n)
   = Λ A. Λ Y. Λ X. λ c1. λ c2. elimListF · A · Y
-  · (λ s : ListF · A · Y. IdDepCod · (ListF · A · Y) · (λ ys : ListF · A · Y. ∀ n : Nat.
+  · (IdDepCod · (ListF · A · Y) · (λ ys : ListF · A · Y. ∀ n : Nat.
     Eq · Nat n (len · A (inL (elimId · (ListF · A · Y) · (ListF · A · (List · A)) (imapL · A · Y · (List · A) c1) ys)))
-    ➾ VecF · A · X n) s)
+    ➾ VecF · A · X n))
   (pairId · (ListF · A · Y) · (∀ n : Nat. {n ≃ len nilL} ➾ VecF · A · X n) -(nilLF · A · Y) (Λ n. Λ q. ρ q - (nilVF · A · X)) β)
   (λ a. λ y. pairId · (ListF · A · Y) · (∀ n : Nat. {n ≃ len (consL a y)} ➾ VecF · A · X n)
     -(consLF · A · Y a y)
