@@ -56,13 +56,40 @@ nf2ifP ◂ ∀ A : ★. ∀ x : A. ∀ Y : ★. ∀ X : List · A ➔ ★.
   IdDep · (NatF · Y) · (λ n : NatF · Y. ∀ xs : List · A.
     Lookup · A x xs (inNat (elimId · (NatF · Y) · (NatF · Nat) (imapN · Y · Nat c1) n))
     ➾ MemF · A x · X xs)
-  = Λ A. Λ x. Λ Y. Λ X. λ c1. λ c2.
-  ●
+  = Λ A. Λ x. Λ Y. Λ X. λ c1. λ c2. elimNatF · Y
+  · (IdDepCod · (NatF · Y) · (λ n : NatF · Y. ∀ xs : List · A.
+    Lookup · A x xs (inNat (elimId · (NatF · Y) · (NatF · Nat) (imapN · Y · Nat c1) n))
+    ➾ MemF · A x · X xs))
+  (pairId · (NatF · Y) · (∀ xs : List · A. Lookup · A x xs zero ➾ MemF · A x · X xs)
+    -(zeroF · Y)
+    (Λ xs. Λ i.
+      ρ (invZeroEq · A -x -xs i) -
+      hereF · A -x · X -(invZeroTail · A -x -xs i)
+    )
+    β
+  )
+  (λ n. pairId · (NatF · Y) · (∀ xs : List · A. Lookup · A x xs (suc (elimId · Y · Nat c1 n)) ➾ MemF · A x · X xs)
+    -(sucF · Y n)
+    (Λ xs. Λ i.
+      ρ (invSucEq · A -x -xs -(elimId · Y · Nat c1 n) i) -
+      thereF · A -x · X
+        -(invSucHead · A -x -xs -(elimId · Y · Nat c1 n) i)
+        -(invSucTail · A -x -xs -(elimId · Y · Nat c1 n) i)
+        (elimIdDep · Y · (λ n : Y . ∀ xs : List · A . Lookup · A x xs (elimId c1 n) ➾ X xs)
+          c2 n
+          -(invSucTail · A -x -xs -(elimId · Y · Nat c1 n) i)
+          -(invSucPred · A -x -xs -(elimId · Y · Nat c1 n) i)
+        )
+    )
+    β
+  )
 .
 
 n2iP ◂ ∀ A : ★. ∀ x : A. IdDep · Nat · (λ n : Nat. ∀ xs : List · A. Lookup · A x xs n ➾ Mem · A x xs)
   = Λ A. Λ x. fix2ifixP · NatF · (List · A) · (MemF · A x)
   imapN (imapMem · A -x) · (Lookup · A x) (nf2ifP · A -x).
+n2iP# ◂ ∀ A : ★. ∀ x : A. Π n : Nat. ∀ xs : List · A. Lookup · A x xs n ➾ Mem · A x xs
+  = Λ A. Λ x. elimIdDep · Nat · (λ n : Nat. ∀ xs : List · A. Lookup · A x xs n ➾ Mem · A x xs) (n2iP · A -x).
 
 rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
   Π c1 : Id · Y · Raw.
@@ -78,9 +105,13 @@ rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
     -(varF · Y n)
     (Λ GA. Λ p.
       ρ (etaCtxTp GA) -
-      ivarF · X -(projCtx GA) -(projTp GA) n
+      ivarF · X -(projCtx GA) -(projTp GA)
+        (n2iP# · Tp -(projTp GA) n -(projCtx GA)
+          -(invVarLookup -(projCtx GA) -(projTp GA) -n (ρ ς (etaCtxTp GA) - p))
+        )
     )
-    β)
+    β
+  )
   (λ y. pairId · (RawF · Y) · (∀ GA : CtxTp. Typed GA (lam (elimId · Y · Raw c1 y)) ➾ TermF · X GA)
     -(lamF · Y y)
     (Λ GC. Λ p.

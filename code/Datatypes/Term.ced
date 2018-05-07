@@ -7,12 +7,13 @@ import TermF.
 import Ctx.
 import Tp.
 import Nat.
+import Mem.
 import IFixM.
 
 Term ◂ CtxTp ➔ ★ = IFixIndM · CtxTp · TermF imapTerm.
-ivar ◂ ∀ G : Ctx. ∀ A : Tp. Nat ➔ Term (pairCtxTp G A)
-  = Λ G. Λ A. λ n. iinFixIndM · CtxTp · TermF -imapTerm -(pairCtxTp G A)
-  (ivarF · Term -G -A n).
+ivar ◂ ∀ G : Ctx. ∀ A : Tp. Mem · Tp A G ➔ Term (pairCtxTp G A)
+  = Λ G. Λ A. λ i. iinFixIndM · CtxTp · TermF -imapTerm -(pairCtxTp G A)
+  (ivarF · Term -G -A i).
 ilam ◂ ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. Term (pairCtxTp (ext G A) B) ➔ Term (pairCtxTp G (Arr A B))
   = Λ G. Λ A. Λ B. λ b. iinFixIndM · CtxTp · TermF -imapTerm -(pairCtxTp G (Arr A B))
   (ilamF · Term -G -A -B b).
@@ -21,7 +22,7 @@ iapp ◂ ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. Term (pairCtxTp G (Arr A B)) ➔ T
   (iappF · Term -G -A -B f a).
 
 elimTerm ◂ ∀ P : Π GA : CtxTp. Term GA ➔ ★.
-  Π pV : ∀ G : Ctx. ∀ A : Tp. Π n : Nat. P (pairCtxTp G A) (ivar -G -A n).
+  Π pV : ∀ G : Ctx. ∀ A : Tp. Π i : Mem · Tp A G. P (pairCtxTp G A) (ivar -G -A i).
   Π pL : ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp.
     Π b : Term (pairCtxTp (ext G A) B). P (pairCtxTp (ext G A) B) b ➔
     P (pairCtxTp G (Arr A B)) (ilam -G -A -B b).

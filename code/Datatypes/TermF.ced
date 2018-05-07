@@ -5,16 +5,17 @@ import IIdMapping.
 import Nat.
 import Ctx.
 import Tp.
+import Mem.
 import Product.
 
 TermFC ◂ (CtxTp ➔ ★) ➔ CtxTp ➔ ★ =
   λ X : CtxTp ➔ ★. λ GA : CtxTp. ∀ C : CtxTp ➔ ★.
-  Π cV : ∀ G : Ctx. ∀ A : Tp. Nat ➔ C (pairCtxTp G A).
+  Π cV : ∀ G : Ctx. ∀ A : Tp. Mem · Tp A G ➔ C (pairCtxTp G A).
   Π cL : ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. X (pairCtxTp (ext G A) B) ➔ C (pairCtxTp G (Arr A B)).
   Π cA : ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. X (pairCtxTp G (Arr A B)) ➔ X (pairCtxTp G A) ➔ C (pairCtxTp G B).
   C GA.
-ivarFC ◂ ∀ X : CtxTp ➔ ★. ∀ G : Ctx. ∀ A : Tp. Nat ➔ TermFC · X (pairCtxTp G A)
-  = Λ X. Λ G. Λ A. λ n. Λ C. λ cV. λ cL. λ cA. cV -G -A n.
+ivarFC ◂ ∀ X : CtxTp ➔ ★. ∀ G : Ctx. ∀ A : Tp. Mem · Tp A G ➔ TermFC · X (pairCtxTp G A)
+  = Λ X. Λ G. Λ A. λ i. Λ C. λ cV. λ cL. λ cA. cV -G -A i.
 ilamFC ◂ ∀ X : CtxTp ➔ ★. ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. X (pairCtxTp (ext G A) B) ➔ TermFC · X (pairCtxTp G (Arr A B))
   = Λ X. Λ G. Λ A. Λ B. λ x. Λ C. λ cV. λ cL. λ cA. cL -G -A -B x .
 iappFC ◂ ∀ X : CtxTp ➔ ★. ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. X (pairCtxTp G (Arr A B)) ➔ X (pairCtxTp G A) ➔ TermFC · X (pairCtxTp G B)
@@ -22,26 +23,26 @@ iappFC ◂ ∀ X : CtxTp ➔ ★. ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. X (pairCt
 
 TermFI ◂ Π X : CtxTp ➔ ★. Π GA : CtxTp. TermFC · X GA ➔ ★ 
   = λ X : CtxTp ➔ ★. λ GA : CtxTp. λ s : TermFC · X GA. ∀ P : Π GA : CtxTp. TermFC · X GA ➔ ★. 
-  Π pV : ∀ G : Ctx. ∀ A : Tp. Π n : Nat. P (pairCtxTp G A) (ivarFC · X -G -A n).
+  Π pV : ∀ G : Ctx. ∀ A : Tp. Π i : Mem · Tp A G. P (pairCtxTp G A) (ivarFC · X -G -A i).
   Π pL : ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. Π x : X (pairCtxTp (ext G A) B). P (pairCtxTp G (Arr A B)) (ilamFC · X -G -A -B x).
   Π pA : ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. Π x1 : X (pairCtxTp G (Arr A B)). Π x2 : X (pairCtxTp G A). P (pairCtxTp G B) (iappFC · X -G -A -B x1 x2).
   P GA s.
 TermF ◂ (CtxTp ➔ ★) ➔ CtxTp ➔ ★ = λ X : CtxTp ➔ ★. λ GA : CtxTp. ι s : TermFC · X GA. TermFI · X GA s.
-ivarF ◂ ∀ X : CtxTp ➔ ★. ∀ G : Ctx. ∀ A : Tp. Nat ➔ TermF · X (pairCtxTp G A)
-  = Λ X. Λ G. Λ A. λ n. [ivarFC · X -G -A n, Λ P. λ pV. λ pL. λ pA. pV -G -A n].
+ivarF ◂ ∀ X : CtxTp ➔ ★. ∀ G : Ctx. ∀ A : Tp. Mem · Tp A G ➔ TermF · X (pairCtxTp G A)
+  = Λ X. Λ G. Λ A. λ i. [ivarFC · X -G -A i, Λ P. λ pV. λ pL. λ pA. pV -G -A i].
 ilamF ◂ ∀ X : CtxTp ➔ ★. ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. X (pairCtxTp (ext G A) B) ➔ TermF · X (pairCtxTp G (Arr A B))
   = Λ X. Λ G. Λ A. Λ B. λ x. [ilamFC · X -G -A -B x, Λ P. λ pV. λ pL. λ pA. pL -G -A -B x].
 iappF ◂ ∀ X : CtxTp ➔ ★. ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. X (pairCtxTp G (Arr A B)) ➔ X (pairCtxTp G A) ➔ TermF · X (pairCtxTp G B)
   = Λ X. Λ G. Λ A. Λ B. λ x1. λ x2. [iappFC · X -G -A -B x1 x2, Λ P. λ pV. λ pL. λ pA. pA -G -A -B x1 x2].
 
 elimTermF ◂ ∀ X : CtxTp ➔ ★. ∀ P : Π GA : CtxTp. TermF · X GA ➔ ★.
-  Π pV : ∀ G : Ctx. ∀ A : Tp. Π n : Nat. P (pairCtxTp G A) (ivarF · X -G -A n).
+  Π pV : ∀ G : Ctx. ∀ A : Tp. Π i : Mem · Tp A G. P (pairCtxTp G A) (ivarF · X -G -A i).
   Π pL : ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. Π x : X (pairCtxTp (ext G A) B). P (pairCtxTp G (Arr A B)) (ilamF · X -G -A -B x).
   Π pA : ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. Π x1 : X (pairCtxTp G (Arr A B)). Π x2 : X (pairCtxTp G A). P (pairCtxTp G B) (iappF · X -G -A -B x1 x2).
   ∀ GA : CtxTp. Π s : TermF · X GA. P GA s
   = Λ X. Λ P. λ pV. λ pL. λ pA. Λ GA. λ s. s.2 · (λ GA : CtxTp. λ sC : TermFC · X GA.
   ∀ C : ★. (Π s' : TermF · X GA. {sC ≃ s'} ➾ P GA s' ➔ C) ➔ C) 
-  (Λ G. Λ A. λ n. Λ C. λ p. p (ivarF · X -G -A n) -β (pV -G -A n))
+  (Λ G. Λ A. λ i. Λ C. λ p. p (ivarF · X -G -A i) -β (pV -G -A i))
   (Λ G. Λ A. Λ B. λ x. Λ C. λ p. p (ilamF · X -G -A -B x) -β (pL -G -A -B x))
   (Λ G. Λ A. Λ B. λ x1. λ x2. Λ C. λ p. p (iappF · X -G -A -B x1 x2) -β (pA -G -A -B x1 x2))
   · (P GA s) (λ s'. Λ q. λ p. ρ q - p).
@@ -49,8 +50,8 @@ elimTermF ◂ ∀ X : CtxTp ➔ ★. ∀ P : Π GA : CtxTp. TermF · X GA ➔ �
 imapTerm ◂ IIdMapping · CtxTp · TermF
   = Λ X. Λ Y. λ c. elimTermF · X
   · (λ GA : CtxTp. λ s : TermF · X GA. IdCod · (TermF · X GA) · (TermF · Y GA) s)
-  (Λ G. Λ A. λ n. pairId · (TermF · X (pairCtxTp G A)) · (TermF · Y (pairCtxTp G A))
-    -(ivarF · X -G -A n) (ivarF · Y -G -A n) β)
+  (Λ G. Λ A. λ i. pairId · (TermF · X (pairCtxTp G A)) · (TermF · Y (pairCtxTp G A))
+    -(ivarF · X -G -A i) (ivarF · Y -G -A i) β)
   (Λ G. Λ A. Λ B. λ x. pairId · (TermF · X (pairCtxTp G (Arr A B))) · (TermF · Y (pairCtxTp G (Arr A B)))
     -(ilamF · X -G -A -B x) (ilamF · Y -G -A -B
       (elimId · (X (pairCtxTp (ext G A) B)) · (Y (pairCtxTp (ext G A) B)) (c -(pairCtxTp (ext G A) B)) x))
