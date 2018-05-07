@@ -6,7 +6,11 @@ import FixIndM.
 import IFixIndM.
 import FogFix.
 import EnrFix.
+import NatF.
 import Nat.
+import List.
+import MemF.
+import Mem.
 import Ctx.
 import Tp.
 import RawF.
@@ -14,7 +18,23 @@ import Raw.
 import TermF.
 import Term.
 module RawTermReuse2
+  (Lookup : Π A : ★. A ➔ List · A ➔ Nat ➔ ★)
+  
+  (invZeroTail : ∀ A : ★. ∀ x : A. ∀ xs : List · A. Lookup · A x xs zero ➔ List · A)
+  (invZeroEq : ∀ A : ★. ∀ x : A. ∀ xs : List · A. Π i : Lookup · A x xs zero.
+    Eq · (List · A) xs (consL · A x (invZeroTail · A -x -xs i)))
+
+  (invSucHead : ∀ A : ★. ∀ x : A. ∀ xs : List · A. ∀ n : Nat. Lookup · A x xs (suc n) ➔ A)
+  (invSucTail : ∀ A : ★. ∀ x : A. ∀ xs : List · A. ∀ n : Nat. Lookup · A x xs (suc n) ➔ List · A)
+  (invSucEq : ∀ A : ★. ∀ x : A. ∀ xs : List · A. ∀ n : Nat. Π i : Lookup · A x xs (suc n).
+    Eq · (List · A) xs (consL · A (invSucHead · A -x -xs -n i) (invSucTail · A -x -xs -n i)))
+  (invSucPred : ∀ A : ★. ∀ x : A. ∀ xs : List · A. ∀ n : Nat. Π i : Lookup · A x xs (suc n).
+    Lookup · A x (invSucTail · A -x -xs -n i) n)
+
   (Typed : CtxTp ➔ Raw ➔ ★)
+  
+  (invVarLookup : ∀ G : Ctx. ∀ A : Tp. ∀ n : Nat. Typed (pairCtxTp G A) (var n)
+    ➔ Lookup · Tp A G n)
 
   (invLamDom : ∀ GC : CtxTp. ∀ b : Raw. Typed GC (lam b) ➔ Tp)
   (invLamCod : ∀ GC : CtxTp. ∀ b : Raw. Typed GC (lam b) ➔ Tp)
@@ -29,6 +49,20 @@ module RawTermReuse2
   (invAppArg : ∀ GB : CtxTp. ∀ f : Raw. ∀ a : Raw. Π p : Typed GB (app f a).
     Typed (pairCtxTp (projCtx GB) (invAppDom -GB -f -a p)) a)
 .
+
+nf2ifP ◂ ∀ A : ★. ∀ x : A. ∀ Y : ★. ∀ X : List · A ➔ ★.
+  Π c1 : Id · Y · Nat.
+  Π c2 : IdDep · Y · (λ n : Y. ∀ xs : List · A. Lookup · A x xs (elimId · Y · Nat c1 n) ➾ X xs).
+  IdDep · (NatF · Y) · (λ n : NatF · Y. ∀ xs : List · A.
+    Lookup · A x xs (inNat (elimId · (NatF · Y) · (NatF · Nat) (imapN · Y · Nat c1) n))
+    ➾ MemF · A x · X xs)
+  = Λ A. Λ x. Λ Y. Λ X. λ c1. λ c2.
+  ●
+.
+
+n2iP ◂ ∀ A : ★. ∀ x : A. IdDep · Nat · (λ n : Nat. ∀ xs : List · A. Lookup · A x xs n ➾ Mem · A x xs)
+  = Λ A. Λ x. fix2ifixP · NatF · (List · A) · (MemF · A x)
+  imapN (imapMem · A -x) · (Lookup · A x) (nf2ifP · A -x).
 
 rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
   Π c1 : Id · Y · Raw.

@@ -8,6 +8,7 @@ import IFixM.
 import Unit.
 
 Nat ◂ ★ = FixIndM · NatF imapN.
+inNat ◂ NatF · Nat ➔ Nat = inFixIndM · NatF -imapN.
 zero ◂ Nat = inFixIndM · NatF -imapN (zeroF · Nat).
 suc ◂ Nat ➔ Nat = λ n. inFixIndM · NatF -imapN (sucF · Nat n).
 
