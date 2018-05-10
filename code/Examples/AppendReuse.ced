@@ -53,7 +53,7 @@ AssocL2 ◂ AppL ➔ Π A : ★. List · A ➔ ★ =
   λ appL : AppL. λ A : ★. λ xs : List · A.
   Π ys : List · A. AssocL3 appL · A xs ys.
 AssocL1 ◂ AppL ➔ ★ ➔ ★ = λ appL : AppL. λ A : ★.
-     Π xs : List · A. AssocL2 appL · A xs.
+  Π xs : List · A. AssocL2 appL · A xs.
 AssocL ◂ AppL ➔ ★ = λ appL : AppL. ∀ A : ★. AssocL1 appL · A.
 
 AssocV4 ◂ AppV ➔ Π A : ★. Π n : Nat. Vec · A n ➔ Π m : Nat. Vec · A m ➔ Π o : Nat. Vec · A o ➔ ★ =
