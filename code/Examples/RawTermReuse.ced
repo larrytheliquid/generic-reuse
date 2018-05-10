@@ -20,34 +20,34 @@ import Term.
 module RawTermReuse2
   (Lookup : Π A : ★. A ➔ List · A ➔ Nat ➔ ★)
   
-  (invZeroTail : ∀ A : ★. ∀ x : A. ∀ xs : List · A. Lookup · A x xs zero ➔ List · A)
-  (invZeroEq : ∀ A : ★. ∀ x : A. ∀ xs : List · A. Π i : Lookup · A x xs zero.
-    Eq · (List · A) xs (consL · A x (invZeroTail · A -x -xs i)))
+  (invZeroTail : ∀ A : ★. Π x : A. Π xs : List · A. Lookup · A x xs zero ➔ List · A)
+  (invZeroEq : ∀ A : ★. Π x : A. Π xs : List · A. Π i : Lookup · A x xs zero.
+    Eq · (List · A) xs (consL · A x (invZeroTail · A x xs i)))
 
-  (invSucHead : ∀ A : ★. ∀ x : A. ∀ xs : List · A. ∀ n : Nat. Lookup · A x xs (suc n) ➔ A)
-  (invSucTail : ∀ A : ★. ∀ x : A. ∀ xs : List · A. ∀ n : Nat. Lookup · A x xs (suc n) ➔ List · A)
-  (invSucEq : ∀ A : ★. ∀ x : A. ∀ xs : List · A. ∀ n : Nat. Π i : Lookup · A x xs (suc n).
-    Eq · (List · A) xs (consL · A (invSucHead · A -x -xs -n i) (invSucTail · A -x -xs -n i)))
-  (invSucPred : ∀ A : ★. ∀ x : A. ∀ xs : List · A. ∀ n : Nat. Π i : Lookup · A x xs (suc n).
-    Lookup · A x (invSucTail · A -x -xs -n i) n)
+  (invSucHead : ∀ A : ★. Π x : A. Π xs : List · A. Π n : Nat. Lookup · A x xs (suc n) ➔ A)
+  (invSucTail : ∀ A : ★. Π x : A. Π xs : List · A. Π n : Nat. Lookup · A x xs (suc n) ➔ List · A)
+  (invSucEq : ∀ A : ★. Π x : A. Π xs : List · A. Π n : Nat. Π i : Lookup · A x xs (suc n).
+    Eq · (List · A) xs (consL · A (invSucHead · A x xs n i) (invSucTail · A x xs n i)))
+  (invSucPred : ∀ A : ★. Π x : A. Π xs : List · A. Π n : Nat. Π i : Lookup · A x xs (suc n).
+    Lookup · A x (invSucTail · A x xs n i) n)
 
   (Typed : CtxTp ➔ Raw ➔ ★)
   
-  (invVarLookup : ∀ G : Ctx. ∀ A : Tp. ∀ n : Nat. Typed (pairCtxTp G A) (var n)
+  (invVarLookup : Π G : Ctx. Π A : Tp. Π n : Nat. Typed (pairCtxTp G A) (var n)
     ➔ Lookup · Tp A G n)
 
-  (invLamDom : ∀ GC : CtxTp. ∀ b : Raw. Typed GC (lam b) ➔ Tp)
-  (invLamCod : ∀ GC : CtxTp. ∀ b : Raw. Typed GC (lam b) ➔ Tp)
-  (invLamEq : ∀ GC : CtxTp. ∀ b : Raw. Π p : Typed GC (lam b).
-    {projTp GC ≃ Arr (invLamDom -GC -b p) (invLamCod -GC -b p)})
-  (invLamBod : ∀ GC : CtxTp. ∀ b : Raw. Π p : Typed GC (lam b).
-    Typed (pairCtxTp (ext (projCtx GC) (invLamDom -GC -b p)) (invLamCod -GC -b p)) b)
+  (invLamDom : Π GC : CtxTp. Π b : Raw. Typed GC (lam b) ➔ Tp)
+  (invLamCod : Π GC : CtxTp. Π b : Raw. Typed GC (lam b) ➔ Tp)
+  (invLamEq : Π GC : CtxTp. Π b : Raw. Π p : Typed GC (lam b).
+    Eq · Tp (projTp GC) (Arr (invLamDom GC b p) (invLamCod GC b p)))
+  (invLamBod : Π GC : CtxTp. Π b : Raw. Π p : Typed GC (lam b).
+    Typed (pairCtxTp (ext (projCtx GC) (invLamDom GC b p)) (invLamCod GC b p)) b)
 
-  (invAppDom : ∀ GB : CtxTp. ∀ f : Raw. ∀ a : Raw. Typed GB (app f a) ➔ Tp)
-  (invAppFun : ∀ GB : CtxTp. ∀ f : Raw. ∀ a : Raw. Π p : Typed GB (app f a).
-    Typed (pairCtxTp (projCtx GB) (Arr (invAppDom -GB -f -a p) (projTp GB))) f)
-  (invAppArg : ∀ GB : CtxTp. ∀ f : Raw. ∀ a : Raw. Π p : Typed GB (app f a).
-    Typed (pairCtxTp (projCtx GB) (invAppDom -GB -f -a p)) a)
+  (invAppDom : Π GB : CtxTp. Π f : Raw. Π a : Raw. Typed GB (app f a) ➔ Tp)
+  (invAppFun : Π GB : CtxTp. Π f : Raw. Π a : Raw. Π p : Typed GB (app f a).
+    Typed (pairCtxTp (projCtx GB) (Arr (invAppDom GB f a p) (projTp GB))) f)
+  (invAppArg : Π GB : CtxTp. Π f : Raw. Π a : Raw. Π p : Typed GB (app f a).
+    Typed (pairCtxTp (projCtx GB) (invAppDom GB f a p)) a)
 .
 
 ------------------------------------------------------------------------------------------
@@ -120,22 +120,22 @@ nf2ifP ◂ ∀ A : ★. ∀ x : A. ∀ Y : ★. ∀ X : List · A ➔ ★.
   (pairId · (NatF · Y) · (∀ xs : List · A. Lookup · A x xs zero ➾ MemF · A x · X xs)
     -(zeroF · Y)
     (Λ xs. Λ i.
-      ρ (invZeroEq · A -x -xs i) -
-      hereF · A -x · X -(invZeroTail · A -x -xs i)
+      ρ (invZeroEq · A x xs i) -
+      hereF · A -x · X -(invZeroTail · A x xs i)
     )
     β
   )
   (λ n. pairId · (NatF · Y) · (∀ xs : List · A. Lookup · A x xs (suc (elimId · Y · Nat c1 n)) ➾ MemF · A x · X xs)
     -(sucF · Y n)
     (Λ xs. Λ i.
-      ρ (invSucEq · A -x -xs -(elimId · Y · Nat c1 n) i) -
+      ρ (invSucEq · A x xs (elimId · Y · Nat c1 n) i) -
       thereF · A -x · X
-        -(invSucHead · A -x -xs -(elimId · Y · Nat c1 n) i)
-        -(invSucTail · A -x -xs -(elimId · Y · Nat c1 n) i)
+        -(invSucHead · A x xs (elimId · Y · Nat c1 n) i)
+        -(invSucTail · A x xs (elimId · Y · Nat c1 n) i)
         (elimIdDep · Y · (λ n : Y . ∀ xs : List · A . Lookup · A x xs (elimId c1 n) ➾ X xs)
           c2 n
-          -(invSucTail · A -x -xs -(elimId · Y · Nat c1 n) i)
-          -(invSucPred · A -x -xs -(elimId · Y · Nat c1 n) i)
+          -(invSucTail · A x xs (elimId · Y · Nat c1 n) i)
+          -(invSucPred · A x xs (elimId · Y · Nat c1 n) i)
         )
     )
     β
@@ -166,7 +166,7 @@ rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
       ρ (etaCtxTp GA) -
       ivarF · X -(projCtx GA) -(projTp GA)
         (n2iP# · Tp -(projTp GA) n -(projCtx GA)
-          -(invVarLookup -(projCtx GA) -(projTp GA) -n (ρ ς (etaCtxTp GA) - p))
+          -(invVarLookup (projCtx GA) (projTp GA) n (ρ ς (etaCtxTp GA) - p))
         )
     )
     β
@@ -175,12 +175,12 @@ rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
     -(lamF · Y y)
     (Λ GC. Λ p.
       ρ (etaCtxTp GC) -
-      ρ (invLamEq -GC -(elimId · Y · Raw c1 y) p) -
-      ilamF · X -(projCtx GC) -(invLamDom -GC -(elimId · Y · Raw c1 y) p) -(invLamCod -GC -(elimId · Y · Raw c1 y) p)
+      ρ (invLamEq GC (elimId · Y · Raw c1 y) p) -
+      ilamF · X -(projCtx GC) -(invLamDom GC (elimId · Y · Raw c1 y) p) -(invLamCod GC (elimId · Y · Raw c1 y) p)
         (elimIdDep · Y · (λ y : Y. ∀ GA : CtxTp. Typed GA (elimId · Y · Raw c1 y) ➾ X GA)
           c2 y
-          -(pairCtxTp (ext (projCtx GC) (invLamDom -GC -(elimId · Y · Raw c1 y) p)) (invLamCod -GC -(elimId · Y · Raw c1 y) p))
-          -(invLamBod -GC -(elimId · Y · Raw c1 y) p)
+          -(pairCtxTp (ext (projCtx GC) (invLamDom GC (elimId · Y · Raw c1 y) p)) (invLamCod GC (elimId · Y · Raw c1 y) p))
+          -(invLamBod GC (elimId · Y · Raw c1 y) p)
         )
     )
     β
@@ -189,16 +189,16 @@ rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
     -(appF · Y y1 y2)
     (Λ GB. Λ p.
       ρ (etaCtxTp GB) -
-      iappF · X -(projCtx GB) -(invAppDom -GB -(elimId · Y · Raw c1 y1) -(elimId · Y · Raw c1 y2) p) -(projTp GB)
+      iappF · X -(projCtx GB) -(invAppDom GB (elimId · Y · Raw c1 y1) (elimId · Y · Raw c1 y2) p) -(projTp GB)
         (elimIdDep · Y · (λ y : Y. ∀ GA : CtxTp. Typed GA (elimId · Y · Raw c1 y) ➾ X GA)
           c2 y1
-          -(pairCtxTp (projCtx GB) (Arr (invAppDom -GB -(elimId · Y · Raw c1 y1) -(elimId · Y · Raw c1 y2) p) (projTp GB)))
-          -(invAppFun -GB -(elimId · Y · Raw c1 y1) -(elimId · Y · Raw c1 y2) p)
+          -(pairCtxTp (projCtx GB) (Arr (invAppDom GB (elimId · Y · Raw c1 y1) (elimId · Y · Raw c1 y2) p) (projTp GB)))
+          -(invAppFun GB (elimId · Y · Raw c1 y1) (elimId · Y · Raw c1 y2) p)
         )
         (elimIdDep · Y · (λ y : Y. ∀ GA : CtxTp. Typed GA (elimId · Y · Raw c1 y) ➾ X GA)
           c2 y2
-          -(pairCtxTp (projCtx GB) (invAppDom -GB -(elimId · Y · Raw c1 y1) -(elimId · Y · Raw c1 y2) p))
-          -(invAppArg -GB -(elimId · Y · Raw c1 y1) -(elimId · Y · Raw c1 y2) p)
+          -(pairCtxTp (projCtx GB) (invAppDom GB (elimId · Y · Raw c1 y1) (elimId · Y · Raw c1 y2) p))
+          -(invAppArg GB (elimId · Y · Raw c1 y1) (elimId · Y · Raw c1 y2) p)
         )
     )
     β
