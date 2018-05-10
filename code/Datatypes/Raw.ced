@@ -4,18 +4,19 @@ import IIdMapping.
 import FixIndM.
 import RawF.
 import Nat.
+import Tp.
 import IFixM.
 
 Raw ◂ ★ = FixIndM · RawF imapRaw.
 inRaw ◂ RawF · Raw ➔ Raw
   = inFixIndM · RawF -imapRaw.
 var ◂ Nat ➔ Raw = λ n. inRaw (varF · Raw n).
-lam ◂ Raw ➔ Raw = λ b. inRaw (lamF · Raw b).
+lam ◂ Tp ➔ Raw ➔ Raw = λ A. λ b. inRaw (lamF · Raw A b).
 app ◂ Raw ➔ Raw ➔ Raw = λ f. λ a. inRaw (appF · Raw f a).
 
 elimRaw ◂ ∀ P : Raw ➔ ★.
   Π pV : Π n : Nat. P (var n).
-  Π pL : Π b : Raw. P b ➔ P (lam b).
+  Π pL : Π A : Tp. Π b : Raw. P b ➔ P (lam A b).
   Π pA : Π f : Raw. P f ➔ Π a : Raw. P a ➔ P (app f a).
   Π t : Raw. P t
   = Λ P. λ pV. λ pL. λ pA. indFixIndM · RawF -imapRaw · P
@@ -23,9 +24,9 @@ elimRaw ◂ ∀ P : Raw ➔ ★.
     · (λ s : RawF · R. P (inRaw (elimId · (RawF · R) · (RawF · Raw)
       (imapRaw · R · Raw c) s)))
     pV
-    (λ r. pL (elimId~ · R · Raw -c r) (ih r))
+    (λ A. λ r. pL A (elimId~ · R · Raw -c r) (ih r))
     (λ r1. λ r2. pA (elimId~ · R · Raw -c r1) (ih r1) (elimId~ · R · Raw -c r2) (ih r2))
   ).
-foldRaw ◂ ∀ C : ★. (Nat ➔ C) ➔ (Raw ➔ C ➔ C) ➔ (Raw ➔ C ➔ Raw ➔ C ➔ C) ➔ Raw ➔ C
+foldRaw ◂ ∀ C : ★. (Nat ➔ C) ➔ (Tp ➔ Raw ➔ C ➔ C) ➔ (Raw ➔ C ➔ Raw ➔ C ➔ C) ➔ Raw ➔ C
   = Λ C. elimRaw · (λ n : Raw. C).
 
