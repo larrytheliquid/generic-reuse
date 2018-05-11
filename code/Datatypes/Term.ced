@@ -1,0 +1,49 @@
+module Term.
+import Id.
+import IIdMapping.
+import IFixIndM.
+import IInductionM.
+import TermF.
+import Ctx.
+import Tp.
+import Nat.
+import Mem.
+import IFixM.
+
+Term ◂ CtxTp ➔ ★ = IFixIndM · CtxTp · TermF imapTerm.
+ivar ◂ ∀ G : Ctx. ∀ A : Tp. Mem · Tp A G ➔ Term (pairCtxTp G A)
+  = Λ G. Λ A. λ i. iinFixIndM · CtxTp · TermF -imapTerm -(pairCtxTp G A)
+  (ivarF · Term -G -A i).
+ilam ◂ ∀ G : Ctx. Π A : Tp. ∀ B : Tp. Term (pairCtxTp (ext G A) B) ➔ Term (pairCtxTp G (Arr A B))
+  = Λ G. λ A. Λ B. λ b. iinFixIndM · CtxTp · TermF -imapTerm -(pairCtxTp G (Arr A B))
+  (ilamF · Term -G A -B b).
+iapp ◂ ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. Term (pairCtxTp G (Arr A B)) ➔ Term (pairCtxTp G A) ➔ Term (pairCtxTp G B)
+  = Λ G. Λ A. Λ B. λ f. λ a. iinFixIndM · CtxTp · TermF -imapTerm -(pairCtxTp G B)
+  (iappF · Term -G -A -B f a).
+
+elimTerm ◂ ∀ P : Π GA : CtxTp. Term GA ➔ ★.
+  Π pV : ∀ G : Ctx. ∀ A : Tp. Π i : Mem · Tp A G. P (pairCtxTp G A) (ivar -G -A i).
+  Π pL : ∀ G : Ctx. Π A : Tp. ∀ B : Tp.
+    Π b : Term (pairCtxTp (ext G A) B). P (pairCtxTp (ext G A) B) b ➔
+    P (pairCtxTp G (Arr A B)) (ilam -G A -B b).
+  Π pA : ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp.
+    Π f : Term (pairCtxTp G (Arr A B)). P (pairCtxTp G (Arr A B)) f ➔
+    Π a : Term (pairCtxTp G A). P (pairCtxTp G A) a ➔
+    P (pairCtxTp G B) (iapp -G -A -B f a).
+  ∀ GA : CtxTp. Π t : Term GA. P GA t
+  = Λ P. λ pV. λ pL. λ pA. iindFixIndM · CtxTp · TermF -imapTerm · P
+  (Λ R. Λ c. λ ih. elimTermF · R
+    · (λ GA : CtxTp. λ s : TermF · R GA. P GA (iinFixIndM · CtxTp · TermF -imapTerm -GA
+        (elimId · (TermF · R GA) · (TermF · Term GA)
+          (imapTerm · R · Term c -GA) s)
+      ))
+    pV
+    (Λ G. λ A. Λ B. λ r. pL -G A -B
+      (elimId~ · (R (pairCtxTp (ext G A) B)) · (Term (pairCtxTp (ext G A) B)) -(c -(pairCtxTp (ext G A) B)) r) (ih -(pairCtxTp (ext G A) B) r)
+    )
+    (Λ G. Λ A. Λ B. λ r1. λ r2. pA -G -A -B
+      (elimId~ · (R (pairCtxTp G (Arr A B))) · (Term (pairCtxTp G (Arr A B))) -(c -(pairCtxTp G (Arr A B))) r1) (ih -(pairCtxTp G (Arr A B)) r1)
+      (elimId~ · (R (pairCtxTp G A)) · (Term (pairCtxTp G A)) -(c -(pairCtxTp G A)) r2) (ih -(pairCtxTp G A) r2)
+    )
+    
+  ).
