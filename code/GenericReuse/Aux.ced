@@ -1,4 +1,5 @@
 module Aux.
+import Unit.
 import Id.
 import Sigma.
 
@@ -31,6 +32,14 @@ insertPrem ◂ ∀ Q : ★. ∀ Y : ★. ∀ P : Y ➔ ★. ∀ X : ★.
   )
   β.
 
+skipPremDep ◂ ∀ Y : ★. ∀ P : ★. ∀ X : Y ➔ ★.
+  IdDep · Y · X ➔
+  IdDep · Y · (λ y : Y. P ➾ X y)
+  = Λ Y. Λ P. Λ X. λ c. λ y. pairIdDep
+  · Y · (λ y : Y. P ➾ X y) -y
+  (Λ p. elimIdDep · Y · X c y)
+  β.
+
 skipPrem ◂ ∀ Y : ★. ∀ P : ★. ∀ X : ★.
   Id · Y · X ➔
   Id · Y · (P ➾ X)
@@ -38,6 +47,35 @@ skipPrem ◂ ∀ Y : ★. ∀ P : ★. ∀ X : ★.
   · Y · (P ➾ X) -y
   (Λ p. elimId · Y · X c y)
   β.
+
+skipPiPrem ◂ ∀ X : ★. ∀ Y : ★. ∀ Y' : Y ➔ ★. ∀ P : Y ➔ ★.
+  Π c : Id · X · (Π y : Y. Y' y).
+  Id · X · (Π y : Y. P y ➾ Y' y)
+  = Λ X. Λ Y. Λ Y'. Λ P. λ c. λ x. pairId
+  · X · (Π y : Y. P y ➾ Y' y) -x
+  (λ y. Λ p. elimId · X · (Π y : Y. Y' y) c x y)
+  β.
+
+skipPiUnit ◂ ∀ X : ★. ∀ Y : ★. ∀ Y' : Y ➔ ★.
+  Π c : Id · X · (Π y : Y. Y' y).
+  Id · X · (Π y : Y. Unit ➾ Y' y)
+  = Λ X. Λ Y. Λ Y'.
+  skipPiPrem · X · Y · Y' · (λ _ : Y . Unit).
+
+insertPiPrem ◂ ∀ X : ★. ∀ Y : ★. ∀ Y' : Y ➔ ★. ∀ P : Y ➔ ★.
+  Π p : Π y : Y. P y.
+  Π c : Id · X · (Π y : Y. P y ➾ Y' y).
+  Id · X · (Π y : Y. Y' y)
+  = Λ X. Λ Y. Λ Y'. Λ P. λ p. λ c. λ x. pairId
+  · X · (Π y : Y. Y' y) -x
+  (λ y. elimId · X · (Π y : Y. P y ➾ Y' y) c x y -(p y))
+  β.
+
+insertPiUnit ◂ ∀ X : ★. ∀ Y : ★. ∀ Y' : Y ➔ ★.
+  Π c : Id · X · (Π y : Y. Unit ➾ Y' y).
+  Id · X · (Π y : Y. Y' y)
+  = Λ X. Λ Y. Λ Y'.
+  insertPiPrem · X · Y · Y' · (λ _ : Y. Unit) (λ _. unit).
 
 copyType ◂ ∀ F : ★ ➔ ★. ∀ G : ★ ➔ ★.
   (∀ A : ★. Id · (F · A) · (G · A)) ➔
