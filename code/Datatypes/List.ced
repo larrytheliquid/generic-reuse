@@ -6,7 +6,8 @@ import FixIndM.
 import ListF.
 import Nat.
 import IFixM.
-import Unit.
+import Sigma.
+import Eq.
 
 List ◂ ★ ➔ ★ = λ A : ★. FixIndM · (ListF · A) (imapL · A).
 inL ◂ ∀ A : ★. ListF · A · (List · A)  ➔ List · A
@@ -38,4 +39,10 @@ lenAlgM ◂ ∀ A : ★. AlgM · (ListF · A) · Nat
  = Λ A. Λ R. λ rec. λ s. foldListF · A · R · Nat zero (λ a. λ r. suc (rec r)) s.
 len ◂ ∀ A : ★. List · A ➔ Nat 
  = Λ A. foldFixIndM · (ListF · A) -(imapL · A) · Nat (lenAlgM · A).
+
+NonEmpty ◂ Π A : ★. List · A ➔ ★ = λ A : ★. λ xs : List · A.
+  Sigma · Nat · (λ n : Nat. Eq · Nat (suc n) (len · A xs)).
+
+lenPred ◂ ∀ A : ★. Π xs : List · A. NonEmpty · A xs ➔ Nat
+  = Λ A. λ xs. proj1 · Nat · (λ n : Nat. Eq · Nat (suc n) (len · A xs)).
 
