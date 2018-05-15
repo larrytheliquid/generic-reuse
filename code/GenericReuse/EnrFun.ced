@@ -26,7 +26,7 @@ piAll2allPiP' ◂ ∀ Y : ★. ∀ P : Y ➔ ★.
   -(q (elimId · (X i) · Y (c1 -i) x) (c1' -i x))
   ) β.
 
-piImp2allArr' ◂ ∀ Y : ★. ∀ P : Y ➔ ★. ∀ Y' : ★.
+piImp2allArrP' ◂ ∀ Y : ★. ∀ P : Y ➔ ★. ∀ Y' : ★.
   ∀ Q : Π y : Y. Π p : P y. Y' ➔ ★.
   ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : I ➔ ★.
   Π c1 : ∀ i : I. Id · (X i) · Y.
