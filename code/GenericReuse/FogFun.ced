@@ -3,7 +3,7 @@ import Unit.
 import Id.
 import Aux.
 
-allPi2piP' ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★.
+allPi2piAll' ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★.
   ∀ Y : ★. ∀ P : Y ➔ ★. ∀ Y' : Π y : Y. P y ➔ ★.
   Π r : Π y : Y. P y ➔ I.
   Π c1 : IdDep · Y · (λ y : Y. ∀ p : P y. X (r y p)).
@@ -16,14 +16,14 @@ allPi2piP' ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★.
   (f -(r y p) (elimIdDep · Y · (λ y : Y. ∀ p : P y. X (r y p)) c1 y -p))
   ) β.
 
-allArr2arrP' ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : I ➔ ★.
+allArr2piImp' ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : I ➔ ★.
   ∀ Y : ★. ∀ P : Y ➔ ★. ∀ Y' : ★.
   Π r : Π y : Y. P y ➔ I.
   Π c1 : IdDep · Y · (λ y : Y. ∀ p : P y. X (r y p)).
   Π c2 : Π y : Y. ∀ p : P y. Id · (X' (r y p)) · Y'.
   Id · (∀ i : I. X i ➔ X' i) · (Π y : Y. P y ➾ Y')
   = Λ I. Λ X. Λ X'. Λ Y. Λ P. Λ Y'.
-  allPi2piP' · I · X · (λ i : I. λ x : X i. X' i) · Y · P · (λ y : Y. λ p : P y. Y').
+  allPi2piAll' · I · X · (λ i : I. λ x : X i. X' i) · Y · P · (λ y : Y. λ p : P y. Y').
 
 allPi2pi' ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★. ∀ Y : ★. ∀ Y' : Y ➔ ★.
   Π r : Y ➔ I.
