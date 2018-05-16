@@ -23,7 +23,7 @@ the generic zero-cost reuse combinators for the following types:
 * [Functions (forgetful `allArr2arr` & `allPi2pi`)](code/GenericReuse/FogFun.ced)
 * [Functions (enriching `arr2allArrP` & `pi2allPiP`)](code/GenericReuse/EnrFun.ced)
 * [Fixpoints (forgetful `ifix2fix`)](code/GenericReuse/FogFix.ced)
-* [Fixpoints (enriching `fix2ifix`)](code/GenericReuse/EnrFix.ced)
+* [Fixpoints (enriching `fix2ifix` & `fix2ifixP`)](code/GenericReuse/EnrFix.ced)
 
 The [auxiliary combinators](code/GenericReuse/Aux.ced) also appear here.
 
@@ -35,6 +35,7 @@ This directory includes reuse examples via our combinators:
   * forgetful `appV2appL` & enriching `appL2appV`
   * forgetful `assocV2assocL` & enriching `assocL2assocV`
 * [Data Reuse of vectors (forgetful `v2l`) and lists (enriching `l2v`)](code/Examples/ListVecReuse.ced)
+* [Data Reuse of typed terms (forgetful `t2r`) and raw terms (enriching `r2tP`)](code/Examples/RawTermReuse.ced)
 
 [Datatypes](code/Datatypes)
 ---------------------------
@@ -45,10 +46,15 @@ and their schemes, defined using generic Mendler-style fixpoints:
 * [Lists (`List`)](code/Datatypes/List.ced)
 * [Vectors Scheme (`VecF`)](code/Datatypes/VecF.ced)
 * [Vectors (`Vec`)](code/Datatypes/Vec.ced)
+* [Raw Terms Scheme (`RawF`)](code/Datatypes/RawF.ced)
+* [Raw Terms (`Raw`)](code/Datatypes/Raw.ced)
+* [Typed Terms Scheme (`TermF`)](code/Datatypes/TermF.ced)
+* [Typed Terms (`Term`)](code/Datatypes/Term.ced)
 
 The derived definition of [`Nat`](code/Datatypes/Nat.ced)
 (in terms of the scheme [`NatF`](code/Datatypes/NatF.ced))
-also appears here.
+also appears here, as well the types [`Tp`](code/Datatypes/Tp.ced)
+of STLC (and their scheme [`TpF`](code/Datatypes/TpF.ced)).
 
 [IndexedMendlerInduction](code/IndexedMendlerInduction)
 -------------------------------------------------------
