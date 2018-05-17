@@ -14,6 +14,22 @@ subst ◂ ∀ Y : ★. ∀ I : ★. ∀ X : I ➔ ★.
   (Λ q. ρ ς q - (elimIdDep · Y · (λ y : Y. X (r y)) c y))
   β.
 
+applyDep ◂ ∀ Y : ★. ∀ X : ★.
+  ∀ P : ★. ∀ Q : P ➔ Y ➔ ★.
+  ∀ p : P. Π c : IdDep · Y · (λ y : Y. Q p y ➾ X).
+  IdDep · Y · (λ y : Y. (Π p : P. Q p y) ➾ X)
+  = Λ Y. Λ X. Λ P. Λ Q. Λ p. λ c. λ y.
+  pairIdDep · Y · (λ y : Y. (Π p : P. Q p y) ➾ X) -y
+  (Λ f. elimIdDep · Y · (λ y : Y. Q p y ➾ X) c y -(f p))
+  β.
+
+apply ◂ ∀ Y : ★. ∀ X : ★.
+  ∀ P : ★. ∀ Q : Y ➔ ★.
+  ∀ p : P. Π c : IdDep · Y · (λ y : Y. Q y ➾ X).
+  IdDep · Y · (λ y : Y. (P ➔ Q y) ➾ X)
+  = Λ Y. Λ X. Λ P. Λ Q.
+  applyDep · Y · X · P · (λ p : P. Q).
+
 supplyPrem ◂ ∀ Y : ★. ∀ P : ★. ∀ X : ★.
   P ➔ Id · Y · (P ➾ X) ➔
   Id · Y · X
