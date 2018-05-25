@@ -26,8 +26,8 @@ Lift ◂ Π I : ★. Π F : ((I ➔ ★) ➔ (I ➔ ★)). Π imap : IIdMapping 
 LiftProp1 ◂ ∀ I : ★. ∀ F : ((I ➔ ★) ➔ (I ➔ ★)). ∀ imap : IIdMapping · I · F. ∀ Q : Π i : I. IFixIndM · I · F imap i ➔ ★.
  ∀ i : I. ∀ e : IFixIndM · I · F imap i. (Lift · I · F imap · Q i e.1) ➔ Q i e 
  = Λ I. Λ F. Λ imap.  Λ Q. Λ i. Λ e. λ pr. 
- ρ (projProd1 · {e ≃ (proj1 · (FixIndM · F imap) · 
-   (λ x' : (FixIndM · F imap). Product · {e ≃ x'.1} · (Q x')) pr)} · 
+ ρ (projProd1 · {e ≃ (proj1 · (IFixIndM · I · F imap) · 
+   (λ x' : (IFixIndM · I · F imap). Product · {e ≃ x'.1} · (Q x')) pr)} · 
    (Q i (proj1 · (IFixIndM · I · F imap i) · (λ x' : (IFixIndM · I · F imap i). Product · {e ≃ x'} · (Q i x')) pr)) 
    (proj2 · (IFixIndM · I · F imap i) · (λ x' : (IFixIndM · I · F imap i). Product · {e ≃ x'} · (Q i x')) pr)) -   
    (projProd2 · {e ≃ (proj1 pr)} · 
