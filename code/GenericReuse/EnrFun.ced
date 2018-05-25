@@ -3,42 +3,6 @@ import Unit.
 import Id.
 import Aux.
 
-piAll2allPiP' ◂ ∀ Y : ★. ∀ P : Y ➔ ★.
-  ∀ Y' : Π y : Y. P y ➔ ★. ∀ Q : Π y : Y. Π p : P y. Y' y p ➔ ★.
-  ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★.
-  Π c1 : ∀ i : I. Id · (X i) · Y.
-  Π c1' : ∀ i : I. Π x : X i. P (elimId · (X i) · Y (c1 -i) x).
-  Π c2 : ∀ i : I. Π x : X i. IdDep · (Y' (elimId · (X i) · Y (c1 -i) x) (c1' -i x))
-    · (λ y' : Y' (elimId · (X i) · Y (c1 -i) x) (c1' -i x). Q (elimId · (X i) · Y (c1 -i) x) (c1' -i x) y' ➾ X' i x).
-  IdDep · (Π y : Y. ∀ p : P y. Y' y p) · (λ f : Π y : Y. ∀ p : P y. Y' y p.
-    (Π y : Y. Π p : P y. Q y p (f y -p)) ➾
-    ∀ i : I. Π x : X i. X' i x)
-  = Λ Y. Λ P. Λ Y'. Λ Q. Λ I. Λ X. Λ X'. λ c1. λ c1'. λ c2. λ f. pairIdDep
-  · (Π y : Y. ∀ p : P y. Y' y p)
-  · (λ f : Π y : Y. ∀ p : P y. Y' y p.
-    (Π y : Y. Π p : P y. Q y p (f y -p)) ➾
-    ∀ i : I. Π x : X i. X' i x) -f
-  (Λ q. Λ i. λ x. elimIdDep
-  · (Y' (elimId · (X i) · Y (c1 -i) x) (c1' -i x))
-  · (λ y' : Y' (elimId · (X i) · Y (c1 -i) x) (c1' -i x). Q (elimId · (X i) · Y (c1 -i) x) (c1' -i x) y' ➾ X' i x)
-  (c2 -i x)
-  (f (elimId · (X i) · Y (c1 -i) x) -(c1' -i x))
-  -(q (elimId · (X i) · Y (c1 -i) x) (c1' -i x))
-  ) β.
-
-piImp2allArrP' ◂ ∀ Y : ★. ∀ P : Y ➔ ★. ∀ Y' : ★.
-  ∀ Q : Π y : Y. Π p : P y. Y' ➔ ★.
-  ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : I ➔ ★.
-  Π c1 : ∀ i : I. Id · (X i) · Y.
-  Π c1' : ∀ i : I. Π x : X i. P (elimId · (X i) · Y (c1 -i) x).
-  Π c2 : ∀ i : I. Π x : X i. IdDep · Y'
-    · (λ y' : Y'. Q (elimId · (X i) · Y (c1 -i) x) (c1' -i x) y' ➾ X' i).
-  IdDep · (Π y : Y. P y ➾ Y') · (λ f : Π y : Y. P y ➾ Y'.
-    (Π y : Y. Π p : P y. Q y p (f y -p)) ➾
-    ∀ i : I. X i ➔ X' i)
-  = Λ Y. Λ P. Λ Y'. Λ Q. Λ I. Λ X. Λ X'.
-  piAll2allPiP' · Y · P · (λ y : Y. λ p : P y. Y') · Q · I · X · (λ i : I. λ x : X i. X' i).
-
 pi2allPiP' ◂ ∀ Y : ★. ∀ Y' : Y ➔ ★. ∀ P : Π y : Y. Y' y ➔ ★.
   ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★.
   Π c1 : ∀ i : I. Id · (X i) · Y.
@@ -68,47 +32,49 @@ arr2allArrP' ◂ ∀ Y : ★. ∀ Y' : ★. ∀ P : Y ➔ Y' ➔ ★.
     ∀ i : I. X i ➔ X' i)
   = Λ Y. Λ Y'. Λ P. Λ I. Λ X. Λ X'.
   pi2allPiP' · Y · (λ y : Y. Y') · (λ y : Y. λ y' : Y'. P y y') · I · X · (λ i : I. λ x : X i. X' i).
-  
-arr2allArrP ◂ ∀ Y : ★. ∀ Y' : ★. ∀ P : Y ➔ Y' ➔ ★.
-  ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : I ➔ ★.
-  Π r : Y ➔ I.
-  Π c1 : ∀ i : I. Id · (X i) · Y.
-  Π c1' : ∀ i : I. Π x : X i. {i ≃ r x}.
-  Π c2 : Π y : Y. IdDep · Y' · (λ y' : Y'. P y y' ➾ X' (r y)).
-  IdDep · (Y ➔ Y') · (λ f : Y ➔ Y'.
-    (Π y : Y. P y (f y)) ➾
-    ∀ i : I. X i ➔ X' i)
-  = Λ Y. Λ Y'. Λ P. Λ I. Λ X. Λ X'. λ r. λ c1. λ c1'. λ c2.
-  arr2allArrP' · Y · Y' · P · I · X · X' c1
-  (Λ i. λ x. ρ (c1' -i x) - (c2 (elimId · (X i) · Y (c1 -i) x))) .
 
 pi2allPiP ◂ ∀ Y : ★. ∀ Y' : Y ➔ ★. ∀ P : Π y : Y. Y' y ➔ ★.
   ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★.
   Π r : Y ➔ I.
   Π c1 : ∀ i : I. Id · (X i) · Y.
   Π c1' : ∀ i : I. Π x : X i. {i ≃ r x}.
-  Π c2 : IdDep · Y · (λ y : Y. X (r y)).
-  Π c3 : Π y : Y. IdDep · (Y' y)
-    · (λ y' : Y' y. P y y' ➾ X' (r y) (elimIdDep · Y · (λ y : Y. X (r y)) c2 y)).
+  Π c2 : ∀ i : I. Π x : X i. IdDep · (Y' (elimId · (X i) · Y (c1 -i) x))
+    · (λ y' : Y' (elimId · (X i) · Y (c1 -i) x).
+    P (elimId · (X i) · Y (c1 -i) x) y' ➾
+    X' (r (elimId · (X i) · Y (c1 -i) x)) (ρ ς (c1' -i x) - x)).
   IdDep · (Π y : Y. Y' y) · (λ f : Π y : Y. Y' y.
     (Π y : Y. P y (f y)) ➾
     ∀ i : I. Π x : X i. X' i x)
-  = Λ Y. Λ Y'. Λ P. Λ I. Λ X. Λ X'. λ r. λ c1. λ c1'. λ c2. λ c3.
+  = Λ Y. Λ Y'. Λ P. Λ I. Λ X. Λ X'. λ r. λ c1. λ c1'. λ c2.
   pi2allPiP' · Y · Y' · P · I · X · X' c1
-  (Λ i. λ x. ρ (c1' -i x) - (c3 (elimId · (X i) · Y (c1 -i) x))).
+  (Λ i. λ x. ρ (c1' -i x) - c2 -i x).
+  
+arr2allArrP ◂ ∀ Y : ★. ∀ Y' : ★. ∀ P : Y ➔ Y' ➔ ★.
+  ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : I ➔ ★.
+  Π r : Y ➔ I.
+  Π c1 : ∀ i : I. Id · (X i) · Y.
+  Π c1' : ∀ i : I. Π x : X i. {i ≃ r x}.
+  Π c2 : ∀ i : I. Π x : X i. IdDep · Y' · (λ y' : Y'.
+    P (elimId · (X i) · Y (c1 -i) x) y' ➾ X' (r (elimId · (X i) · Y (c1 -i) x))).
+  IdDep · (Y ➔ Y') · (λ f : Y ➔ Y'.
+    (Π y : Y. P y (f y)) ➾
+    ∀ i : I. X i ➔ X' i)
+  = Λ Y. Λ Y'. Λ P. Λ I. Λ X. Λ X'.
+  pi2allPiP · Y · (λ y : Y. Y') · (λ y : Y. λ y' : Y'. P y y') · I · X · (λ i : I. λ x : X i. X' i).
 
 pi2allPi ◂ ∀ Y : ★. ∀ Y' : Y ➔ ★.
   ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★.
   Π r : Y ➔ I.
   Π c1 : ∀ i : I. Id · (X i) · Y.
   Π c1' : ∀ i : I. Π x : X i. {i ≃ r x}.
-  Π c2 : IdDep · Y · (λ y : Y. X (r y)).
-  Π c3 : Π y : Y. Id · (Y' y) · (X' (r y) (elimIdDep · Y · (λ y : Y. X (r y)) c2 y)).
+  Π c2 : ∀ i : I. Π x : X i. Id · (Y' (elimId · (X i) · Y (c1 -i) x))
+    · (X' (r (elimId · (X i) · Y (c1 -i) x)) (ρ ς (c1' -i x) - x)).
   Id · (Π y : Y. Y' y) · (∀ i : I. Π x : X i. X' i x)
-  = Λ Y. Λ Y'. Λ I. Λ X. Λ X'. λ r. λ c1. λ c1'. λ c2. λ c3.
+  = Λ Y. Λ Y'. Λ I. Λ X. Λ X'. λ r. λ c1. λ c1'. λ c2.
   supplyPrem · (Π y : Y. Y' y) · (Y ➔ Unit) · (∀ i : I. Π x : X i. X' i x) (λ y. unit)
-  (pi2allPiP · Y · Y' · (λ y : Y. λ y' : Y' y. Unit) · I · X · X' r c1 c1' c2
-  (λ y. skipPrem · (Y' y) · Unit · (X' (r y) (elimIdDep · Y · (λ y : Y. X (r y)) c2 y))
-  (c3 y)
+  (pi2allPiP · Y · Y' · (λ y : Y. λ y' : Y' y. Unit) · I · X · X' r c1 c1'
+  (Λ i. λ x. skipPrem · (Y' (elimId · (X i) · Y (c1 -i) x)) · Unit
+    · (X' (r (elimId · (X i) · Y (c1 -i) x)) (ρ ς (c1' -i x) - x))
+    (c2 -i x)
   )).
 
