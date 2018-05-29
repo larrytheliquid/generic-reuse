@@ -63,27 +63,27 @@ arr2allArrP ◂ ∀ Y : ★. ∀ Y' : ★. ∀ P : Y ➔ Y' ➔ ★.
   pi2allPiP · Y · (λ y : Y. Y') · (λ y : Y. λ y' : Y'. P y y') · I · X · (λ i : I. λ x : X i. X' i).
 
 arr2allArrP2 ◂ ∀ Y : ★. ∀ Y' : ★. ∀ I : ★.
-  ∀ P : I ➔ Y ➔ ★. ∀ P' : I ➔ Y ➔ Y' ➔ ★.
+  ∀ P : I ➔ Y ➔ ★. ∀ P' : I ➔ Y' ➔ ★.
   ∀ X : I ➔ ★. ∀ X' : I ➔ ★.
   Π c1 : ∀ i : I. Id · (X i) · Y.
   Π c1' : Π i : I. Π x : X i. P i (elimId · (X i) · Y (c1 -i) x).
-  Π c2 : ∀ i : I. Π x : X i. IdDep · Y' · (λ y' : Y'.
-    P' i (elimId · (X i) · Y (c1 -i) x) y' ➾ X' i).
+  Π c2 : ∀ i : I. IdDep · Y' · (λ y' : Y'.
+    P' i y' ➾ X' i).
   IdDep · (Y ➔ Y') · (λ f : Y ➔ Y'.
-    (Π y : Y. Π i : I. P i y ➔ P' i y (f y)) ➾
+    (Π y : Y. Π i : I. P i y ➔ P' i (f y)) ➾
     ∀ i : I. X i ➔ X' i)
   = Λ Y. Λ Y'. Λ I. Λ P. Λ P'. Λ X. Λ X'. λ c1. λ c1'. λ c2.
   arr2allArrP' · Y · Y'
-  · (λ y : Y. λ y' : Y'. Π i : I. P i y ➔ P' i y y')
+  · (λ y : Y. λ y' : Y'. Π i : I. P i y ➔ P' i y')
   · I · X · X'
   c1
   (Λ i. λ x. applyDep · Y' · (X' i) · I
-  · (λ i' : I. λ y' : Y'. P i' (elimId · (X i) · Y (c1 -i) x) ➔ P' i' (elimId · (X i) · Y (c1 -i) x) y')
+  · (λ i' : I. λ y' : Y'. P i' (elimId · (X i) · Y (c1 -i) x) ➔ P' i' y')
   -i
   (apply · Y' · (X' i) · (P i (elimId · (X i) · Y (c1 -i) x))
-  · (P' i (elimId · (X i) · Y (c1 -i) x))
+  · (P' i)
   -(c1' i x)
-  (c2 -i x)
+  (c2 -i)
   )).
 
 pi2allPi ◂ ∀ Y : ★. ∀ Y' : Y ➔ ★.

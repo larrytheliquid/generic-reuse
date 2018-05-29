@@ -21,7 +21,7 @@ TpPres ◂ StepR ➔ ★ = λ betaR : StepR. Π t : Raw. TpPres1 t (betaR t).
 
 StepT ◂ ★ = ∀ GA : CtxTp. Term GA ➔ Term GA.
 
-betaR2betaT ◂ IdDep · StepR · (λ f : StepR. TpPres f ➾ StepT)
+betaR2betaT' ◂ IdDep · StepR · (λ f : StepR. TpPres f ➾ StepT)
   = arr2allArrP'
   · Raw · Raw · TpPres1
   · CtxTp · Term · Term
@@ -36,3 +36,15 @@ betaR2betaT ◂ IdDep · StepR · (λ f : StepR. TpPres f ➾ StepT)
   -(termTyped GA t)
   (r2tP -GA)
   )).
+
+TpPres' ◂ StepR ➔ ★ = λ betaR : StepR.
+  Π t : Raw. Π GA : CtxTp. Typed GA t ➔ Typed GA (betaR t).
+
+betaR2betaT ◂ IdDep · StepR · (λ f : StepR. TpPres' f ➾ StepT)
+  = arr2allArrP2
+  · Raw · Raw · CtxTp
+  · Typed · Typed
+  · Term · Term
+  t2r termTyped
+  r2tP
+.
