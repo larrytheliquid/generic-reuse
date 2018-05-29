@@ -1,0 +1,34 @@
+import Id.
+import Ctx.
+import Tp.
+import Raw.
+import Term.
+import EnvR.
+import EnvT.
+module SubReuse
+  (Typed : CtxTp ➔ Raw ➔ ★)
+  (t2r : ∀ GA : CtxTp. Id · (Term GA) · Raw)
+  (termTyped : Π GA : CtxTp. Π t : Term GA. Typed GA (elimId · (Term GA) · Raw (t2r -GA) t))
+  (r2tP : ∀ GA : CtxTp. IdDep · Raw · (λ t : Raw. Typed GA t ➾ Term GA))
+  
+  (Taking : Ctx2 ➔ EnvR ➔ ★)
+  (ts2rs : ∀ GD : Ctx2. Id · (EnvT GD) · EnvR)
+  (envTaking : Π GD : Ctx2. Π e : EnvT GD. Taking GD (elimId · (EnvT GD) · EnvR (ts2rs -GD) e))
+  (rs2tsP : ∀ GD : Ctx2. IdDep · EnvR · (λ e : EnvR. Taking GD e ➾ EnvT GD))
+.
+import Aux.
+import FogFun.
+import EnrFun.
+
+SubR ◂ ★ = EnvR ➔ Raw ➔ Raw.
+
+TpPres ◂ SubR ➔ ★ = λ subR : SubR.
+  Π e : EnvR. Π GD : Ctx2. Taking GD e ➔
+  Π t : Raw. Π GA : CtxTp. Typed GA t ➔
+  Typed GA (subR e t).
+
+SubT ◂ ★ = ∀ GD : Ctx2. EnvT GD ➔ ∀ GA : CtxTp. Term GA ➔
+  Term (pairCtxTp (projCtx2 GD) (projTp GA)).
+
+subR2subT ◂ IdDep · SubR · (λ f : SubR. TpPres f ➾ SubT)
+  = ●.
