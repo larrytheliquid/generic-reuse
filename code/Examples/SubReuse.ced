@@ -20,15 +20,37 @@ import Aux.
 import FogFun.
 import EnrFun.
 
-SubR ◂ ★ = EnvR ➔ Raw ➔ Raw.
+SubR2 ◂ ★ = Raw.
+SubR1 ◂ ★ = Raw ➔ SubR2.
+SubR ◂ ★ = EnvR ➔ SubR1.
 
+SubT2 ◂ Ctx2 ➔ CtxTp ➔ ★ = λ GD : Ctx2. λ GA : CtxTp.
+  Term (pairCtxTp (projCtx2 GD) (projTp GA)).
+SubT1 ◂ Ctx2 ➔ ★ = λ GD : Ctx2.
+  ∀ GA : CtxTp. Term GA ➔
+  SubT2 GD GA.
+SubT ◂ ★ = ∀ GD : Ctx2. EnvT GD ➔ SubT1 GD.
+
+TpPres2 ◂ Ctx2 ➔ CtxTp ➔ SubR2 ➔ ★ = λ GD : Ctx2. λ GA : CtxTp. λ subR2 : SubR2.
+  Typed GA subR2.
+TpPres1 ◂ Ctx2 ➔ SubR1 ➔ ★ = λ GD : Ctx2. λ subR1 : SubR1.
+  Π t : Raw. Π GA : CtxTp. Typed GA t ➔
+  TpPres2 GD GA (subR1 t).
 TpPres ◂ SubR ➔ ★ = λ subR : SubR.
   Π e : EnvR. Π GD : Ctx2. Taking GD e ➔
-  Π t : Raw. Π GA : CtxTp. Typed GA t ➔
-  Typed GA (subR e t).
-
-SubT ◂ ★ = ∀ GD : Ctx2. EnvT GD ➔ ∀ GA : CtxTp. Term GA ➔
-  Term (pairCtxTp (projCtx2 GD) (projTp GA)).
+  TpPres1 GD (subR e).
 
 subR2subT ◂ IdDep · SubR · (λ f : SubR. TpPres f ➾ SubT)
-  = ●.
+  = arr2allArrP2
+  · EnvR · SubR1 · Ctx2
+  · Taking · TpPres1
+  · EnvT · SubT1
+  ts2rs envTaking
+  (Λ GD. arr2allArrP2
+  · Raw · SubR2 · CtxTp
+  · Typed · (TpPres2 GD)
+  · Term · (SubT2 GD)
+  t2r termTyped
+  (Λ GA. ● -- r2tP -(pairCtxTp (projCtx2 GD) (projTp GA))
+  )).
+
