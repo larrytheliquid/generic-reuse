@@ -3,7 +3,7 @@ import Ctx.
 import Tp.
 import Raw.
 import Term.
-module BetaReuse
+module StepReuse
   (Typed : CtxTp ➔ Raw ➔ ★)
   (t2r : ∀ GA : CtxTp. Id · (Term GA) · Raw)
   (termTyped : Π GA : CtxTp. Π t : Term GA. Typed GA (elimId · (Term GA) · Raw (t2r -GA) t))
@@ -13,15 +13,15 @@ import Aux.
 import FogFun.
 import EnrFun.
 
-BetaR ◂ ★ = Raw ➔ Raw.
+StepR ◂ ★ = Raw ➔ Raw.
 
 TpPres2 ◂ Raw ➔ CtxTp ➔ Raw ➔ ★ = λ t : Raw. λ GA : CtxTp. λ t' : Raw. Typed GA t ➔ Typed GA t'.
 TpPres1 ◂ Raw ➔ Raw ➔ ★ = λ t : Raw. λ t' : Raw. Π GA : CtxTp. TpPres2 t GA t'.
-TpPres ◂ BetaR ➔ ★ = λ betaR : BetaR. Π t : Raw. TpPres1 t (betaR t).
+TpPres ◂ StepR ➔ ★ = λ betaR : StepR. Π t : Raw. TpPres1 t (betaR t).
 
-BetaT ◂ ★ = ∀ GA : CtxTp. Term GA ➔ Term GA.
+StepT ◂ ★ = ∀ GA : CtxTp. Term GA ➔ Term GA.
 
-betaR2betaT ◂ IdDep · BetaR · (λ f : BetaR. TpPres f ➾ BetaT)
+betaR2betaT ◂ IdDep · StepR · (λ f : StepR. TpPres f ➾ StepT)
   = arr2allArrP'
   · Raw · Raw · TpPres1
   · CtxTp · Term · Term
