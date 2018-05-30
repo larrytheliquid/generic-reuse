@@ -8,20 +8,20 @@ file in Cedille, open a file in Emacs whose extension is `.ced`.
 The code should be black and white, and the mode displayed at the
 bottom of the buffer should be "(cedille)".
 
-Pressing `M-s` (the meta key, e.g. alt, and `s`) checks the file,
-which adds syntax highlighting and adds navigation mode (navi) to the
-bottom of the buffer "(cedille navi)". The file passed type checking
-if pressing `r` results in the message "No errors." at the bottom of
-the file buffer.
+Pressing `M-s` (the meta key, e.g. the alt key, and the character 's')
+checks the file, which adds syntax highlighting and adds navigation
+mode (navi) to the bottom of the buffer, which should now display
+"(cedille navi)". The file passed type checking if pressing `r`
+results in the message "No errors." at the bottom of the file buffer.
 
 This is all that is required to evaluate our artifact, for each file
-described in Part 2. If you feel more adventurous, feel free to press
-`h` to enter Cedille's help mode, then click "cedille mode commands"
-to learn how to navigate the code's AST, and display the context (`c`)
-and goal (`i`) once focusing on a particular node (by pressing `p`
-with the cursor on a node), and how to unfocus a node (by pressing
-`g`). It is also possible to jump (by pressing `j`) to the definition
-of a focused node, and jump back (by pressing `,`).
+described in Parts 2 and 3. If you feel more adventurous, feel free to
+press `h` to enter Cedille's help mode, then click "cedille mode
+commands" to learn how to navigate the code's AST, and display the
+context (`c`) and goal (`i`) once focusing on a particular node (by
+pressing `p` with the cursor on a node), and how to unfocus a node (by
+pressing `g`). It is also possible to jump (by pressing `j`) to the
+definition of a focused node, and jump back (by pressing `,`).
 
 
 Part 2: Step-by-Step Evaluation Instructions
@@ -34,8 +34,8 @@ message is displayed. Also, verify that the definitions described
 below appear in the Cedille file and the paper section.
 
 Note that the paper's code is much more terse, as it omits types
-inferrable via a sufficiently advanced unification algorithm not
-currently implemented by Cedille. Hence, the Cedille code is more
+inferrable by a sufficiently advanced unification algorithm, which is
+not currently implemented by Cedille. Hence, the Cedille code is more
 verbose, but we did our best to use type synonyms where possible to
 maintain the readability of our code.
 
@@ -107,9 +107,9 @@ append functions and associativity proofs:
 3. Enriching program reuse `appL2appV` (Section 4.3.2).
 4. Enriching proof reuse `assocL2assocV` (Section 4.3.3).
 
-Note that these examples make extensive use of type synonyms to break
-apart a type into the various pieces that would be inferred by a more
-advantaged implementation of Cedille, e.g. AppV1 through AppV3,
+Note that these examples make extensive use of type synonyms to split
+a type into the various pieces that would be inferred by a more
+sophisticated implementation of Cedille, e.g. AppV1 through AppV3,
 AssocV1 through AssocV4, etc.
 
 Data Reuse Examples
@@ -156,14 +156,16 @@ a total function). Thus, lists can be enriched to vectors by
 calculating the index via the length algebra. Some indexed types
 cannot have their indices computed by a total function (e.g. typed
 STLC terms) from their untyped counterparts. Hence, the file also
-contains `fix2ifixP`, which allows data to be enriched if it satisfies
-a premise (e.g. the typing relation of an untyped STLC term).
+contains combinator `fix2ifixP`, which allows data to be enriched if
+it satisfies a premise (e.g. the typing relation of an untyped STLC
+term).
 
 Data Reuse Examples
 -------------------
 
-Data reuse is between typed STLC `Term`s (code/Datatypes/Term.ced) and
-untyped (prior to typechecking) `Raw` terms (code/Datatypes/Raw.ced).
+Data reuse is between typed (the positive result of type checking)
+STLC `Term`s (code/Datatypes/Term.ced) and untyped (prior to type
+checking) `Raw` terms (code/Datatypes/Raw.ced).
 
 File `code/Examples/RawTermReuse.ced` contains examples of reusing
 raw and and typed terms:
@@ -173,8 +175,9 @@ raw and and typed terms:
 4. Enriching reuse of natural numbers as list membership proofs `n2iP` & `nf2ifP`
 
 The list membership proofs are used to ensure that a type appears in
-the context, in the well-typed variable constructor (`ivar`) of
-`Term`.
+the context, as an argument to the well-typed variable constructor of
+`Term`. The `Raw` term variable constructor simply has a natural
+number as its argument, representing the de Bruijn index.
 
 Raw terms are enrichable if they satisfy a typing relation (`Typed`),
 given abstractly as a module parameter. Any implementation of `Typed`
@@ -192,7 +195,7 @@ Program Reuse Examples
 
 For program reuse, we show how to enrich a one-step
 (beta + congruence) reduction function on raw terms to a
-type-preserving one typed terms.
+type-preserving version on typed terms.
 
 File `code/Examples/StepReuse.ced` contains an example of enriching
 program reuse of a step function as the term `stepR2stepT`.  The
