@@ -19,7 +19,9 @@ described in Part 2. If you feel more adventurous, feel free to press
 `h` to enter Cedille's help mode, then click "cedille mode commands"
 to learn how to navigate the code's AST, and display the context (`c`)
 and goal (`i`) once focusing on a particular node (by pressing `p`
-with the cursor on a node), and how to unfocus a node (by pressing `g`).
+with the cursor on a node), and how to unfocus a node (by pressing
+`g`). It is also possible to jump (by pressing `j`) to the definition
+of a focused node, and jump back (by pressing `,`).
 
 Part 2: Step-by-Step Evaluation Instructions
 ============================================
@@ -94,6 +96,28 @@ Enriching Data Reuse Combinator
 File `code/GenericReuse/EnrFix.ced` contains the enriching data
 (fixpoint) reuse combinator `fix2ifix` (Section 5.5.1).
 
+Program Reuse Examples
+----------------------
+
+File `code/Examples/AppendReuse.ced` contains examples of reusing
+append functions and associativity proofs:
+1. Forgetful program reuse `appV2appL` (Section 4.2.2).
+2. Forgetful proof reuse `assocV2assocL` (Section 4.2.4).
+3. Enriching program reuse `appL2appV` (Section 4.3.2).
+4. Enriching proof reuse `assocL2assocV` (Section 4.3.3).
+
+Note that these examples make extensive use of type synonyms to break
+apart a type into the various pieces that would be inferred by a more
+advantaged implementation of Cedille, e.g. AppV1 through AppV3,
+AssocV1 through AssocV4, etc.
+
+Data Reuse Examples
+-------------------
+
+File `code/Examples/ListVecReuse.ced` contains examples of reusing
+lists and vectors:
+1. Forgetful reuse of vectors as lists `v2l` & `vf2lf` (Section 5.3.2)
+2. Enriching reuse of lists as vectors `l2v` & `lf2vf` (Section 5.5.2)
 
 Identity Mappings
 -----------------
