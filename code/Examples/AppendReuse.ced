@@ -1,21 +1,12 @@
 import Id.
-module AppendReuse
-  (Nat : ★) (List : ★ ➔ ★) (Vec : ★ ➔ Nat ➔ ★)
-  (add : Nat ➔ Nat ➔ Nat)
-  (len : ∀ A : ★. List · A ➔ Nat)
-  (v2l : ∀ A : ★. ∀ n : Nat. Id · (Vec · A n) · (List · A))
-  (v2lPres : ∀ A : ★. ∀ n : Nat. Π xs : Vec · A n. {n ≃ len xs})
-  (l2v : ∀ A : ★. IdDep · (List · A) · (λ xs : List · A. Vec · A (len · A xs)))
- .
 import Aux.
 import FogFun.
 import EnrFun.
-
-v2l! ◂ ∀ A : ★. ∀ n : Nat. Vec · A n ➔ List · A
-  = Λ A. Λ n. elimId · (Vec · A n) · (List · A) (v2l · A -n).
-l2v! ◂ ∀ A : ★. Π xs : List · A. Vec · A (len · A xs)
-  = Λ A. elimIdDep · (List · A) · (λ xs : List · A. Vec · A (len · A xs)) (l2v · A).
-
+import Nat.
+import List.
+import Vec.
+import ListVecReuse.
+module AppendReuse.
 
 AppL3 ◂ ★ ➔ ★ = λ A : ★ . List · A.
 AppL2 ◂ ★ ➔ ★ = λ A : ★ . List · A ➔ AppL3 · A.
@@ -89,15 +80,6 @@ assocV2assocL ◂ ∀ appV : AppV. Id · (AssocV appV) · (AssocL (appV2appL! ap
   )))).
 assocV2assocL! ◂ ∀ appV : AppV. AssocV appV ➔ AssocL (appV2appL! appV)
   = Λ appV. elimId · (AssocV appV) · (AssocL (appV2appL! appV)) (assocV2assocL -appV).
-
-
-VecP ◂ Π A : ★. Nat ➔ List · A ➔ ★ = λ A : ★. λ n : Nat. λ xs : List · A. {len xs ≃ n} ➾ Vec · A n.
-l2vP ◂ ∀ A : ★. ∀ n : Nat. IdDep · (List · A) · (VecP · A n)
-  = Λ A. Λ n. subst
-  · (List · A) · Nat · (Vec · A) -(len · A)
-  -n (l2v · A).
-l2vP! ◂ ∀ A : ★. ∀ n : Nat. Π xs : List · A. VecP · A n xs
-  = Λ A. Λ n. elimIdDep · (List · A) · (VecP · A n) (l2vP · A -n).
 
 DistL3 ◂ Π A : ★. List · A ➔ List · A ➔ AppL3 · A ➔ ★ = λ A : ★.
   λ xs : List · A. λ ys : List · A. λ zs : AppL3 · A.

@@ -3,15 +3,15 @@ import Ctx.
 import Tp.
 import Raw.
 import Term.
+import Aux.
+import FogFun.
+import EnrFun.
 module StepReuse
   (Typed : CtxTp ➔ Raw ➔ ★)
   (t2r : ∀ GA : CtxTp. Id · (Term GA) · Raw)
   (termTyped : Π GA : CtxTp. Π t : Term GA. Typed GA (elimId · (Term GA) · Raw (t2r -GA) t))
   (r2tP : ∀ GA : CtxTp. IdDep · Raw · (λ t : Raw. Typed GA t ➾ Term GA))
 .
-import Aux.
-import FogFun.
-import EnrFun.
 
 StepR ◂ ★ = Raw ➔ Raw.
 

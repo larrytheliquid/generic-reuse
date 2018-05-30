@@ -6,6 +6,7 @@ import IIdMapping.
 import IFixIndM.
 import IInductionM.
 import VecF.
+import List.
 
 Vec ◂ ★ ➔ Nat ➔ ★ = λ A : ★. λ n : Nat. IFixIndM · Nat · (VecF · A) (imapV · A) n.
 nilV ◂ ∀ A : ★. Vec · A zero
@@ -34,3 +35,8 @@ foldVec ◂ ∀ A : ★. ∀ C : Nat ➔ ★.
   ∀ n : Nat. Vec · A n ➔ C n
   = Λ A. Λ C. elimVec · A · (λ n : Nat. λ xs : Vec · A n. C n).
 
+v2lPres ◂ ∀ A : ★. ∀ n : Nat. Π xs : Vec · A n. {n ≃ len xs}
+  = Λ A. elimVec · A · (λ n : Nat. λ xs : Vec · A n. {n ≃ len xs})
+  β
+  (Λ n. λ x. λ xs. λ ih. ρ ih - β)
+.
