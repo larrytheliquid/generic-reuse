@@ -24,6 +24,25 @@ with the cursor on a node), and how to unfocus a node (by pressing `g`).
 Part 2: Step-by-Step Evaluation Instructions
 ============================================
 
+To evaluate our artifact, open each Cedille (.ced) file described below
+(which we map to the appropriate section in our paper), then press
+`M-s` to check it, and press `r` to verify that the "No errors."
+message is displayed. Also, verify that the definitions described
+below appear in the Cedille file and the paper section.
+
+Note that the paper's code is much more terse, as it omits types
+inferrable via a sufficiently advanced unification algorithm not
+currently implemented by Cedille. Hence, the Cedille code is more
+verbose, but we did our best to use type synonyms where possible to
+maintain the readability of our code.
+
+Finally, you may be interested in reading README.md for an overview of
+the directory structure of the code, including files and definitions
+that the paper assumes to exist (e.g. `code/Datatypes/Vec.ced`).
+However, understanding the directory structure and extra files is not
+necessary to evaluate our artifact, and the instructions below are
+sufficient. 
+
 Section 4.1: Type of Dependent Identity Functions
 -------------------------------------------------
 
