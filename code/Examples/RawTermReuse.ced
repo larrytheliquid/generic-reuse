@@ -17,7 +17,7 @@ import RawF.
 import Raw.
 import TermF.
 import Term.
-module RawTermReuse2
+module RawTermReuse
   (Lookup : Π A : ★. A ➔ List · A ➔ Nat ➔ ★)
   
   (invZeroTail : ∀ A : ★. Π x : A. Π xs : List · A. Lookup · A x xs zero ➔ List · A)

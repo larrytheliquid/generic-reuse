@@ -23,6 +23,7 @@ with the cursor on a node), and how to unfocus a node (by pressing
 `g`). It is also possible to jump (by pressing `j`) to the definition
 of a focused node, and jump back (by pressing `,`).
 
+
 Part 2: Step-by-Step Evaluation Instructions
 ============================================
 
@@ -137,8 +138,54 @@ File `code/GenericReuse/Aux.ced` contains the auxiliary combinators
 from Figure 2 in the paper: `id`, `copyType`, `copyTypeP`, and `subst`
 (as well as others not in the paper).
 
+
 Part 3: Mandatory Revisions
 ===========================
+
+For completeness, we have also included code addressing some mandatory
+revisions of our paper. Because the text describing the revisions has
+not yet been written, we do not expect you to verify this part, but we
+include it below in case you are interested.
+
+Enriching Data Reuse Combinator with a Premise
+----------------------------------------------
+
+As mentioned in Part 2, file `code/GenericReuse/EnrFix.ced` contains
+`fix2ifix`, which enriches data by providing an algebra (representing
+a total function). Thus, lists can be enriched to vectors by
+calculating the index via the length algebra. Some indexed types
+cannot have their indices computed by a total function (e.g. typed
+STLC terms) from their untyped counterparts. Hence, the file also
+contains `fix2ifixP`, which allows data to be enriched if it satisfies
+a premise (e.g. the typing relation of an untyped STLC term).
+
+Data Reuse Examples
+-------------------
+
+Data reuse is between typed STLC `Term`s (code/Datatypes/Term.ced) and
+untyped (prior to typechecking) `Raw` terms (code/Datatypes/Raw.ced).
+
+File `code/Examples/RawTermReuse.ced` contains examples of reusing
+raw and and typed terms:
+1. Forgetful reuse of typed terms as raw terms `t2r` & `tf2rf`
+2. Forgetful reuse of list membership proofs as natural numbers `i2n` & `if2nf`
+3. Enriching reuse of raw terms as typed terms `r2tP` & `rf2tfP`
+4. Enriching reuse of natural numbers as list membership proofs `n2iP` & `nf2ifP`
+
+The list membership proofs are used to ensure that a type appears in
+the context, in the well-typed variable constructor (`ivar`) of
+`Term`.
+
+Raw terms are enrichable if they satisfy a typing relation (`Typed`),
+given abstractly as a module parameter. Any implementation of `Typed`
+works, as long as it is possible to satisfy the required inversion
+lemmas (e.g. `invLamEq`), which also appear as module parameters.
+
+Similarly, a natural number is enrichable to a membership proof if it
+satisfies an abstract `Lookup` relation saying that an element appears
+in the list at a particular natural number position. `Lookup` also can
+be implemented many different ways, and is specified by its required
+inversion lemmas.
 
 
 
