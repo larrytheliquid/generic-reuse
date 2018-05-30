@@ -51,18 +51,67 @@ However, understanding the directory structure and extra files is not
 necessary to evaluate our artifact, and the instructions below are
 sufficient. 
 
-Section 4.1: Type of Dependent Identity Functions
--------------------------------------------------
+Type of Dependent Identity Functions
+------------------------------------
 
 The file `code/Base/Id.ced` contains the following dependent identity
-function definitions: `IdDep`, `intrIdDep`, `elimIdDep`. It also
-contains the following non-dependent counterparts: `Id`, `intrId`,
-`elimId`.
+function (Section 4.1) definitions: `IdDep`, `intrIdDep`,
+`elimIdDep`. It also contains the following non-dependent
+counterparts: `Id`, `intrId`, `elimId`.
 
 Note that `elimIdDep` is defined in terms of the more general
 `elimIdDep~` (not in the paper), which allows the eliminated `IdDep`
 argument to be erased.
 
+Forgetful Program & Proof Reuse Combinators
+-------------------------------------------
+
+File `code/GenericReuse/FogFun.ced` contains the
+forgetful program (non-dependent function) reuse combinator
+`allArr2arr` (Section 4.2.1) and the forgetful proof
+(dependent function) reuse combinator `allPi2pi` (Section 4.2.3). Note
+that these are defined in terms of more general "prime" versions of
+the  combinators: ``allArr2arr'` and `allPi2pi'`. However, inlining
+the prime definitions results in the definitions of the paper.
+
+Enriching Program & Proof Reuse Combinators
+-------------------------------------------
+
+File `code/GenericReuse/EnrFun.ced` contains the
+enriching program (non-dependent function) reuse combinator
+`arr2allArrP` (Section 4.3.1) and the enriching proof (dependent
+function) reuse combinator `pi2allPiP` (Section 4.3.3).
+
+Forgetful Data Reuse Combinator
+-------------------------------
+
+File `code/GenericReuse/FogFix.ced` contains the forgetful data
+(fixpoint) reuse combinator `ifix2fix` (Section 5.3.1).
+
+Enriching Data Reuse Combinator
+-------------------------------
+
+File `code/GenericReuse/EnrFix.ced` contains the enriching data
+(fixpoint) reuse combinator `fix2ifix` (Section 5.5.1).
+
+
+Identity Mappings
+-----------------
+
+File `code/IndexedMendlerInduction/IIdMapping.ced` contains the
+non-indexed and indexed types of identity mappings (Section 5.1),
+`IdMapping` and `IIdMapping`, respectively.
+
+Files `code/Datatypes/ListF.ced` and `code/Datatypes/VecF.ced` contain
+the list and vector schemes (Figure 3) and identity mappings (Section 5.2),
+`ListF` & `imapL` and `VecF` & `imapV`, respectively.
+
+Auxiliary Combinators
+---------------------
+
+File `code/GenericReuse/Aux.ced` contains the auxiliary combinators
+from Figure 2 in the paper: `id`, `copyType`, `copyTypeP`, and `subst`
+(as well as others not in the paper).
 
 Part 3: Mandatory Revisions
 ===========================
