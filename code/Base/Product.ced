@@ -13,3 +13,7 @@ elimProd ◂ ∀ A : ★. ∀ B : ★. ∀ P : Product · A · B ➔ ★.
 
 projProd1 ◂ ∀ A : ★. ∀ B : ★. Product · A · B  ➔  A = Λ A. Λ B. proj1 · A · (λ _ : A. B).
 projProd2 ◂ ∀ A : ★. ∀ B : ★. Product · A · B  ➔  B = Λ A. Λ B. proj2 · A · (λ _ : A. B).
+
+etaProduct ◂ ∀ A : ★. ∀ B : ★. Π xs : Product · A · B.
+  { xs ≃ pairProd (projProd1 xs) (projProd2 xs) }
+  = Λ A. Λ B. etaSigma · A · (λ _ : A. B).

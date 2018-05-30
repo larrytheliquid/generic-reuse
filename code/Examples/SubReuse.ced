@@ -16,15 +16,25 @@ module SubReuse
   (envTaking : Π GD : Ctx2. Π e : EnvT GD. Taking GD (elimId · (EnvT GD) · EnvR (ts2rs -GD) e))
   (rs2tsP : ∀ GD : Ctx2. IdDep · EnvR · (λ e : EnvR. Taking GD e ➾ EnvT GD))
 .
+import Sigma.
+import Product.
 import Aux.
 import FogFun.
 import EnrFun.
+
+substP ◂ ∀ Y : ★. ∀ I : ★. ∀ P : I ➔ ★.
+  ∀ X : I ➔ ★. ∀ i : I. ∀ i' : I.
+  {i ≃ i'} ➾
+  Id · Y · (P i' ➾ X i') ➔
+  Id · Y · (({i ≃ i'} ➔ P i) ➾ X i)
+  = ●.
 
 SubR2 ◂ ★ = Raw.
 SubR1 ◂ ★ = Raw ➔ SubR2.
 SubR ◂ ★ = EnvR ➔ SubR1.
 
 SubT2 ◂ Ctx2 ➔ CtxTp ➔ ★ = λ GD : Ctx2. λ GA : CtxTp.
+  {projCtx GA ≃ projCtx2 GD} ➾ 
   Term (pairCtxTp (projCtx2 GD) (projTp GA)).
 SubT1 ◂ Ctx2 ➔ ★ = λ GD : Ctx2.
   ∀ GA : CtxTp. Term GA ➔
@@ -32,7 +42,7 @@ SubT1 ◂ Ctx2 ➔ ★ = λ GD : Ctx2.
 SubT ◂ ★ = ∀ GD : Ctx2. EnvT GD ➔ SubT1 GD.
 
 TpPres2 ◂ Ctx2 ➔ CtxTp ➔ SubR2 ➔ ★ = λ GD : Ctx2. λ GA : CtxTp. λ subR2 : SubR2.
-  Typed GA subR2.
+  {projCtx GA ≃ projCtx2 GD} ➾ Typed GA subR2.
 TpPres1 ◂ Ctx2 ➔ SubR1 ➔ ★ = λ GD : Ctx2. λ subR1 : SubR1.
   Π t : Raw. Π GA : CtxTp. Typed GA t ➔
   TpPres2 GD GA (subR1 t).
@@ -51,6 +61,8 @@ subR2subT ◂ IdDep · SubR · (λ f : SubR. TpPres f ➾ SubT)
   · Typed · (TpPres2 GD)
   · Term · (SubT2 GD)
   t2r termTyped
-  (Λ GA. ● -- r2tP -(pairCtxTp (projCtx2 GD) (projTp GA))
+  (Λ GA. -- ρ (etaProduct · Ctx · Tp GA) -
+  ●
   )).
+  -- r2tP -(pairCtxTp (projCtx2 GD) (projTp GA))
 

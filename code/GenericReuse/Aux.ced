@@ -3,7 +3,7 @@ import Unit.
 import Id.
 import Sigma.
 
-id ◂ ∀ A : ★. Id · A · A = Λ A . λ a. pairId · A · A -a a β .
+id ◂ ∀ A : ★. Id · A · A = Λ A . λ a. pairId · A · A -a a β.
 
 subst ◂ ∀ Y : ★. ∀ I : ★. ∀ X : I ➔ ★.
   ∀ r : Y ➔ I. ∀ i : I.
@@ -11,7 +11,7 @@ subst ◂ ∀ Y : ★. ∀ I : ★. ∀ X : I ➔ ★.
   IdDep · Y · (λ y : Y. {r y ≃ i} ➾ X i)
   = Λ Y. Λ I. Λ X. Λ r. Λ i. λ c. λ y. pairIdDep
   · Y · (λ y : Y. {r y ≃ i} ➾ X i) -y
-  (Λ q. ρ ς q - (elimIdDep · Y · (λ y : Y. X (r y)) c y))
+  (Λ q. ρ ς q - elimIdDep · Y · (λ y : Y. X (r y)) c y)
   β.
 
 applyDep ◂ ∀ Y : ★. ∀ X : ★.
