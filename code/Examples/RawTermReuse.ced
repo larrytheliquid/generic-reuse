@@ -71,7 +71,7 @@ if2nf ◂ ∀ A : ★. ∀ x : A. ∀ X : List · A ➔ ★. ∀ Y : ★.
 i2n ◂ ∀ A : ★. ∀ x : A. ∀ xs : List · A. Id · (Mem · A x xs) · Nat 
   = Λ A. Λ x. ifix2fix · (List · A) · (MemF · A x) · NatF
   (imapMem · A -x) imapN (if2nf · A -x).
-i2n# ◂ ∀ A : ★. ∀ x : A. ∀ xs : List · A. Mem · A x xs ➔ Nat 
+i2n! ◂ ∀ A : ★. ∀ x : A. ∀ xs : List · A. Mem · A x xs ➔ Nat 
   = Λ A. Λ x. Λ xs. elimId · (Mem · A x xs) · Nat (i2n · A -x -xs).
 
 ------------------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ tf2rf ◂ ∀ X : CtxTp ➔ ★. ∀ Y : ★.
   · (λ GA : CtxTp. IdCod · (TermF · X GA) · (RawF · Y))
   (Λ G. Λ A. λ i. pairId · (TermF · X (pairCtxTp G A)) · (RawF · Y)
     -(ivarF · X -G -A i)
-    (varF · Y (i2n# · Tp -A -G i))
+    (varF · Y (i2n! · Tp -A -G i))
     β
   )
   (Λ G. λ A. Λ B. λ b. pairId · (TermF · X (pairCtxTp G (Arr A B))) · (RawF · Y)
@@ -144,7 +144,7 @@ nf2ifP ◂ ∀ A : ★. ∀ x : A. ∀ Y : ★. ∀ X : List · A ➔ ★.
 n2iP ◂ ∀ A : ★. ∀ x : A. IdDep · Nat · (λ n : Nat. ∀ xs : List · A. Lookup · A x xs n ➾ Mem · A x xs)
   = Λ A. Λ x. fix2ifixP · NatF · (List · A) · (MemF · A x)
   imapN (imapMem · A -x) · (Lookup · A x) (nf2ifP · A -x).
-n2iP# ◂ ∀ A : ★. ∀ x : A. Π n : Nat. ∀ xs : List · A. Lookup · A x xs n ➾ Mem · A x xs
+n2iP! ◂ ∀ A : ★. ∀ x : A. Π n : Nat. ∀ xs : List · A. Lookup · A x xs n ➾ Mem · A x xs
   = Λ A. Λ x. elimIdDep · Nat · (λ n : Nat. ∀ xs : List · A. Lookup · A x xs n ➾ Mem · A x xs) (n2iP · A -x).
 
 ------------------------------------------------------------------------------------------
@@ -164,7 +164,7 @@ rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
     (Λ GA. Λ p.
       ρ (etaCtxTp GA) -
       ivarF · X -(projCtx GA) -(projTp GA)
-        (n2iP# · Tp -(projTp GA) n -(projCtx GA)
+        (n2iP! · Tp -(projTp GA) n -(projCtx GA)
           -(invVarLookup (projCtx GA) (projTp GA) n (ρ ς (etaCtxTp GA) - p))
         )
     )
