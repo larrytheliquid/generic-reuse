@@ -36,6 +36,14 @@ currently implemented by Cedille. Hence, the Cedille code is more
 verbose, but we did our best to use type synonyms where possible to
 maintain the readability of our code.
 
+Cedille's syntax distinguishes type application from
+term application, where type application uses a center dot. For
+example, in the paper we would see `Id AppV AppL`, whereas in the
+formalization we see `Id · AppV · AppL`. Erased term (rather than
+type) arguments (mostly omitted/inferred in the paper) are given via a
+dash. For example, `v2l! xs` in the paper becomes `v2l! · A -n xs` in
+the formalization.
+
 Finally, you may be interested in reading README.md for an overview of
 the directory structure of the code, including files and definitions
 that the paper assumes to exist (e.g. `code/Datatypes/Vec.ced`).
