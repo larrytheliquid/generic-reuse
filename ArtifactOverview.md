@@ -187,6 +187,18 @@ in the list at a particular natural number position. `Lookup` also can
 be implemented many different ways, and is specified by its required
 inversion lemmas.
 
+Program Reuse Examples
+----------------------
+
+For program reuse, we show how to enrich a one-step
+(beta + congruence) reduction function on raw terms to a
+type-preserving one typed terms.
+
+File `code/Examples/StepReuse.ced` contains an example of enriching
+program reuse of a step function as the term `stepR2stepT`.  The
+premise to `stepR2stepT` is that the step function for raw terms must
+preserve types, as specified by `TpPres`.
+
 
 
 
