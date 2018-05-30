@@ -138,6 +138,13 @@ File `code/GenericReuse/Aux.ced` contains the auxiliary combinators
 from Figure 2 in the paper: `id`, `copyType`, `copyTypeP`, and `subst`
 (as well as others not in the paper).
 
+Everything
+----------
+
+Finally, as a sanity check, `code/Everything.ced` imports all of the
+files mentioned above, so if it passes type checking then everything
+type checks.
+
 
 Part 3: Mandatory Revisions
 ===========================
