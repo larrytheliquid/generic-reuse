@@ -26,7 +26,7 @@ vf2lf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ Y :  ★.
 v2l ◂ ∀ A : ★. ∀ n : Nat. Id · (Vec · A n) · (List · A)
   = Λ A. Λ n. ifix2fix · Nat · (VecF · A) · (ListF · A)
   (imapV · A) (imapL · A) (vf2lf · A) -n.
-v2l# ◂ ∀ A : ★. ∀ n : Nat. Vec · A n ➔ List · A
+v2l! ◂ ∀ A : ★. ∀ n : Nat. Vec · A n ➔ List · A
   = Λ A. Λ n. elimId · (Vec · A n) · (List · A) (v2l · A -n).
 
 lf2vf ◂ ∀ A : ★. ∀ Y : ★. ∀ X : Nat ➔ ★.
@@ -42,7 +42,7 @@ lf2vf ◂ ∀ A : ★. ∀ Y : ★. ∀ X : Nat ➔ ★.
 l2v ◂ ∀ A : ★. IdDep · (List · A) · (λ xs : List · A. Vec · A (len · A xs))
   = Λ A. fix2ifix · (ListF · A) · Nat · (VecF · A)
   (imapL · A) (imapV · A) (lenAlgM · A) (lf2vf · A).
-l2v# ◂ ∀ A : ★. Π xs : List · A. Vec · A (len · A xs)
+l2v! ◂ ∀ A : ★. Π xs : List · A. Vec · A (len · A xs)
   = Λ A. elimIdDep · (List · A) · (λ xs : List · A. Vec · A (len · A xs)) (l2v · A).
 
 lf2vfP ◂ ∀ A : ★. ∀ Y : ★. ∀ X : Nat ➔ ★.
@@ -68,6 +68,6 @@ l2vP ◂ ∀ A : ★. IdDep · (List · A) · (λ xs : List · A. ∀ n : Nat. E
   = Λ A. fix2ifixP · (ListF · A) · Nat · (VecF · A) (imapL · A) (imapV · A)
   · (λ n : Nat. λ xs : List · A. Eq · Nat n (len · A xs))
   (lf2vfP · A).
-l2vP# ◂ ∀ A : ★. Π xs : List · A. ∀ n : Nat. Eq · Nat n (len · A xs) ➾ Vec · A n
+l2vP! ◂ ∀ A : ★. Π xs : List · A. ∀ n : Nat. Eq · Nat n (len · A xs) ➾ Vec · A n
   = Λ A. elimIdDep · (List · A) · (λ xs : List · A. ∀ n : Nat. Eq · Nat n (len · A xs) ➾ Vec · A n) (l2vP · A).
 
