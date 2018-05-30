@@ -67,29 +67,3 @@ fix2ifix ◂ ∀ G : ★ ➔ ★. ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ �
         ih) rs)
   ) β).
 
-fix2ifix' ◂ ∀ G : ★ ➔ ★. ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★).
-  Π imapG : IdMapping · G.
-  Π imapF : IIdMapping · I · F.
-  Π ref : FixIndM · G imapG ➔ I. 
-  Π c : ∀ Y : ★. ∀ X : I ➔ ★.
-    Π c1 : Id · Y · (FixIndM · G imapG).
-    Π c2 : IdDep · Y · (λ y : Y. X (ref (elimId · Y · (FixIndM · G imapG) c1 y))).
-    IdDep · (G · Y) · (λ ys : G · Y. F · X (ref (inFixIndM · G -imapG (elimId · (G · Y) · (G · (FixIndM · G imapG)) (imapG · Y · (FixIndM · G imapG) c1) ys)))).
-  IdDep · (FixIndM · G imapG) · (λ y : FixIndM · G imapG. IFixIndM · I · F imapF (ref y))
-  = Λ G. Λ I. Λ F. λ imapG. λ imapF. λ ref. λ c1. indFixIndM · G -imapG
-  · (IdDepCod · (FixIndM · G imapG)
-    · (λ y : FixIndM · G imapG. IFixIndM · I · F imapF (ref y)))
-  (Λ R. Λ c2. λ ih. λ rs. pairIdDep
-  · (FixIndM · G imapG)
-  · (λ y : FixIndM · G imapG. IFixIndM · I · F imapF (ref y))
-  -(inFixIndM · G -imapG
-    (elimId · (G · R) · (G · (FixIndM · G imapG)) (imapG · R · (FixIndM · G imapG) c2) rs))
-  (iinFixIndM · I · F -imapF
-    -(ref (inFixIndM · G -imapG
-      (elimId · (G · R) · (G · (FixIndM · G imapG)) (imapG · R · (FixIndM · G imapG) c2) rs)))
-    (elimIdDep~ · (G · R)
-      · (λ rs' : G · R. F · (IFixIndM · I · F imapF) (ref (inFixIndM · G -imapG (elimId · (G · R) · (G · (FixIndM · G imapG)) (imapG · R · (FixIndM · G imapG) c2) rs'))))
-      -(c1 · R · (IFixIndM · I · F imapF) c2 ih)
-      rs
-    )
-  ) β).
