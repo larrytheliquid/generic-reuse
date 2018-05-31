@@ -1,0 +1,7 @@
+@node summary mode,beta-reduce mode,context mode,minor modes
+
+@chapter Summary mode
+
+Displays a summary of every global definition in the file.
+
+@include minor-mode-commands.texi

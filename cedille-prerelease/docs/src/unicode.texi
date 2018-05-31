@@ -1,0 +1,84 @@
+@node unicode shortcuts,minor modes,cedille mode commands,Top
+@chapter unicode
+
+Here is a very short survey of the Unicode symbols used in Cedille, together
+with the shortcut to type them in the emacs mode.
+
+@table @command
+
+@item \l
+Produces λ (lambda), for anonymous functions
+
+@item \L
+Produces Λ (capital lambda), for anonymous functions taking in compile-time arguments (erased at run-time)
+
+@item \r
+Produces → (right arrow)
+
+@item \a
+Produces ∀ (forall), for quantification over terms which are erased at run-time, and also over type-level expressions
+
+@item \B
+Produces □ (white square), for the sole superkind of the language
+
+@item \P
+Produces Π (capital pi), for dependent function types and for all type-level quantification (even over types)
+
+@item \s
+Produces ★ (black star), the kind of types
+
+@item \S
+Produces ☆ (white star), used in lifting types
+
+@item \.
+Produces · (center dot), for applying a function (term- or type-level) to a type-level argument
+
+@item \f
+Produces ◂ (leftwards double arrow), for checking a term against a type, or type against a kind, at the top-level
+
+@item \u
+Produces ↑ (upwards arrow), for lifting
+
+@item \h
+Produces ● (black circle), a hole representing a missing subterm
+
+@item \k
+Produces 𝒌 (math bold italic small k), all kind-level defined symbols must start with this character
+
+@item \i
+Produces ι (iota), for dependent intersections
+
+@item \=
+Produces ≃ (asymptotically equal to), for propositional equality
+
+@item \b
+Produces β (beta), for proving propositional equalities which follow just by beta-eta reduction
+
+@item \e
+Produces ε (epsilon), for reducing the sides of an equation
+
+@item \R
+Produces ρ (rho), for rewriting with an equation
+
+@item \F
+Produces φ (phi), for proving that if t ≃ t', and t has type T, then t' also has type T
+
+@item \y
+Produces ς (lowercase final sigma), for proving t ≃ t' from t' ≃ t.
+
+@item \t
+Produces θ (theta), for elimination with a motive (of McBride)
+
+@item \x
+Produces χ (chi), for changing the form of the expected or computed classifier to a definitionally equivalent one
+
+@item \rho
+Produces ρ (rho)
+
+@item \theta
+Produces θ (theta)
+
+@item \epsilon
+Produces ε (epsilon)
+
+@end table

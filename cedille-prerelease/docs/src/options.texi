@@ -1,0 +1,29 @@
+@node options,credits,minor modes,Top
+
+@chapter cedille-mode options
+
+The options file resides in ~/.cedille/options and consists of a list of
+options, each on its own line, with a terminating period (``.''). The
+available options are:
+
+@table @option
+
+@item import-directories "/path/to/dir"
+This specifies a directory where Cedille will search for imported files.
+Any number of directories may be listed, each on its own line.
+They will be searched after the current directory.
+Currently, it is not recommended to have two files with the same name.
+
+@item use-cede-files = [true/false]
+Enables/disables the Cedille backend's use of .cede files
+
+@item make-rkt-files = [true/false]
+Enables/disables the Cedille backend's generation of .rkt files
+
+@item generate-logs = [true/false]
+Enables/disables generation of log files (.cedille/log)
+
+@item show-qualified-vars = [true/false]
+Enables/disables the printing of fully-qualified variables
+
+@end table

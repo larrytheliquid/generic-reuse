@@ -1,0 +1,117 @@
+@node cedille mode commands,unicode shortcuts,Index,Top
+
+@chapter cedille-mode commands
+
+Cedille mode supports the following commands:
+
+@chapter Navigation
+@table @command
+@item f/F
+Navigate to the next same-level node in the parse tree
+
+@item b/B
+Navigate to the previous same-level node in the parse tree
+
+@item p
+Navigate to the parent of the current node in the parse tree
+
+@item n
+Navigate to the previously visited child (first by default) node of the current node in the parse tree
+
+@item a/e
+Navigate to the first/last node in the current level of the parse tree
+
+@item r/R
+Select next/previous error
+
+@item t/T
+Select first/last error in file
+
+@item j
+Jump to location associated with selected node
+
+@item g
+Clear current selection
+
+@item ,/.
+Navigate to the previous/next page in browsing history
+
+@item </>
+Navigate to the first/last page in browsing history
+@end table
+
+@chapter Information
+@table @command
+@item i/I
+Toggle info mode (provides information about the currently selected node)
+
+@item c/C
+Toggle context mode (provides information about the context of the currently selected term)
+
+@item s/S
+Toggle summary mode (provides information about the contents of the entire file)
+
+@item x/X
+Toggle scratch mode
+
+@item h
+Open information documents describing how to use Cedille mode
+
+@item 1
+Close all emacs windows except the current one; convenience keystroke for emacs command delete-other-windows.
+
+@item m
+Highlight/unhighlight all instances of the selected symbol (context-sensitive)
+@end table
+
+@chapter Interactive
+If associated with a span (and the beginning and end characters of the span were not deleted), each of these commands will be re-called each time you enter into Cedille mode. They all begin with the 'C-i' prefix.
+
+@table @command
+@item C-i n
+Show normalization of selected span. If no span is selected, this will prompt an expression to normalize.
+
+@item C-i h
+Like 'C-i n', but shows head-normalization
+
+@item C-i e
+Show erasure of selected span. If no span is selected, this will prompt an expression to erase.
+
+@item C-i r
+Remove all interactive attributes associated with the selected span
+
+@item C-i R
+Remove all interactive attributes
+
+@item C-i b
+Open the beta-reduction buffer with an input expression. Copies global scope and local scope if a span is selected.
+
+@item C-i B
+Open the beta-reduction buffer with the selected span
+
+@item C-i t
+Open the beta-reduction buffer with the selected span's expected type (or type if there is no expected type)
+
+@end table
+
+@chapter Other
+@table @command
+@item M-x
+Copy the selected span to the scratch buffer
+
+@item C-h <int>
+Alters highlighting scheme depending on value of <int>:
+1: default highlighting
+2: language level highlighting
+3: checking mode highlighting
+
+@item q/M-s/C-g
+Quit Cedille mode
+
+@item K
+Kill the Cedille process and restart it if it is taking an unusually long time
+
+@item $
+Open customization window for configuring Cedille mode
+
+@end table

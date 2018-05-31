@@ -1,0 +1,14 @@
+@node credits,Index,options,Top
+
+@chapter Credits
+
+@table @abbr
+
+@item Summer 2016: Richard Blair, Ananda Guneratne, Matthew Heimerdinger, Chad Reynolds, Aaron Stump
+
+@item Spring 2016: Aaron Stump
+
+@item 2015: Carl A. Olson created se-mode
+
+@end table
+

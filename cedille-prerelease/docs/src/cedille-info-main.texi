@@ -1,0 +1,43 @@
+\input texinfo
+@settitle Cedille Main Page
+
+@ifnottex
+@node Top
+@top Main
+
+This manual is for Cedille.  Lots of interesting Cedille facts can go here!
+@end ifnottex
+
+@menu
+* cedille mode commands::       A list of cedille mode command shortcuts with brief description
+* unicode shortcuts::           A list of keyboard shortcuts for unicode symbols
+* minor modes::                 Cedille mode has several minor modes providing additional information
+* options::                     A description of the options file
+* credits::                     Who has contributed to the Cedille tool
+* Index::                       Here is the index
+@end menu
+
+@include commands.texi
+
+@include unicode.texi
+
+@include context-mode.texi
+
+@include credits.texi
+
+@include options.texi
+
+@include minor-modes.texi
+
+@include inspect-mode.texi
+
+@include summary-mode.texi
+
+@include beta-reduce-mode.texi
+
+@node Index,,credits,Top
+@unnumbered Index
+
+@printindex cp
+
+@bye

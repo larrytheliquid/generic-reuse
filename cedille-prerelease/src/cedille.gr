@@ -1,0 +1,197 @@
+cedille
+
+Start
+
+start
+
+Syntactic
+
+File : start -> ! ows imports 'module' ws qvar ows params ows '.' ows cmds ows ! .
+
+Import : imprt -> ! 'import' ws fpth optAs args ows '.' ! .
+
+NoOptAs : optAs -> .
+SomeOptAs : optAs -> ows 'as' ws var .
+
+ImportsStart : imports -> .
+ImportsNext : imports -> imprt ows imports .
+
+CmdsStart : cmds -> .
+CmdsNext : cmds -> cmd ws cmds .
+
+ImportCmd : cmd -> imprt .
+
+Type : maybeCheckType -> ows '◂' ows type .
+NoCheckType : maybeCheckType -> .
+
+ParamsCons : params -> ows decl params.
+ParamsNil : params -> .
+
+DefTerm : defTermOrType -> ! var maybeCheckType ows '=' ows term .
+DefType : defTermOrType -> ! var ows '◂' ows kind ows '=' ows type.
+
+DefTermOrType : cmd -> defTermOrType ows '.' ! .
+DefKind : cmd -> ! kvar params ows '=' ows kind ows '.' ! .
+
+Decl : decl -> ! '(' ows ! bvar ows ':' ows tk ows ')' !.
+
+Left : leftRight -> 'l'.
+Right : leftRight -> 'r'.
+Both : leftRight -> .
+
+Abstract : theta -> 'θ' .
+AbstractEq : theta -> 'θ+' .
+AbstractVars : theta -> 'θ<' ows vars ows '>' .
+
+VarsStart : vars -> var .
+VarsNext : vars -> var ws vars.
+
+RhoPlain : rho -> 'ρ' .
+RhoPlus : rho -> 'ρ+' .
+
+NoTerm : optTerm -> .
+SomeTerm : optTerm -> ows '{' ows term ows '}' ! .
+
+Lam : term -> ! lam ows ! bvar optClass ows '.' ows term .
+Let : term -> ! 'let' ws defTermOrType ws 'in' ws term .
+Theta : term -> ! theta ws lterm ows lterms.
+embed : term -> aterm .
+App : aterm -> aterm ws maybeErased aterm .
+AppTp : aterm -> aterm ws '·' ws atype .
+embed : aterm -> lterm .
+Beta : lterm -> ! 'β' optTerm .
+Epsilon : lterm -> ! 'ε' leftRight maybeMinus ows lterm .
+Sigma : lterm -> ! 'ς' ows lterm.
+Rho : lterm -> ! rho ows lterm ows '-' ows lterm.
+Phi : lterm -> ! 'φ' ows lterm ows '-' ows lterm ows '{' ows term ows '}' ! .
+Chi : lterm -> ! 'χ' maybeAtype ows '-' ows lterm.
+embed : lterm -> pterm .
+Var : pterm -> ! qvar .
+Parens : pterm -> ! '(' ows term ows ')' ! . 
+IotaProj : pterm -> pterm ows '.' ows num ! .
+IotaPair : pterm -> ! '[' ows term ows ',' ows term ows ']' ! .
+Hole : pterm -> ! '●' .
+
+Atype : maybeAtype -> ows atype.
+NoAtype : maybeAtype -> .
+
+LtermsNil : lterms -> ! .
+LtermsCons : lterms -> ws maybeErased lterm lterms.
+
+EpsHnf : maybeMinus -> .
+EpsHanf : maybeMinus -> '-'.
+
+NotErased : maybeErased -> .
+Erased : maybeErased -> '-' ows .
+
+NoClass : optClass -> .
+SomeClass : optClass -> ows ':' ows tk .
+
+NoType : optType -> .
+SomeType : optType -> ows ':' ows type .
+
+ErasedLambda : lam -> 'Λ' .
+KeptLambda : lam -> 'λ' .
+
+Abs : type -> ! binder ows ! bvar ows ':' ows tk ows '.' ows type .
+TpLambda : type -> ! 'λ' ows ! bvar ows ':' ows tk ows '.' ows type .
+
+Iota : type -> ! 'ι' ows ! bvar optType ows '.' ows type .
+TpArrow : type -> ltype ows arrowtype ows type.
+ErasedArrow: arrowtype -> '➾'.
+UnerasedArrow: arrowtype -> '➔'.
+embed : type -> ltype.
+
+NoSpans : type -> '{^' type ! '^}' . % intended for internal use only
+
+Lft : ltype -> ! '↑' ows ! var ows '.' ows term ows ':' ows lliftingType .
+TpParens : atype -> ! '(' ows type ows ')' !.
+TpApp : ltype -> ltype ws '·' ws atype.
+TpAppt : ltype -> ltype ws lterm.
+TpVar : atype -> ! qvar.
+embed : ltype -> atype.
+TpEq : type -> term ows '≃' ows term .
+TpHole: atype -> ! '●' .
+
+TermArg : arg -> ws lterm .
+TypeArg : arg -> ows '·' ws atype.
+ArgsCons : args -> arg args.
+ArgsNil : args -> ! .
+
+KndPi : kind -> ! 'Π' ows ! bvar ows ':' ows tk ows '.' ows kind .
+KndArrow : kind -> kind ows '➔' ows kind .
+KndTpArrow : kind -> ltype ows '➔' ows kind .
+Star : kind -> ! '★'.
+KndParens : kind -> ! '(' ows kind ows ')' !.
+KndVar : kind -> ! qkvar args.
+
+LiftStar : lliftingType -> ! '☆'. 
+LiftPi : liftingType -> ! 'Π' ows bvar ows ':' ows type ows '.' ows liftingType .
+LiftArrow : liftingType -> liftingType ows '➔' ows liftingType.
+LiftTpArrow : liftingType -> type ows '➔' ows liftingType.
+LiftParens : lliftingType -> ! '(' ows liftingType ows ')' !.
+embed : liftingType -> lliftingType.
+
+Pi : binder -> 'Π'.
+All : binder -> '∀'.
+
+Tkt : tk -> type .
+Tkk : tk -> kind .
+
+Lexical
+
+alpha -> ['a' - 'z'] | ['A' - 'Z'] .
+
+numone -> ['0' - '9'].
+num -> numone+.
+
+numpunct -> numone | quote | '-' | '~' | '#' | '_'.
+
+qvar -> var .
+qvar -> var '.' qvar .
+
+var -> (alpha (alpha | numpunct)*).
+bvar -> '_' | var .
+
+fpth -> (alpha | ('../'+)) (alpha | numpunct | '/')* .
+
+qkvar -> kvar .
+qkvar -> var '.' qkvar .
+
+kvar -> '𝒌' (alpha | numpunct)*.
+
+otherpunct => '|' | '□' | 'Π' | 'ι' | 'λ' | '∀' | 'π' | '★' | '☆' | '·' | '⇐' | '➔' | '➾' | '↑' | '●' | '(' | ')' | ':' | '.'
+            | '[' | ']' | ',' | '!' | '{' | '}' | '⇒' | '?' | 'Λ' | 'ρ' | 'ε' | 'β' | '-' | '𝒌' | '=' | 'ς' | 'θ' | '+' | '<'
+            | '>' | '≃' | '\"' | 'δ' | 'χ' | 'μ' | 'υ' | 'φ' | '◂' | 'ω'.
+
+anychar => alpha | numpunct | '\t' | space | '%' | otherpunct .
+
+comment => '%' anychar* '\n'.
+
+aws => ('\n' | '\t' | space | comment).
+ws => aws+.
+ows => aws* .
+
+Vars
+  p p2 c b w x y z zz e1 e2 t
+
+Rules
+  App(x,e1,App(y,e2,z)) -> App(App(x,e1,y),e2,z)
+  App(Lam(p,p2,b,x,w,y),e1,z) -> Lam(p,p2,b,x,w,App(y,e1,z))
+  App(App(w, e1,Lam(p,p2,b,x,c,y)), e2, z) -> App(w, e1,Lam(p,p2,b,x,c,App(y, e2, z)))
+
+  App(x,e1,AppTp(y,z)) -> AppTp(App(x,e1,y),z)
+  AppTp(Lam(p,p2,b,x,w,y),z) -> Lam(p,p2,b,x,w,AppTp(y,z))
+  AppTp(App(w, e1,Lam(p,p2,b,x,c,y)), z) -> App(w, e1,Lam(p,p2,b,x,c,AppTp(y, z)))
+
+  LiftArrow(LiftArrow(x,y),z) -> LiftArrow(x,LiftArrow(y,z))
+  LiftArrow(LiftTpArrow(x,y),z) -> LiftTpArrow(x,LiftArrow(y,z))
+  LiftTpArrow(TpArrow(x,t,y),z) -> LiftTpArrow(x,LiftTpArrow(y,z))
+  LiftArrow(LiftPi(p,w,x,y),z) -> LiftPi(p,w,x,LiftArrow(y,z))
+
+  KndArrow(KndArrow(x,y),z) -> KndArrow(x,KndArrow(y,z))
+  KndArrow(KndTpArrow(x,y),z) -> KndTpArrow(x,KndArrow(y,z))
+  KndArrow(KndPi(p,p2,w,x,y),z) -> KndPi(p,p2,w,x,KndArrow(y,z))
+
+  TpApp(x,TpApp(y,z)) -> TpApp(TpApp(x,y),z)
+  TpApp(x,TpAppt(y,z)) -> TpAppt(TpApp(x,y),z)
