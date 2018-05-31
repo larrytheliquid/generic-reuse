@@ -158,6 +158,12 @@ a type into the various pieces that would be inferred by a more
 sophisticated implementation of Cedille, e.g. AppV1 through AppV3,
 AssocV1 through AssocV4, etc.
 
+The crucial point of our paper is that the bang versions of these
+definitions erase and normalize to the identity function. For example,
+you can focus on `assocV2assocL!` by pressing `g` over its definition
+identifier, then pressing `C-i n` to verify the identity function is
+produced.
+
 Data Reuse Examples
 -------------------
 
@@ -165,6 +171,9 @@ File `code/Examples/ListVecReuse.ced` contains examples of reusing
 lists and vectors:
 1. Forgetful reuse of vectors as lists `v2l` & `vf2lf` (Section 5.3.2)
 2. Enriching reuse of lists as vectors `l2v` & `lf2vf` (Section 5.5.2)
+
+Again, you can verify that bang versions of these definitions, like
+`v2l!`, erase to the identity function.
 
 Auxiliary Combinators
 ---------------------
