@@ -1,5 +1,8 @@
 # Installation
 
+Follow these steps to install a pre-release version of Cedille 
+and evaluate our generic-reuse artifact from a fresh Ubuntu install.
+
 ## Update
 ```
 sudo apt-get update
