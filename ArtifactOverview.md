@@ -160,7 +160,7 @@ AssocV1 through AssocV4, etc.
 
 The crucial point of our paper is that the bang versions of these
 definitions erase and normalize to the identity function. For example,
-you can focus on `assocV2assocL!` by pressing `g` over its definition
+you can focus on `assocV2assocL!` by pressing `p` over its definition
 identifier, then pressing `C-i n` to verify the identity function is
 produced.
 
