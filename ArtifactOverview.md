@@ -21,15 +21,20 @@ Part 1: Getting Started Guide
 Our artifact is a formalization of the code presented in our paper in
 the depedently typed Cedille proof assistant. The primary means of
 interacting with Cedille is through an Emacs mode. To type check a
-file in Cedille, open a file in Emacs whose extension is `.ced`.
-The code should be black and white, and the mode displayed at the
-bottom of the buffer should be "(cedille)".
+file in Cedille, open a file in Emacs whose extension is `.ced`.  The
+code should be colored black, and the mode displayed at the bottom of
+the buffer should be `(cedille)`.
 
 Pressing `M-s` (the meta key, e.g. the alt key, and the character 's')
 checks the file, which adds syntax highlighting and adds navigation
 mode (navi) to the bottom of the buffer, which should now display
-"(cedille navi)". The file passed type checking if pressing `r`
+`(cedille navi)`. The file passed type checking if pressing `r`
 results in the message "No errors." at the bottom of the file buffer.
+Note that navi mode is a navigation-only mode. To edit the file, (for
+example, to manually insert a syntax or type error), press `q` to quit
+navi mode. After editing, press `M-s` to re-check the file (and `r` to
+ensure there are no errors, or to jump to the first error location if
+there is one).
 
 This is all that is required to evaluate our artifact. The subsequent
 parts go over particular files and contained definitions in
@@ -37,13 +42,13 @@ detail. However, our artifact can be considerd successfully evaluated
 if `M-s`, then `r` results in "No errors." for the file
 `code/Everything.ced`, which imports all the more specific files.
 
-If you feel more adventurous, feel free to
-press `h` to enter Cedille's help mode, then click "cedille mode
-commands" to learn how to navigate the code's AST, and display the
-context (`c`) and goal (`i`) once focusing on a particular node (by
-pressing `p` with the cursor on a node), and how to unfocus a node (by
-pressing `g`). It is also possible to jump (by pressing `j`) to the
-definition of a focused node, and jump back (by pressing `,`).
+If you feel more adventurous, feel free to press `h` to enter
+Cedille's help mode, then click `cedille mode commands` to learn how
+to navigate the code's AST, and display the context (`c`) and goal
+(`i`) once focusing on a particular node (by pressing `p` with the
+cursor on a node), and how to unfocus a node (by pressing `g`). It is
+also possible to jump (by pressing `j`) to the definition of a focused
+node, and jump back (by pressing `,`).
 
 
 Part 2: Step-by-Step Evaluation Instructions
@@ -55,11 +60,11 @@ To evaluate our artifact, open each Cedille (.ced) file described below
 message is displayed. Also, verify that the definitions described
 below appear in the Cedille file and the paper section.
 
-Note that the paper's code is much more terse, as it omits types
-inferrable by a sufficiently advanced unification algorithm, which is
-not currently implemented by Cedille. Hence, the Cedille code is more
-verbose, but we did our best to use type synonyms where possible to
-maintain the readability of our code.
+Note that the paper's code is much more terse, as it omits types and
+terms inferrable by a sufficiently advanced unification algorithm,
+which is not currently implemented by Cedille. Hence, the Cedille code
+is more verbose, but we did our best to use type synonyms where
+possible to maintain the readability of our code.
 
 Cedille's syntax distinguishes type application from
 term application, where type application uses a center dot. For
@@ -69,7 +74,7 @@ type) arguments (mostly omitted/inferred in the paper) are given via a
 dash. For example, `v2l! xs` in the paper becomes `v2l! · A -n xs` in
 the formalization.
 
-Finally, you may be interested in reading README.md for an overview of
+Finally, you may be interested in reading `README.md` for an overview of
 the directory structure of the code, including files and definitions
 that the paper assumes to exist (e.g. `code/Datatypes/Vec.ced`).
 However, understanding the directory structure and extra files is not
@@ -80,7 +85,7 @@ Type of Dependent Identity Functions
 ------------------------------------
 
 The file `code/Base/Id.ced` contains the following dependent identity
-function (Section 4.1) definitions: `IdDep`, `intrIdDep`,
+function definitions (Section 4.1): `IdDep`, `intrIdDep`,
 `elimIdDep`. It also contains the following non-dependent
 counterparts: `Id`, `intrId`, `elimId`.
 
@@ -96,7 +101,7 @@ forgetful program (non-dependent function) reuse combinator
 `allArr2arr` (Section 4.2.1) and the forgetful proof
 (dependent function) reuse combinator `allPi2pi` (Section 4.2.3). Note
 that these are defined in terms of more general "prime" versions of
-the  combinators: ``allArr2arr'` and `allPi2pi'`. However, inlining
+the  combinators: `allArr2arr'` and `allPi2pi'`. However, inlining
 the prime definitions results in the definitions of the paper.
 
 Enriching Program & Proof Reuse Combinators
@@ -127,7 +132,8 @@ append functions and associativity proofs:
 1. Forgetful program reuse `appV2appL` (Section 4.2.2).
 2. Forgetful proof reuse `assocV2assocL` (Section 4.2.4).
 3. Enriching program reuse `appL2appV` (Section 4.3.2).
-4. Enriching proof reuse `assocL2assocV` (Section 4.3.3).
+4. Enriching proof reuse `assocL2assocV` (discussed in Section 4.3.3,
+   but omitted in the paper).
 
 Note that these examples make extensive use of type synonyms to split
 a type into the various pieces that would be inferred by a more
