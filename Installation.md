@@ -24,7 +24,7 @@ sudo apt-get install -y git
 cd ~
 git clone https://github.com/larrytheliquid/generic-reuse.git
 cd generic-reuse
-git checkout -b artifact
+git checkout 4569b02b3d18e40d15113c133e7d305d5689df22
 
 # Install Cedille
 cd cedille-prerelease
