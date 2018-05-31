@@ -33,8 +33,14 @@ make
 # Set Cedille Options
 mkdir ~/.cedille
 ln -s ~/generic-reuse/code/options ~/.cedille/options
-# update the paths in ~/.cedille/options to point
+# update PATH-TO-CHECKOUT in ~/.cedille/options to point
 # to your absolute generic-reuse checkout path
+
+# Setup Cedille Mode for Emacs in your init.el
+# (setq cedille-path "/PATH-TO-CHECKOUT/generic-reuse/cedille")
+# (add-to-list 'load-path cedille-path)
+# (require 'cedille-mode)
+
 
 # Now read ~/generic-reuse/ArtifactOverview.md
 # for instructions on how to evaluate this artifact.
