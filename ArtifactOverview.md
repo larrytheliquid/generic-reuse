@@ -6,11 +6,14 @@ Our artifact is a VirtualBox
 installed on it. The username and password on Ubuntu are both "icfp".
 
 We now assume you are reading this
-(/home/icfp/generic-reuse/ArtifactOverview.md) in Emacs on our
-provided VirtualBox image, hence all the software installation has
-already been performed, and you can skip Part 0. If you would like to
-manually setup the software on your personal machine, see
-`Installation.md`.
+(`/home/icfp/generic-reuse/ArtifactOverview.md`, also available from
+`https://github.com/larrytheliquid/generic-reuse/blob/artifact/ArtifactOverview.md`)
+in Emacs on our provided VirtualBox image, hence all the software
+installation has already been performed, and you can skip Part 0. If
+you would like to manually setup the software on your personal
+machine, see `/home/icfp/generic-reuse/Installation.md`, also
+available from
+`https://github.com/larrytheliquid/generic-reuse/blob/artifact/Installation.md`.
 
 Part 1: Getting Started Guide
 =============================
@@ -28,8 +31,13 @@ mode (navi) to the bottom of the buffer, which should now display
 "(cedille navi)". The file passed type checking if pressing `r`
 results in the message "No errors." at the bottom of the file buffer.
 
-This is all that is required to evaluate our artifact, for each file
-described in Parts 2 and 3. If you feel more adventurous, feel free to
+This is all that is required to evaluate our artifact. The subsequent
+parts go over particular files and contained definitions in
+detail. However, our artifact can be considerd successfully evaluated
+if `M-s`, then `r` results in "No errors." for the file
+`code/Everything.ced`, which imports all the more specific files.
+
+If you feel more adventurous, feel free to
 press `h` to enter Cedille's help mode, then click "cedille mode
 commands" to learn how to navigate the code's AST, and display the
 context (`c`) and goal (`i`) once focusing on a particular node (by
