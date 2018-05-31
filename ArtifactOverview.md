@@ -52,8 +52,8 @@ Part 2: Step-by-Step Evaluation Instructions
 To evaluate our artifact, open each Cedille (.ced) file described below
 (which we map to the appropriate section in our paper), then press
 `M-s` to check it, and press `r` to verify that the "No errors."
-message is displayed. Also, verify that the definitions described
-below appear in the Cedille file and the paper section.
+message is displayed. We also indicate which section of the paper each
+definition comes from.
 
 Note that the paper's code is much more terse, as it omits types and
 terms inferrable by a sufficiently advanced unification algorithm,
