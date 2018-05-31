@@ -71,8 +71,8 @@ the formalization.
 
 In Cedille and in our development, it is important to know what a term
 normalizes to after erasure (especially if complex terms, like the
-zero-cost conversion `v2l!`, erase to the identity function). To see
-what a definition evaluates to (after type checking, i.e., in navi
+zero-cost conversion `v2l!`, erase to the identity function). To
+practice this on a definition (after type checking, i.e., in navi
 mode), place your cursor on its identifier, then press `p` to focus on
 the definition, then press `C-i n` to erase and normalize it. For
 example, focusing on the identitier `id` and erasing/normalizing it in
