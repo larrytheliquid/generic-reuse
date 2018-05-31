@@ -32,9 +32,9 @@ mode (navi) to the bottom of the buffer, which should now display
 results in the message "No errors." at the bottom of the file buffer.
 Note that navi mode is a navigation-only mode. To edit the file, (for
 example, to manually insert a syntax or type error), press `q` to quit
-navi mode. After editing, press `M-s` to re-check the file (and `r` to
-ensure there are no errors, or to jump to the first error location if
-there is one).
+navi mode. After editing, press `M-s` to re-check the file, and then
+`r` to ensure there are no errors, or to jump to the first error
+location if there is one.
 
 This is all that is required to evaluate our artifact. The subsequent
 parts go over particular files and contained definitions in
