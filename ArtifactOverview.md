@@ -7,13 +7,13 @@ installed on it. The username and password on Ubuntu are both "icfp".
 
 We now assume you are reading this
 (`/home/icfp/generic-reuse/ArtifactOverview.md`, also available from
-`https://github.com/larrytheliquid/generic-reuse/blob/artifact/ArtifactOverview.md`)
+https://github.com/larrytheliquid/generic-reuse/blob/artifact/ArtifactOverview.md)
 in Emacs on our provided VirtualBox image, hence all the software
 installation has already been performed, and you can skip Part 0. If
 you would like to manually setup the software on your personal
 machine, see `/home/icfp/generic-reuse/Installation.md`, also
 available from
-`https://github.com/larrytheliquid/generic-reuse/blob/artifact/Installation.md`.
+https://github.com/larrytheliquid/generic-reuse/blob/artifact/Installation.md.
 
 Part 1: Getting Started Guide
 =============================
