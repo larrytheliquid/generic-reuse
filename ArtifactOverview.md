@@ -177,7 +177,7 @@ type checks.
 Part 3: Mandatory Revisions
 ===========================
 
-For completeness, we have also included code addressing some mandatory
+For completeness, we have also included code addressing the mandatory
 revisions of our paper. Because the text describing the revisions has
 not yet been written, we do not expect you to verify this part, but we
 include it below in case you are interested.
@@ -189,10 +189,10 @@ As mentioned in Part 2, file `code/GenericReuse/EnrFix.ced` contains
 `fix2ifix`, which enriches data by providing an algebra (representing
 a total function). Thus, lists can be enriched to vectors by
 calculating the index via the length algebra. Some indexed types
-cannot have their indices computed by a total function (e.g. typed
-STLC terms) from their untyped counterparts. Hence, the file also
-contains combinator `fix2ifixP`, which allows data to be enriched if
-it satisfies a premise (e.g. the typing relation of an untyped STLC
+(e.g. typed STLC terms) cannot have their indices be computed by a
+total function from their untyped counterparts. Hence, the file also
+contains the combinator `fix2ifixP`, which allows data to be enriched
+if it satisfies a premise (e.g. the typing relation of an untyped STLC
 term).
 
 Data Reuse Examples
@@ -221,7 +221,7 @@ lemmas (e.g. `invLamEq`), which also appear as module parameters.
 
 Similarly, a natural number is enrichable to a membership proof if it
 satisfies an abstract `Lookup` relation saying that an element appears
-in the list at a particular natural number position. `Lookup` also can
+in the list at a particular natural number position. `Lookup` can also
 be implemented many different ways, and is specified by its required
 inversion lemmas.
 
