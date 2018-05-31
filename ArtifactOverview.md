@@ -5,10 +5,12 @@ Our artifact is a VirtualBox
 (https://www.virtualbox.org/wiki/Downloads) image, which has Ubuntu
 installed on it. The username and password on Ubuntu are both "icfp".
 
-We now assume you are reading this in Emacs on our provided VirtualBox
-image, hence all the software installation has already been performed,
-and you can skip Part 0. If you would like to manually setup the
-software on your personal machine, see `Installation.md`.
+We now assume you are reading this
+(/home/icfp/generic-reuse/ArtifactOverview.md) in Emacs on our
+provided VirtualBox image, hence all the software installation has
+already been performed, and you can skip Part 0. If you would like to
+manually setup the software on your personal machine, see
+`Installation.md`.
 
 Part 1: Getting Started Guide
 =============================
