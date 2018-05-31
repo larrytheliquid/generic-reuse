@@ -36,19 +36,14 @@ navi mode. After editing, press `M-s` to re-check the file, and then
 `r` to ensure there are no errors, or to jump to the first error
 location if there is one.
 
-This is all that is required to evaluate our artifact. The subsequent
-parts go over particular files and contained definitions in
-detail. However, our artifact can be considerd successfully evaluated
-if `M-s`, then `r` results in "No errors." for the file
-`code/Everything.ced`, which imports all the more specific files.
-
-If you feel more adventurous, feel free to press `h` to enter
-Cedille's help mode, then click `cedille mode commands` to learn how
-to navigate the code's AST, and display the context (`c`) and goal
-(`i`) once focusing on a particular node (by pressing `p` with the
-cursor on a node), and how to unfocus a node (by pressing `g`). It is
-also possible to jump (by pressing `j`) to the definition of a focused
-node, and jump back (by pressing `,`).
+This is all that is required to have Cedille type check files
+contained in our artifact.  If you feel more adventurous, feel free to
+press `h` to enter Cedille's help mode, then click `cedille mode
+commands` to learn how to navigate the code's AST, and display the
+context (`c`) and goal (`i`) once focusing on a particular node (by
+pressing `p` with the cursor on a node), and how to unfocus a node (by
+pressing `g`). It is also possible to jump (by pressing `j`) to the
+definition of a focused node, and jump back (by pressing `,`).
 
 
 Part 2: Step-by-Step Evaluation Instructions
