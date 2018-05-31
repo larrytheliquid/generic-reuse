@@ -1,10 +1,10 @@
 import-directories  =
- "/home/icfp/generic-reuse/code"
- "/home/icfp/generic-reuse/code/Base"
- "/home/icfp/generic-reuse/code/Datatypes"
- "/home/icfp/generic-reuse/code/Examples"
- "/home/icfp/generic-reuse/code/GenericReuse"
- "/home/icfp/generic-reuse/code/IndexedMendlerInduction"
+ "/PATH-TO-CHECKOUT/generic-reuse/code"
+ "/PATH-TO-CHECKOUT/generic-reuse/code/Base"
+ "/PATH-TO-CHECKOUT/generic-reuse/code/Datatypes"
+ "/PATH-TO-CHECKOUT/generic-reuse/code/Examples"
+ "/PATH-TO-CHECKOUT/generic-reuse/code/GenericReuse"
+ "/PATH-TO-CHECKOUT/generic-reuse/code/IndexedMendlerInduction"
  .
 
 
