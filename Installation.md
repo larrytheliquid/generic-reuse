@@ -15,7 +15,7 @@ EOF
 export PATH=~/.cabal/bin:/opt/cabal/1.22/bin:/opt/ghc/7.10.3/bin:$PATH
 
 # Install Agda
-sudo apt-get install -y zlib1g-dev libncurses5-dev alex-3.1.7 happy-1.19.5 texlive-binaries
+sudo apt-get install -y zlib1g-dev libncurses5-dev texlive-binaries
 cabal update
 cabal install alex-3.1.7 happy-1.19.5 cpphs-1.20.2 agda-2.5.2
 
