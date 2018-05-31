@@ -1,3 +1,11 @@
+Part 0: Installation
+====================
+
+We assume you are reading this on our provided VirtualBox image, hence
+all the installation has already been performed, and you can skip Part
+0. If you would like to manually setup the software on your personal
+machine, see `Installation.md`.
+
 Part 1: Getting Started Guide
 =============================
 
