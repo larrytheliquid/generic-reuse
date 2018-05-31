@@ -37,7 +37,7 @@ ln -s ~/generic-reuse/code/options ~/.cedille/options
 # to your absolute generic-reuse checkout path
 
 # Setup Cedille Mode for Emacs in your init.el
-# (setq cedille-path "/PATH-TO-CHECKOUT/generic-reuse/cedille")
+# (setq cedille-path "/PATH-TO-CHECKOUT/generic-reuse/cedille-prerelease")
 # (add-to-list 'load-path cedille-path)
 # (require 'cedille-mode)
 

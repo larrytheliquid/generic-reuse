@@ -6,7 +6,6 @@
 *.o
 *.jar
 *.flymake
-*.el
 *.agdai
 MAlonzo
 Default
