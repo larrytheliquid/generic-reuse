@@ -72,12 +72,13 @@ the formalization.
 In Cedille and in our development, it is important to know what a term
 normalizes to after erasure (especially if complex terms, like the
 zero-cost conversion `v2l!`, erase to the identity function). To see
-what a definition evaluates to, place your cursor on its identifier,
-then press `g` to focus on the definition, then press `C-x n` to erase
-and normalize it. For example, focusing on the identitier `id` and
-erasing/normalizing it in the definition:
-`id ◂ ∀ X : ★. X ➔ X = Λ X. λ x. x.`, produces `λ x. x.`. Notice that
-the capital lambda (`Λ X.`), which binds types, has been erased.
+what a definition evaluates to (after type checking, i.e., in navi
+mode), place your cursor on its identifier, then press `p` to focus on
+the definition, then press `C-i n` to erase and normalize it. For
+example, focusing on the identitier `id` and erasing/normalizing it in
+the definition: `id ◂ ∀ X : ★. X ➔ X = Λ X. λ x. x.`, produces `λ
+x. x.`. Notice that the capital lambda (`Λ X.`), which binds types,
+has been erased.
 
 Finally, you may be interested in reading `README.md` for an overview of
 the directory structure of the code, including files and definitions
