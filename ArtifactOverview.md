@@ -29,12 +29,12 @@ Pressing `M-s` (the meta key, e.g. the alt key, and the character 's')
 checks the file, which adds syntax highlighting and adds navigation
 mode (navi) to the bottom of the buffer, which should now display
 `(cedille navi)`. The file passed type checking if pressing `r`
-results in the message "No errors." at the bottom of the file buffer.
-Note that navi mode is a navigation-only mode. To edit the file, (for
-example, to manually insert a syntax or type error), press `q` to quit
-navi mode. After editing, press `M-s` to re-check the file, and then
-`r` to ensure there are no errors, or to jump to the first error
-location if there is one.
+results in the message "No errors." at the bottom in the Emacs mini
+buffer.  Note that navi mode is a navigation-only mode. To edit the
+file, (for example, to manually insert a syntax or type error), press
+`q` to quit navi mode. After editing, press `M-s` to re-check the
+file, and then `r` to ensure there are no errors, or to jump to the
+first error location if there is one.
 
 This is all that is required to have Cedille type check files
 contained in our artifact.  If you feel more adventurous, feel free to
