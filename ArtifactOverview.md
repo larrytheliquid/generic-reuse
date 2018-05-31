@@ -69,6 +69,16 @@ type) arguments (mostly omitted/inferred in the paper) are given via a
 dash. For example, `v2l! xs` in the paper becomes `v2l! · A -n xs` in
 the formalization.
 
+In Cedille and in our development, it is important to know what a term
+normalizes to after erasure (especially if complex terms, like the
+zero-cost conversion `v2l!`, erase to the identity function). To see
+what a definition evaluates to, place your cursor on its identifier,
+then press `g` to focus on the definition, then press `C-x n` to erase
+and normalize it. For example, focusing on the identitier `id` and
+erasing/normalizing it in the definition:
+`id ◂ ∀ X : ★. X ➔ X = Λ X. λ x. x.`, produces `λ x. x.`. Notice that
+the capital lambda (`Λ X.`), which binds types, has been erased.
+
 Finally, you may be interested in reading `README.md` for an overview of
 the directory structure of the code, including files and definitions
 that the paper assumes to exist (e.g. `code/Datatypes/Vec.ced`).
@@ -87,6 +97,17 @@ counterparts: `Id`, `intrId`, `elimId`.
 Note that `elimIdDep` is defined in terms of the more general
 `elimIdDep~` (not in the paper), which allows the eliminated `IdDep`
 argument to be erased.
+
+Identity Mappings
+-----------------
+
+File `code/IndexedMendlerInduction/IIdMapping.ced` contains the
+non-indexed and indexed types of identity mappings (Section 5.1),
+`IdMapping` and `IIdMapping`, respectively.
+
+Files `code/Datatypes/ListF.ced` and `code/Datatypes/VecF.ced` contain
+the list and vector schemes (Figure 3) and identity mappings (Section 5.2),
+`ListF` & `imapL` and `VecF` & `imapV`, respectively.
 
 Forgetful Program & Proof Reuse Combinators
 -------------------------------------------
@@ -143,17 +164,6 @@ lists and vectors:
 1. Forgetful reuse of vectors as lists `v2l` & `vf2lf` (Section 5.3.2)
 2. Enriching reuse of lists as vectors `l2v` & `lf2vf` (Section 5.5.2)
 
-Identity Mappings
------------------
-
-File `code/IndexedMendlerInduction/IIdMapping.ced` contains the
-non-indexed and indexed types of identity mappings (Section 5.1),
-`IdMapping` and `IIdMapping`, respectively.
-
-Files `code/Datatypes/ListF.ced` and `code/Datatypes/VecF.ced` contain
-the list and vector schemes (Figure 3) and identity mappings (Section 5.2),
-`ListF` & `imapL` and `VecF` & `imapV`, respectively.
-
 Auxiliary Combinators
 ---------------------
 
@@ -198,7 +208,7 @@ STLC `Term`s (code/Datatypes/Term.ced) and untyped (prior to type
 checking) `Raw` terms (code/Datatypes/Raw.ced).
 
 File `code/Examples/RawTermReuse.ced` contains examples of reusing
-raw and and typed terms:
+raw and typed terms:
 1. Forgetful reuse of typed terms as raw terms `t2r` & `tf2rf`
 2. Forgetful reuse of list membership proofs as natural numbers `i2n` & `if2nf`
 3. Enriching reuse of raw terms as typed terms `r2tP` & `rf2tfP`
