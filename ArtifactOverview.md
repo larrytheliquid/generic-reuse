@@ -59,7 +59,8 @@ Note that the paper's code is much more terse, as it omits types and
 terms inferrable by a sufficiently advanced unification algorithm,
 which is not currently implemented by Cedille. Hence, the Cedille code
 is more verbose, but we did our best to use type synonyms where
-possible to maintain the readability of our code.
+possible to maintain the readability of our code. Futher details about
+Cedille syntax can be found in Section 2.1 and Figure 2 of the paper.
 
 Cedille's syntax distinguishes type application from
 term application, where type application uses a center dot. For
