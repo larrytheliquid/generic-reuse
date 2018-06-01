@@ -101,18 +101,10 @@ arr2allArrP2 ◂ ∀ Y : ★. ∀ Y' : ★. ∀ I : ★.
     (Π y : Y. Π i : I. P i y ➔ P' i (f y)) ➾
     ∀ i : I. X i ➔ X' i)
   = Λ Y. Λ Y'. Λ I. Λ P. Λ P'. Λ X. Λ X'. λ c1. λ c1'. λ c2.
-  arr2allArrP' · Y · Y'
-  · (λ y : Y. λ y' : Y'. Π i : I. P i y ➔ P' i y')
-  · I · X · X'
-  c1
-  (Λ i. λ x. applyDep · Y' · (X' i) · I
-  · (λ i' : I. λ y' : Y'. P i' (elimId · (X i) · Y (c1 -i) x) ➔ P' i' y')
-  -i
-  (apply · Y' · (X' i) · (P i (elimId · (X i) · Y (c1 -i) x))
-  · (P' i)
-  -(c1' i x)
-  (c2 -i)
-  )).
+  pi2allPiP2 · Y · (λ _ : Y. Y') · I · P
+  · (λ i : I. λ y : Y. λ _ : P i y. λ y' : Y'. P' i y')
+  · X · (λ i : I. λ _ : X i. X' i)
+  c1 c1' (Λ i. λ _. c2 -i).
 
 pi2allPi ◂ ∀ Y : ★. ∀ Y' : Y ➔ ★.
   ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★.
