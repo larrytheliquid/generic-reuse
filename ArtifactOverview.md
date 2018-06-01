@@ -34,7 +34,9 @@ buffer.  Note that navi mode is a navigation-only mode. To edit the
 file, (for example, to manually insert a syntax or type error), press
 `q` to quit navi mode. After editing, press `M-s` to re-check the
 file, and then `r` to ensure there are no errors, or to jump to the
-first error location if there is one.
+first error location if there is one.  For example, you can try
+checking the file `code/Everything.ced`, which imports all parts of
+our development.
 
 This is all that is required to have Cedille type check files
 contained in our artifact.  If you feel more adventurous, feel free to
@@ -79,14 +81,21 @@ the definition, then press `C-i n` to erase and normalize it. For
 example, focusing on the identitier `id` and erasing/normalizing it in
 the definition: `id ◂ ∀ X : ★. X ➔ X = Λ X. λ x. x.`, produces `λ
 x. x.`. Notice that the capital lambda (`Λ X.`), which binds types,
-has been erased.
+has been erased (Figure 1 contains the erasure rules).
 
 Finally, you may be interested in reading `README.md` for an overview of
 the directory structure of the code, including files and definitions
 that the paper assumes to exist (e.g. `code/Datatypes/Vec.ced`).
 However, understanding the directory structure and extra files is not
 necessary to evaluate our artifact, and the instructions below are
-sufficient. 
+sufficient.
+
+Everything
+----------
+
+As a sanity check, `code/Everything.ced` imports all of the files
+mentioned below, so if it passes type checking then everything type
+checks.
 
 Type of Dependent Identity Functions
 ------------------------------------
@@ -114,13 +123,13 @@ the list and vector schemes (Figure 3) and identity mappings (Section 5.2),
 Forgetful Program & Proof Reuse Combinators
 -------------------------------------------
 
-File `code/GenericReuse/FogFun.ced` contains the
-forgetful program (non-dependent function) reuse combinator
-`allArr2arr` (Section 4.2.1) and the forgetful proof
-(dependent function) reuse combinator `allPi2pi` (Section 4.2.3). Note
-that these are defined in terms of more general "prime" versions of
-the  combinators: `allArr2arr'` and `allPi2pi'`. However, inlining
-the prime definitions results in the definitions of the paper.
+File `code/GenericReuse/FogFun.ced` contains the forgetful program
+(non-dependent function) reuse combinator `allArr2arr` (Section 4.2.1)
+and the forgetful proof (dependent function) reuse combinator
+`allPi2pi` (Section 4.2.3). Note that these are defined in terms of
+more general versions of the combinators, whose names are suffixed by
+the prime symbol: `allArr2arr'` and `allPi2pi'`. However, inlining the
+prime definitions results in the definitions of the paper.
 
 Enriching Program & Proof Reuse Combinators
 -------------------------------------------
@@ -182,13 +191,6 @@ File `code/GenericReuse/Aux.ced` contains the auxiliary combinators
 from Figure 2 in the paper: `id`, `copyType`, `copyTypeP`, and `subst`
 (as well as others not in the paper).
 
-Everything
-----------
-
-Finally, as a sanity check, `code/Everything.ced` imports all of the
-files mentioned above, so if it passes type checking then everything
-type checks.
-
 
 Part 3: Mandatory Revisions
 ===========================
@@ -245,7 +247,7 @@ Program Reuse Examples
 ----------------------
 
 For program reuse, we show how to enrich a one-step
-(beta + congruence) reduction function on raw terms to a
+(beta) reduction function on raw terms to a
 type-preserving version on typed terms.
 
 File `code/Examples/StepReuse.ced` contains an example of enriching
