@@ -22,12 +22,12 @@ import Aux.
 import FogFun.
 import EnrFun.
 
--- subR ◂ (ℕ ➔ EnvR) ➔ Raw ➔ Raw
+-- subR ◂ EnvR ➔ Raw ➔ Raw
 SubR2 ◂ ★ = Raw.
 SubR1 ◂ ★ = Raw ➔ SubR2.
 SubR ◂ ★ = EnvR ➔ SubR1.
 
--- subT ◂ ∀ Γ,Δ : Ctx × Ctx. (∀ A : Tp. A ∈ Γ ➔ EnvT Γ,Δ) ➔
+-- subT ◂ ∀ Γ,Δ : Ctx × Ctx. EnvT Γ,Δ ➔
 --   ∀ A : Tp. Term Γ,A ➔ Term Δ,A
 SubT2 ◂ Ctx2 ➔ CtxTp ➔ ★ = λ GD : Ctx2. λ GA : CtxTp.
   {projCtx GA ≃ projCtx1 GD} ➾ 
@@ -43,7 +43,7 @@ SubT1' ◂ Ctx2 ➔ ★ = λ GD : Ctx2.
 SubT ◂ ★ = ∀ GD : Ctx2. EnvT GD ➔ SubT1' GD.
 
 -- subPresTp ◂
---   ∀ e : ℕ ➔ EnvR. ∀ Γ,Δ : Ctx × Ctx. Taking Γ,Δ e ➔
+--   ∀ e : EnvR. ∀ Γ,Δ : Ctx × Ctx. Taking Γ,Δ e ➔
 --   ∀ t : Raw. ∀ A : Tp. Typed Γ,A t ➔
 --   Typed Δ,A (subR e t)
 TpPres2 ◂ Ctx2 ➔ CtxTp ➔ SubR2 ➔ ★ = λ GD : Ctx2. λ GA : CtxTp. λ subR2 : SubR2.
