@@ -22,43 +22,64 @@ import Aux.
 import FogFun.
 import EnrFun.
 
+-- subR ◂ (ℕ ➔ EnvR) ➔ Raw ➔ Raw
 SubR2 ◂ ★ = Raw.
 SubR1 ◂ ★ = Raw ➔ SubR2.
 SubR ◂ ★ = EnvR ➔ SubR1.
 
+-- subT ◂ ∀ Γ,Δ : Ctx × Ctx. (∀ A : Tp. A ∈ Γ ➔ EnvT Γ,Δ) ➔
+--   ∀ A : Tp. Term Γ,A ➔ Term Δ,A
 SubT2 ◂ Ctx2 ➔ CtxTp ➔ ★ = λ GD : Ctx2. λ GA : CtxTp.
-  {projCtx1 GD ≃ projCtx GA} ➾ 
+  {projCtx GA ≃ projCtx1 GD} ➾ 
   Term (pairCtxTp (projCtx2 GD) (projTp GA)).
 SubT1 ◂ Ctx2 ➔ ★ = λ GD : Ctx2.
   ∀ GA : CtxTp. Term GA ➔
   SubT2 GD GA.
-SubT ◂ ★ = ∀ GD : Ctx2. EnvT GD ➔ SubT1 GD.
+SubT2' ◂ Ctx2 ➔ Tp ➔ ★ = λ GD : Ctx2. λ A : Tp.
+  Term (pairCtxTp (projCtx2 GD) A).
+SubT1' ◂ Ctx2 ➔ ★ = λ GD : Ctx2.
+  ∀ A : Tp. Term (pairCtxTp (projCtx1 GD) A) ➔
+  SubT2' GD A.
+SubT ◂ ★ = ∀ GD : Ctx2. EnvT GD ➔ SubT1' GD.
 
+-- subPresTp ◂
+--   ∀ e : ℕ ➔ EnvR. ∀ Γ,Δ : Ctx × Ctx. Taking Γ,Δ e ➔
+--   ∀ t : Raw. ∀ A : Tp. Typed Γ,A t ➔
+--   Typed Δ,A (subR e t)
 TpPres2 ◂ Ctx2 ➔ CtxTp ➔ SubR2 ➔ ★ = λ GD : Ctx2. λ GA : CtxTp. λ subR2 : SubR2.
-  {projCtx1 GD ≃ projCtx GA} ➾ Typed (pairCtxTp (projCtx2 GD) (projTp GA)) subR2.
+  {projCtx GA ≃ projCtx1 GD} ➾ Typed (pairCtxTp (projCtx2 GD) (projTp GA)) subR2.
 TpPres1 ◂ Ctx2 ➔ SubR1 ➔ ★ = λ GD : Ctx2. λ subR1 : SubR1.
   Π t : Raw. Π GA : CtxTp. Typed GA t ➔
   TpPres2 GD GA (subR1 t).
+TpPres2' ◂ Ctx2 ➔ Tp ➔ SubR2 ➔ ★ = λ GD : Ctx2. λ A : Tp. λ subR2 : SubR2.
+  Typed (pairCtxTp (projCtx2 GD) A) subR2.
+TpPres1' ◂ Ctx2 ➔ SubR1 ➔ ★ = λ GD : Ctx2. λ subR1 : SubR1.
+  Π t : Raw. Π A : Tp. Typed (pairCtxTp (projCtx1 GD) A) t ➔
+  TpPres2' GD A (subR1 t).
 TpPres ◂ SubR ➔ ★ = λ subR : SubR.
   Π e : EnvR. Π GD : Ctx2. Taking GD e ➔
-  TpPres1 GD (subR e).
+  TpPres1' GD (subR e).
 
 subR2subT ◂ IdDep · SubR · (λ f : SubR. TpPres f ➾ SubT)
   = arr2allArrP2
   · EnvR · SubR1 · Ctx2
-  · Taking · TpPres1
-  · EnvT · SubT1
+  · Taking · TpPres1'
+  · EnvT · SubT1'
   ts2rs envTaking
-  (Λ GD. arr2allArrP2
+  (Λ GD. freshProdP2 · Raw · SubR2 · Ctx · Tp
+  · Typed · (λ GA : CtxTp. TpPres2' GD (projTp GA))
+  · Term · (λ GA : CtxTp. SubT2' GD (projTp GA))
+  -(projCtx1 GD)
+  (arr2allArrP2
   · Raw · SubR2 · CtxTp
   · Typed · (TpPres2 GD)
   · Term · (SubT2 GD)
   t2r termTyped
   (Λ GA. skipP2
-  · Raw · {projCtx1 GD ≃ projCtx GA}
+  · Raw · {projCtx GA ≃ projCtx1 GD}
   · (Typed (pairCtxTp (projCtx2 GD) (projTp GA)))
   · (Term (pairCtxTp (projCtx2 GD) (projTp GA)))
   (r2tP -(pairCtxTp (projCtx2 GD) (projTp GA)))
-  )).
+  ))).
 
 

@@ -1,6 +1,7 @@
 module Aux.
 import Unit.
 import Id.
+import Product.
 import Sigma.
 
 id ◂ ∀ A : ★. Id · A · A = Λ A . λ a. pairId · A · A -a a β.
@@ -21,6 +22,32 @@ skipP2 ◂ ∀ Y : ★. ∀ P : ★. ∀ Q : Y ➔ ★. ∀ X : ★.
   pairIdDep · Y · (λ y : Y. (P ➾ Q y) ➾ P ➾ X) -y
   (Λ qf. Λ p. elimIdDep · Y · (λ y : Y. Q y ➾ X) c y -(qf -p))
   β.
+
+freshProdP2 ◂ ∀ Y : ★. ∀ Y' : ★. ∀ I : ★. ∀ I' : ★.
+  ∀ P : Product · I · I' ➔ Y ➔ ★. ∀ P' : Product · I · I' ➔ Y' ➔ ★.
+  ∀ X : Product · I · I' ➔ ★. ∀ X' : Product · I · I' ➔ ★.
+  ∀ i : I. 
+  Π c : IdDep · (Y ➔ Y') · (λ f : Y ➔ Y'.
+    (Π y : Y. Π ii' : Product · I · I'. P ii' y ➔ {proj1 ii' ≃ i} ➾ P' ii' (f y))
+      ➾ ∀ ii' : Product · I · I'. X ii' ➔ {proj1 ii' ≃ i} ➾ X' ii').
+  IdDep · (Y ➔ Y') · (λ f : Y ➔ Y'.
+    (Π y : Y. Π i' : I'. P (pairProd · I · I' i i') y ➔ P' (pairProd · I · I' i i') (f y))
+      ➾ ∀ i' : I'. X (pairProd · I · I' i i') ➔ X' (pairProd · I · I' i i'))
+  = Λ Y. Λ Y'. Λ I. Λ I'. Λ P. Λ P'. Λ X. Λ X'. Λ i. λ c. λ f.
+  pairIdDep · (Y ➔ Y') · (λ f : Y ➔ Y'.
+    (Π y : Y. Π i' : I'. P (pairProd · I · I' i i') y ➔ P' (pairProd · I · I' i i') (f y))
+      ➾ ∀ i' : I'. X (pairProd · I · I' i i') ➔ X' (pairProd · I · I' i i'))
+    -f
+    (Λ pf. Λ i'. λ x.
+    elimIdDep · (Y ➔ Y') · (λ f : Y ➔ Y'.
+      (Π y : Y. Π ii' : Product · I · I'. P ii' y ➔ {proj1 ii' ≃ i} ➾ P' ii' (f y))
+        ➾ ∀ ii' : Product · I · I'. X ii' ➔ {proj1 ii' ≃ i} ➾ X' ii')
+      c f
+      -(λ y. λ ii'. λ p. Λ q. ρ (etaProduct · I · I' ii') - ρ q - pf y (projProd2 · I · I' ii')
+        (ρ ς q - ρ ς (etaProduct · I · I' ii') - p))
+      -(pairProd · I · I' i i') x -β 
+    )
+    β.
 
 applyDep ◂ ∀ Y : ★. ∀ X : ★.
   ∀ P : ★. ∀ Q : P ➔ Y ➔ ★.
