@@ -45,7 +45,7 @@ elimAllF ◂ ∀ A : ★. ∀ Q : A ➔ ★. ∀ X : List · A ➔ ★.
   (Λ x. Λ xs. λ q. λ qs. Λ C. λ p. p (nextF · A · Q · X -x -xs q qs) -β (pN -x -xs q qs))
   · (P xs s) (λ s'. Λ q. λ p. ρ q - p).
 
-imapAll ◂ ∀ A : ★. ∀ Q : A ➔ ★. IIdMapping · (List · A) · (AllF · A · Q)
+imapA ◂ ∀ A : ★. ∀ Q : A ➔ ★. IIdMapping · (List · A) · (AllF · A · Q)
   = Λ A. Λ Q. Λ X. Λ Y. λ c. elimAllF · A · Q · X
   · (λ xs : List · A. λ s : AllF · A · Q · X xs. IdCod · (AllF · A · Q · X xs) · (AllF · A · Q · Y xs) s)
   (pairId

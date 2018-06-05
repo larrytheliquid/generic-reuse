@@ -1,3 +1,4 @@
+module ListVecReuse.
 import Unit.
 import Sigma.
 import IIdMapping.
@@ -7,7 +8,6 @@ import FixIndM.
 import IFixIndM.
 import FogFix.
 import EnrFix.
-module ListVecReuse.
 import Nat.
 import ListF.
 import List.
