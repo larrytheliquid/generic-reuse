@@ -4,6 +4,7 @@ import Eq.
 import Id.
 import FixIndM.
 import IFixIndM.
+import Aux.
 import FogFix.
 import EnrFix.
 import NatF.
@@ -215,5 +216,7 @@ rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
 
 r2tP ◂ IdDep · Raw · (λ t : Raw. ∀ GA : CtxTp. Typed GA t ➾ Term GA)
   = fix2ifixP · RawF · CtxTp · TermF imapRaw imapTerm · Typed rf2tfP.
+r2tP' ◂ ∀ GA : CtxTp. IdDep · Raw · (λ t : Raw. Typed GA t ➾ Term GA)
+  = Λ GA. supplyPremIdx · Raw · CtxTp · (λ GA : CtxTp. λ t : Raw. Typed GA t ➾ Term GA) r2tP -GA.
 
 ------------------------------------------------------------------------------------------

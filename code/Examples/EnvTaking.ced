@@ -1,0 +1,10 @@
+import Raws.
+import Env.
+import Id.
+import Sigma.
+import Taking.
+module EnvTaking (ts2rs : ∀ GD : Ctx2. Id · (Env GD) · Raws).
+
+envTaking ◂ Π GD : Ctx2. Π e : Env GD. Taking GD (elimId · (Env GD) · Raws (ts2rs -GD) e)
+  = λ GD. λ e. pair · (Env GD) · (λ e' : Env GD. {e' ≃ e}) e β.
+

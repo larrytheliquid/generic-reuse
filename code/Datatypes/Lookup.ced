@@ -1,0 +1,10 @@
+module Lookup.
+import List.
+import Nat.
+import Mem.
+import Sigma.
+
+Lookup ◂ Π A : ★. A ➔ List · A ➔ Nat ➔ ★
+  = λ A : ★. λ x : A. λ xs : List · A. λ n : Nat.
+  Sigma · (Mem · A x xs) · (λ i : Mem · A x xs. {i ≃ n}).
+

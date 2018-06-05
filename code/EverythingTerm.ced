@@ -1,0 +1,56 @@
+import Id.
+import IIdMapping.
+import Aux.
+import FogFun.
+import EnrFun.
+import FogFix.
+import EnrFix.
+
+import Nat.
+import List.
+import Eq.
+import Tp.
+import Ctx.
+import Raw.
+import Lookup.
+import Typed.
+
+module EverythingTerm
+  (invZeroTail : ∀ A : ★. Π x : A. Π xs : List · A. Lookup · A x xs zero ➔ List · A)
+  (invZeroEq : ∀ A : ★. Π x : A. Π xs : List · A. Π i : Lookup · A x xs zero.
+    Eq · (List · A) xs (consL · A x (invZeroTail · A x xs i)))
+  (invSucHead : ∀ A : ★. Π x : A. Π xs : List · A. Π n : Nat. Lookup · A x xs (suc n) ➔ A)
+  (invSucTail : ∀ A : ★. Π x : A. Π xs : List · A. Π n : Nat. Lookup · A x xs (suc n) ➔ List · A)
+  (invSucEq : ∀ A : ★. Π x : A. Π xs : List · A. Π n : Nat. Π i : Lookup · A x xs (suc n).
+    Eq · (List · A) xs (consL · A (invSucHead · A x xs n i) (invSucTail · A x xs n i)))
+  (invSucPred : ∀ A : ★. Π x : A. Π xs : List · A. Π n : Nat. Π i : Lookup · A x xs (suc n).
+    Lookup · A x (invSucTail · A x xs n i) n)
+
+  (invVarLookup : Π G : Ctx. Π A : Tp. Π n : Nat. Typed (pairCtxTp G A) (var n)
+    ➔ Lookup · Tp A G n)
+  (invLamCod : Π GC : CtxTp. Π A : Tp. Π b : Raw. Typed GC (lam A b) ➔ Tp)
+  (invLamEq : Π GC : CtxTp. Π A : Tp. Π b : Raw. Π p : Typed GC (lam A b).
+    Eq · Tp (projTp GC) (Arr A (invLamCod GC A b p)))
+  (invLamBod : Π GC : CtxTp. Π A : Tp. Π b : Raw. Π p : Typed GC (lam A b).
+    Typed (pairCtxTp (ext (projCtx GC) A) (invLamCod GC A b p)) b)
+  (invAppDom : Π GB : CtxTp. Π f : Raw. Π a : Raw. Typed GB (app f a) ➔ Tp)
+  (invAppFun : Π GB : CtxTp. Π f : Raw. Π a : Raw. Π p : Typed GB (app f a).
+    Typed (pairCtxTp (projCtx GB) (Arr (invAppDom GB f a p) (projTp GB))) f)
+  (invAppArg : Π GB : CtxTp. Π f : Raw. Π a : Raw. Π p : Typed GB (app f a).
+    Typed (pairCtxTp (projCtx GB) (invAppDom GB f a p)) a)
+.
+
+import RawTermReuse
+  · Lookup invZeroTail invZeroEq invSucHead invSucTail invSucEq invSucPred
+  · Typed invVarLookup invLamCod invLamEq invLamBod invAppDom invAppFun invAppArg
+.
+
+import Taking.
+import EnvTaking ts2rs.
+import TermTyped t2r.
+
+import SubReuse
+  · Typed t2r termTyped r2tP'
+  · Taking ts2rs envTaking
+.
+

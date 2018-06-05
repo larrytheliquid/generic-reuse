@@ -1,0 +1,10 @@
+import Raws.
+import Env.
+import Id.
+import Sigma.
+module Taking.
+
+Taking ◂ Ctx2 ➔ Raws ➔ ★
+  = λ GD : Ctx2. λ e : Raws.
+  Sigma · (Env GD) · (λ e' : Env GD. {e' ≃ e}).
+

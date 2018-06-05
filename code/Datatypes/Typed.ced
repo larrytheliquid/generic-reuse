@@ -1,0 +1,11 @@
+import Ctx.
+import Raw.
+import Term.
+import Id.
+import Sigma.
+module Typed.
+
+Typed ◂ CtxTp ➔ Raw ➔ ★
+  = λ GA : CtxTp. λ t : Raw.
+  Sigma · (Term GA) · (λ t' : Term GA. {t' ≃ t}).
+

@@ -2,7 +2,6 @@ module ListVecReuse.
 import Unit.
 import Sigma.
 import IIdMapping.
-import Eq.
 import Id.
 import FixIndM.
 import IFixIndM.
@@ -13,6 +12,7 @@ import ListF.
 import List.
 import VecF.
 import Vec.
+import Aux.
 
 vf2lf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ Y :  ★. 
   Π c : ∀ n : Nat. Id · (X n) · Y.
@@ -45,29 +45,10 @@ l2v ◂ ∀ A : ★. IdDep · (List · A) · (λ xs : List · A. Vec · A (len �
 l2v! ◂ ∀ A : ★. Π xs : List · A. Vec · A (len · A xs)
   = Λ A. elimIdDep · (List · A) · (λ xs : List · A. Vec · A (len · A xs)) (l2v · A).
 
-lf2vfP ◂ ∀ A : ★. ∀ Y : ★. ∀ X : Nat ➔ ★.
-  Π c1 : Id · Y · (List · A).
-  Π c2 : IdDep · Y · (λ y : Y. ∀ n : Nat. Eq · Nat n (len · A (elimId · Y · (List · A) c1 y)) ➾ X n).
-  IdDep · (ListF · A · Y) · (λ ys : ListF · A · Y. ∀ n : Nat.
-    Eq · Nat n (len · A (inL (elimId · (ListF · A · Y) · (ListF · A · (List · A)) (imapL · A · Y · (List · A) c1) ys)))
-    ➾ VecF · A · X n)
-  = Λ A. Λ Y. Λ X. λ c1. λ c2. elimListF · A · Y
-  · (IdDepCod · (ListF · A · Y) · (λ ys : ListF · A · Y. ∀ n : Nat.
-    Eq · Nat n (len · A (inL (elimId · (ListF · A · Y) · (ListF · A · (List · A)) (imapL · A · Y · (List · A) c1) ys)))
-    ➾ VecF · A · X n))
-  (pairId · (ListF · A · Y) · (∀ n : Nat. {n ≃ len nilL} ➾ VecF · A · X n) -(nilLF · A · Y) (Λ n. Λ q. ρ q - (nilVF · A · X)) β)
-  (λ a. λ y. pairId · (ListF · A · Y) · (∀ n : Nat. {n ≃ len (consL a y)} ➾ VecF · A · X n)
-    -(consLF · A · Y a y)
-    (Λ n. Λ q. ρ q - (consVF · A · X -(len · A (elimId · Y · (List · A) c1 y)) a
-      (elimIdDep · Y · (λ y' : Y. ∀ n' : Nat. {n' ≃ len y'} ➾ X n')
-        c2 y -(len · A (elimId · Y · (List · A) c1 y)) -β)
-    )) β
-  ).
-
-l2vP ◂ ∀ A : ★. IdDep · (List · A) · (λ xs : List · A. ∀ n : Nat. Eq · Nat n (len · A xs) ➾ Vec · A n)
-  = Λ A. fix2ifixP · (ListF · A) · Nat · (VecF · A) (imapL · A) (imapV · A)
-  · (λ n : Nat. λ xs : List · A. Eq · Nat n (len · A xs))
-  (lf2vfP · A).
-l2vP! ◂ ∀ A : ★. Π xs : List · A. ∀ n : Nat. Eq · Nat n (len · A xs) ➾ Vec · A n
-  = Λ A. elimIdDep · (List · A) · (λ xs : List · A. ∀ n : Nat. Eq · Nat n (len · A xs) ➾ Vec · A n) (l2vP · A).
-
+VecP ◂ Π A : ★. Nat ➔ List · A ➔ ★ = λ A : ★. λ n : Nat. λ xs : List · A. {len xs ≃ n} ➾ Vec · A n.
+l2vP ◂ ∀ A : ★. ∀ n : Nat. IdDep · (List · A) · (VecP · A n)
+  = Λ A. Λ n. subst
+  · (List · A) · Nat · (Vec · A) -(len · A)
+  -n (l2v · A).
+l2vP! ◂ ∀ A : ★. ∀ n : Nat. Π xs : List · A. VecP · A n xs
+  = Λ A. Λ n. elimIdDep · (List · A) · (VecP · A n) (l2vP · A -n).
