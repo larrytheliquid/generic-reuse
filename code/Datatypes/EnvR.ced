@@ -1,6 +1,0 @@
-module EnvR.
-import Nat.
-import Raw.
-import Product.
-
-EnvR ◂ ★ = Nat ➔ Raw.

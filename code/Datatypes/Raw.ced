@@ -5,6 +5,7 @@ import FixIndM.
 import RawF.
 import Nat.
 import Tp.
+import List.
 import IFixM.
 
 Raw ◂ ★ = FixIndM · RawF imapRaw.
@@ -30,3 +31,4 @@ elimRaw ◂ ∀ P : Raw ➔ ★.
 foldRaw ◂ ∀ C : ★. (Nat ➔ C) ➔ (Tp ➔ Raw ➔ C ➔ C) ➔ (Raw ➔ C ➔ Raw ➔ C ➔ C) ➔ Raw ➔ C
   = Λ C. elimRaw · (λ n : Raw. C).
 
+Raws ◂ ★ = List · Raw.

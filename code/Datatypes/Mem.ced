@@ -12,7 +12,7 @@ import MemF.
 Mem ◂ Π A : ★. Π x : A. List · A ➔ ★ =
   λ A : ★. λ x : A. IFixIndM · (List · A) · (MemF · A x) (imapMem · A -x).
 here ◂ ∀ A : ★. ∀ x : A. ∀ xs : List · A. Mem · A x (consL · A x xs)
-  = Λ A. Λ x. Λ xs .iinFixIndM · (List · A) · (MemF · A x)
+  = Λ A. Λ x. Λ xs. iinFixIndM · (List · A) · (MemF · A x)
   -(imapMem · A -x) -(consL · A x xs)
   (hereF · A -x · (Mem · A x) -xs).
 there ◂ ∀ A : ★. ∀ x : A. ∀ y : A. ∀ xs : List · A. Mem · A x xs ➔ Mem · A x (consL · A y xs)
