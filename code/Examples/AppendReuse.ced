@@ -5,6 +5,7 @@ import EnrFun.
 import Nat.
 import List.
 import Vec.
+import VecListReuse.
 import ListVecReuse.
 module AppendReuse.
 

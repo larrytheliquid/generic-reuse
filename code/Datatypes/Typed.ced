@@ -3,9 +3,12 @@ import Raw.
 import Term.
 import Id.
 import Sigma.
+import TermRawReuse.
 module Typed.
 
 Typed ◂ CtxTp ➔ Raw ➔ ★
   = λ GA : CtxTp. λ t : Raw.
   Sigma · (Term GA) · (λ t' : Term GA. {t' ≃ t}).
 
+termTyped ◂ Π GA : CtxTp. Π t : Term GA. Typed GA (elimId · (Term GA) · Raw (t2r -GA) t)
+  = λ GA. λ t. pair · (Term GA) · (λ t' : Term GA. {t' ≃ t}) t β.

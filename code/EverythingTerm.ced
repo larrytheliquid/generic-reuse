@@ -14,6 +14,7 @@ import Ctx.
 import Raw.
 import Lookup.
 import Typed.
+import Taking.
 
 module EverythingTerm
   (invZeroTail : ∀ A : ★. Π x : A. Π xs : List · A. Lookup · A x xs zero ➔ List · A)
@@ -40,14 +41,11 @@ module EverythingTerm
     Typed (pairCtxTp (projCtx GB) (invAppDom GB f a p)) a)
 .
 
+import TermRawReuse.
 import RawTermReuse
   · Lookup invZeroTail invZeroEq invSucHead invSucTail invSucEq invSucPred
   · Typed invVarLookup invLamCod invLamEq invLamBod invAppDom invAppFun invAppArg
 .
-
-import Taking.
-import EnvTaking ts2rs.
-import TermTyped t2r.
 
 import SubReuse
   · Typed t2r termTyped r2tP'

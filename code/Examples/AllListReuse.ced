@@ -1,4 +1,4 @@
-module ListAllReuse.
+module AllListReuse.
 import Unit.
 import Sigma.
 import IIdMapping.
