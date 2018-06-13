@@ -81,11 +81,24 @@ projBod ◂ ∀ A : Tp. ∀ b : Raw. Π t : Raw. {t ≃ lam A b} ➾ Raw
   (λ f. λ ihf. λ a. λ iha. Λ q. δ - χ {notLam (app f a) ≃ notLam (lam A b)} - ρ q - β)
 .
 
+projFun ◂ ∀ f : Tp. ∀ a : Raw. Π t : Raw. {t ≃ app f a} ➾ Raw
+  = Λ f. Λ a. elimRaw · (λ t : Raw. {t ≃ app f a} ➾ Raw)
+  (λ n. Λ q. δ - χ {notApp (var n) ≃ notApp (app f a)} - ρ q - β)
+  (λ A. λ b. λ ih. Λ q. δ - χ {notApp (lam A b) ≃ notApp (app f a)} - ρ q - β)
+  (λ f. λ ihf. λ a. λ iha. Λ q. f)
+.
+
+
 invILamLam1 ◂ ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. Π b : Term (pairCtxTp (ext G A) B). Π A' : Tp. Π b' : Raw. {ilam A b ≃ lam A' b'} ➔ {A ≃ A'}
   = Λ G. Λ A. Λ B. λ b. λ A'. λ b'. λ q. χ {projDom (ilam A b) ≃ projDom (lam A' b')} - ρ q - β.
 
 invILamLam2 ◂ ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. Π b : Term (pairCtxTp (ext G A) B). Π A' : Tp. Π b' : Raw. {ilam A b ≃ lam A' b'} ➔ {b ≃ b'}
   = Λ G. Λ A. Λ B. λ b. λ A'. λ b'. λ q. χ {projBod (ilam A b) ≃ projBod (lam A' b')} - ρ q - β.
+
+invIAppApp1 ◂ ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp.
+  Π f : Term (pairCtxTp G (Arr A B)). Π a : Term (pairCtxTp G A).
+  Π f' : Raw. Π a' : Raw. {iapp f a ≃ app f' a'} ➔ {f ≃ f'}
+  = Λ G. Λ A. Λ B. λ f. λ a. λ f'. λ a'. λ q. χ {projFun (iapp f a) ≃ projFun (app f' a')} - ρ q - β.
 
 projArrCod ◂ ∀ A : Tp. ∀ B : Tp. Π C : Tp. {C ≃ Arr A B} ➔ Tp
   = Λ A. Λ B. elimTp · (λ C : Tp. {C ≃ Arr A B} ➔ Tp)
@@ -162,6 +175,25 @@ invAppDom ◂ Π GB : CtxTp. Π f : Raw. Π a : Raw. Typed GB (app f a) ➔ Tp
     (Λ G'. λ A'. Λ B'. λ b'. λ _. λ GB'. λ q1. λ q2. δ - χ {notApp (ilam A' b') ≃ notApp (app f a)} - ρ q2 - β)
     (Λ G'. Λ A'. Λ B'. λ f'. λ _. λ a'. λ _. λ GB'. λ q1. λ q2.
       projTpEq1 -A' (infer (projCtx GB') -A' (ρ (invCtxTp1 -GB' -G' -B' q1) - a'))
+    )
+    -GB t GB β
+  )
+.
+
+invAppFun ◂ Π GB : CtxTp. Π f : Raw. Π a : Raw. Π p : Typed GB (app f a).
+  Typed (pairCtxTp (projCtx GB) (Arr (invAppDom GB f a p) (projTp GB))) f
+  = λ GB. λ f. λ a. elimSigma · (Term GB) · (λ t : Term GB. {t ≃ app f a})
+  · (λ p : Typed GB (app f a). Typed (pairCtxTp (projCtx GB) (Arr (invAppDom GB f a p) (projTp GB))) f)
+  (λ t. elimTerm · (λ GB : CtxTp. λ t : Term GB. Π GB' : CtxTp. {GB' ≃ GB} ➔ Π q : { t ≃ app f a }.
+    Typed (pairCtxTp (projCtx GB) (Arr (invAppDom GB f a (pair · (Term GB) · (λ t : Term GB. { t ≃ app f a }) t q)) (projTp GB))) f)
+    (Λ G'. Λ A'. λ i. λ GB'. λ q1. λ q2. δ - χ {notApp (ivar i) ≃ notApp (app f a)} - ρ q2 - β)
+    (Λ G'. λ A'. Λ B'. λ b'. λ _. λ GB'. λ q1. λ q2. δ - χ {notApp (ilam A' b') ≃ notApp (app f a)} - ρ q2 - β)
+    (Λ G'. Λ A'. Λ B'. λ f'. λ _. λ a'. λ _. λ GB'. λ q1. λ q2.
+      ρ ς (invIAppApp1 -G' -A' -B' f' a' f a q2) -
+      ρ ς (invCtxTp1 -GB' -G' -B' q1) -
+      ρ (projTpEq2 -A' (infer (projCtx GB') -A' (ρ (invCtxTp1 -GB' -G' -B' q1) - a'))) -
+      ρ (invCtxTp1 -GB' -G' -B' q1) -
+      (termTyped' -(pairCtxTp G' (Arr A' B')) f')
     )
     -GB t GB β
   )
