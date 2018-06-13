@@ -55,6 +55,16 @@ isArr ◂ Tp ➔ Bool
   = foldTp · Bool false (λ A. λ ihA. λ B. λ ihB. true).
 notArr ◂ Tp ➔ Bool = λ A. not (isArr A).
 
+projDom ◂ ∀ A : Tp. ∀ b : Raw. Π t : Raw. {t ≃ lam A b} ➾ Tp
+  = Λ A. Λ b. elimRaw · (λ t : Raw. {t ≃ lam A b} ➾ Tp)
+  (λ n. Λ q. δ - χ {notLam (var n) ≃ notLam (lam A b)} - ρ q - β)
+  (λ A. λ b. λ ih. Λ q. A)
+  (λ f. λ ihf. λ a. λ iha. Λ q. δ - χ {notLam (app f a) ≃ notLam (lam A b)} - ρ q - β)
+.
+
+invILamLam1 ◂ ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. Π b : Term (pairCtxTp (ext G A) B). Π A' : Tp. Π b' : Raw. {ilam A b ≃ lam A' b'} ➔ {A ≃ A'}
+  = Λ G. Λ A. Λ B. λ b. λ A'. λ b'. λ q. χ {projDom (ilam A b) ≃ projDom (lam A' b')} - ρ q - β.
+
 projArrCod ◂ ∀ A : Tp. ∀ B : Tp. Π C : Tp. {C ≃ Arr A B} ➔ Tp
   = Λ A. Λ B. elimTp · (λ C : Tp. {C ≃ Arr A B} ➔ Tp)
   (λ q. δ - χ {notArr Base ≃ notArr (Arr A B)} - ρ q - β)
@@ -87,6 +97,18 @@ invLamCod ◂ Π GC : CtxTp. Π A : Tp. Π b : Raw. Typed GC (lam A b) ➔ Tp
     (Λ G'. λ A'. Λ B'. λ b'. λ _. λ GC'. λ q1. λ q2. projPairCod -G' -A' -B' GC' q1)
     (Λ G'. Λ A'. Λ B'. λ f. λ _. λ a. λ _. λ GC'. λ q1. λ q2. δ - χ {notLam (iapp f a) ≃ notLam (lam A b)} - ρ q2 - β)
     -GC t GC β
+  )
+.
+
+invLamEq ◂ Π GC : CtxTp. Π A : Tp. Π b : Raw. Π p : Typed GC (lam A b).
+  {projTp GC ≃ Arr A (invLamCod GC A b p)}
+  = λ GC. λ A. λ b. elimSigma · (Term GC) · (λ t : Term GC. {t ≃ lam A b})
+  · (λ p : Typed GC (lam A b). {projTp GC ≃ Arr A (invLamCod GC A b p)})
+  (elimTerm · (λ GC : CtxTp. λ t : Term GC . Π q : { t ≃ lam A b }. { projTp GC ≃ Arr A (invLamCod GC A b (pair t q)) })
+    (Λ G'. Λ A'. λ i. λ q. δ - χ {notLam (ivar i) ≃ notLam (lam A b)} - ρ q - β)
+    (Λ G'. λ A'. Λ B'. λ b'. λ _. λ q. ρ (invILamLam1 -G' -A' -B' b' A b q) - β)
+    (Λ G'. Λ A'. Λ B'. λ f. λ _. λ a. λ _. λ q. δ - χ {notLam (iapp f a) ≃ notLam (lam A b)} - ρ q - β)
+    -GC
   )
 .
 
