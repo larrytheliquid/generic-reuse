@@ -15,8 +15,10 @@ Typed ◂ CtxTp ➔ Raw ➔ ★
   = λ GA : CtxTp. λ t : Raw.
   Sigma · (Term GA) · (λ t' : Term GA. {t' ≃ t}).
 
+termTyped' ◂ ∀ GA : CtxTp. Π t : Term GA. Typed GA (elimId · (Term GA) · Raw (t2r -GA) t)
+  = Λ GA. λ t. pair · (Term GA) · (λ t' : Term GA. {t' ≃ t}) t β.
 termTyped ◂ Π GA : CtxTp. Π t : Term GA. Typed GA (elimId · (Term GA) · Raw (t2r -GA) t)
-  = λ GA. λ t. pair · (Term GA) · (λ t' : Term GA. {t' ≃ t}) t β.
+  = λ GA. termTyped' -GA.
 
 isVar ◂ Raw ➔ Bool
   = foldRaw · Bool (λ n. true) (λ A. λ b. λ ih. false) (λ f. λ ihf. λ a. λ iha. false).
@@ -62,8 +64,18 @@ projDom ◂ ∀ A : Tp. ∀ b : Raw. Π t : Raw. {t ≃ lam A b} ➾ Tp
   (λ f. λ ihf. λ a. λ iha. Λ q. δ - χ {notLam (app f a) ≃ notLam (lam A b)} - ρ q - β)
 .
 
+projBod ◂ ∀ A : Tp. ∀ b : Raw. Π t : Raw. {t ≃ lam A b} ➾ Raw
+  = Λ A. Λ b. elimRaw · (λ t : Raw. {t ≃ lam A b} ➾ Raw)
+  (λ n. Λ q. δ - χ {notLam (var n) ≃ notLam (lam A b)} - ρ q - β)
+  (λ A. λ b. λ ih. Λ q. b)
+  (λ f. λ ihf. λ a. λ iha. Λ q. δ - χ {notLam (app f a) ≃ notLam (lam A b)} - ρ q - β)
+.
+
 invILamLam1 ◂ ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. Π b : Term (pairCtxTp (ext G A) B). Π A' : Tp. Π b' : Raw. {ilam A b ≃ lam A' b'} ➔ {A ≃ A'}
   = Λ G. Λ A. Λ B. λ b. λ A'. λ b'. λ q. χ {projDom (ilam A b) ≃ projDom (lam A' b')} - ρ q - β.
+
+invILamLam2 ◂ ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. Π b : Term (pairCtxTp (ext G A) B). Π A' : Tp. Π b' : Raw. {ilam A b ≃ lam A' b'} ➔ {b ≃ b'}
+  = Λ G. Λ A. Λ B. λ b. λ A'. λ b'. λ q. χ {projBod (ilam A b) ≃ projBod (lam A' b')} - ρ q - β.
 
 projArrCod ◂ ∀ A : Tp. ∀ B : Tp. Π C : Tp. {C ≃ Arr A B} ➔ Tp
   = Λ A. Λ B. elimTp · (λ C : Tp. {C ≃ Arr A B} ➔ Tp)
@@ -107,6 +119,23 @@ invLamEq ◂ Π GC : CtxTp. Π A : Tp. Π b : Raw. Π p : Typed GC (lam A b).
   (elimTerm · (λ GC : CtxTp. λ t : Term GC . Π q : { t ≃ lam A b }. { projTp GC ≃ Arr A (invLamCod GC A b (pair t q)) })
     (Λ G'. Λ A'. λ i. λ q. δ - χ {notLam (ivar i) ≃ notLam (lam A b)} - ρ q - β)
     (Λ G'. λ A'. Λ B'. λ b'. λ _. λ q. ρ (invILamLam1 -G' -A' -B' b' A b q) - β)
+    (Λ G'. Λ A'. Λ B'. λ f. λ _. λ a. λ _. λ q. δ - χ {notLam (iapp f a) ≃ notLam (lam A b)} - ρ q - β)
+    -GC
+  )
+.
+
+invLamBod ◂ Π GC : CtxTp. Π A : Tp. Π b : Raw. Π p : Typed GC (lam A b).
+  Typed (pairCtxTp (ext (projCtx GC) A) (invLamCod GC A b p)) b
+  = λ GC. λ A. λ b. elimSigma · (Term GC) · (λ t : Term GC. {t ≃ lam A b})
+  · (λ p : Typed GC (lam A b). Typed (pairCtxTp (ext (projCtx GC) A) (invLamCod GC A b p)) b)
+  (elimTerm · (λ GC : CtxTp. λ t : Term GC . Π q : { t ≃ lam A b }.
+    Typed (pairCtxTp (ext (projCtx GC) A) (invLamCod GC A b (pair · (Term GC) · (λ t : Term GC. { t ≃ lam A b }) t q))) b)
+    (Λ G'. Λ A'. λ i. λ q. δ - χ {notLam (ivar i) ≃ notLam (lam A b)} - ρ q - β)
+    (Λ G'. λ A'. Λ B'. λ b'. λ _. λ q.
+      ρ ς (invILamLam1 -G' -A' -B' b' A b q) -
+      ρ ς (invILamLam2 -G' -A' -B' b' A b q) -
+      (termTyped' -(pairCtxTp (ext G' A') B') b')
+    )
     (Λ G'. Λ A'. Λ B'. λ f. λ _. λ a. λ _. λ q. δ - χ {notLam (iapp f a) ≃ notLam (lam A b)} - ρ q - β)
     -GC
   )
