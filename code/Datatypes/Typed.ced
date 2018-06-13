@@ -9,7 +9,7 @@ import Product.
 import TermRawReuse.
 import Lookup.
 import Mem.
-module Typed.
+module Typed (infer : Π G : Ctx. ∀ A : Tp. Term (pairCtxTp G A) ➔ Sigma · Tp · (λ A' : Tp. {A' ≃ A})).
 
 Typed ◂ CtxTp ➔ Raw ➔ ★
   = λ GA : CtxTp. λ t : Raw.
@@ -47,11 +47,21 @@ projVar' ◂ Nat ➔ Raw ➔ Nat
   (λ f. λ ihf. λ a. λ iha. n)
 .
 
+invPair1 ◂ ∀ A : ★. ∀ B : ★. ∀ a : A. ∀ a' : A. ∀ b : B. ∀ b' : B.
+  {pair a b ≃ pair a' b'} ➔ {a ≃ a'}
+  = Λ A. Λ B. Λ a. Λ a'. Λ b. Λ b'. λ q.
+  χ {proj1 (pair a b) ≃ proj1 (pair a' b')} -
+  ρ q - β.
+
 invPair2 ◂ ∀ A : ★. ∀ B : ★. ∀ a : A. ∀ a' : A. ∀ b : B. ∀ b' : B.
   {pair a b ≃ pair a' b'} ➔ {b ≃ b'}
   = Λ A. Λ B. Λ a. Λ a'. Λ b. Λ b'. λ q.
   χ {proj2 (pair a b) ≃ proj2 (pair a' b')} -
   ρ q - β.
+
+invCtxTp1 ◂ ∀ GA : CtxTp. ∀ G' : Ctx. ∀ A' : Tp.
+  {GA ≃ pairCtxTp G' A'} ➔ {projCtx GA ≃ G'}
+  = Λ GA. Λ G'. Λ A'. λ q. ρ q - β.
 
 isArr ◂ Tp ➔ Bool
   = foldTp · Bool false (λ A. λ ihA. λ B. λ ihB. true).
@@ -138,6 +148,22 @@ invLamBod ◂ Π GC : CtxTp. Π A : Tp. Π b : Raw. Π p : Typed GC (lam A b).
     )
     (Λ G'. Λ A'. Λ B'. λ f. λ _. λ a. λ _. λ q. δ - χ {notLam (iapp f a) ≃ notLam (lam A b)} - ρ q - β)
     -GC
+  )
+.
+
+TpEq ◂ Tp ➔ ★ = λ A : Tp. Sigma · Tp · (λ A' : Tp. {A' ≃ A}).
+projTpEq1 ◂ ∀ A : Tp. TpEq A ➔ Tp = Λ A. proj1 · Tp · (λ A' : Tp. {A' ≃ A}).
+projTpEq2 ◂ ∀ A : Tp. Π s : TpEq A. {projTpEq1 s ≃ A} = Λ A. proj2 · Tp · (λ A' : Tp. {A' ≃ A}).
+
+invAppDom ◂ Π GB : CtxTp. Π f : Raw. Π a : Raw. Typed GB (app f a) ➔ Tp
+  = λ GB. λ f. λ a. foldSigma · (Term GB) · (λ t : Term GB. {t ≃ app f a}) · Tp
+  (λ t. elimTerm · (λ GB : CtxTp. λ t : Term GB . Π GB' : CtxTp. {GB' ≃ GB} ➔ { t ≃ app f a } ➔ Tp)
+    (Λ G'. Λ A'. λ i. λ GB'. λ q1. λ q2. δ - χ {notApp (ivar i) ≃ notApp (app f a)} - ρ q2 - β)
+    (Λ G'. λ A'. Λ B'. λ b'. λ _. λ GB'. λ q1. λ q2. δ - χ {notApp (ilam A' b') ≃ notApp (app f a)} - ρ q2 - β)
+    (Λ G'. Λ A'. Λ B'. λ f'. λ _. λ a'. λ _. λ GB'. λ q1. λ q2.
+      projTpEq1 -A' (infer (projCtx GB') -A' (ρ (invCtxTp1 -GB' -G' -B' q1) - a'))
+    )
+    -GB t GB β
   )
 .
 
