@@ -10,5 +10,5 @@ module EverythingList.
 
 import VecListReuse.
 import ListVecReuse.
-import ListAllReuse.
+import AllListReuse.
 import AppendReuse.

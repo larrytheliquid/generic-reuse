@@ -17,16 +17,6 @@ import Typed.
 import Taking.
 
 module EverythingTerm
-  (invZeroTail : ∀ A : ★. Π x : A. Π xs : List · A. Lookup · A x xs zero ➔ List · A)
-  (invZeroEq : ∀ A : ★. Π x : A. Π xs : List · A. Π i : Lookup · A x xs zero.
-    Eq · (List · A) xs (consL · A x (invZeroTail · A x xs i)))
-  (invSucHead : ∀ A : ★. Π x : A. Π xs : List · A. Π n : Nat. Lookup · A x xs (suc n) ➔ A)
-  (invSucTail : ∀ A : ★. Π x : A. Π xs : List · A. Π n : Nat. Lookup · A x xs (suc n) ➔ List · A)
-  (invSucEq : ∀ A : ★. Π x : A. Π xs : List · A. Π n : Nat. Π i : Lookup · A x xs (suc n).
-    Eq · (List · A) xs (consL · A (invSucHead · A x xs n i) (invSucTail · A x xs n i)))
-  (invSucPred : ∀ A : ★. Π x : A. Π xs : List · A. Π n : Nat. Π i : Lookup · A x xs (suc n).
-    Lookup · A x (invSucTail · A x xs n i) n)
-
   (invVarLookup : Π G : Ctx. Π A : Tp. Π n : Nat. Typed (pairCtxTp G A) (var n)
     ➔ Lookup · Tp A G n)
   (invLamCod : Π GC : CtxTp. Π A : Tp. Π b : Raw. Typed GC (lam A b) ➔ Tp)

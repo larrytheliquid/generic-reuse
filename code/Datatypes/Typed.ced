@@ -1,9 +1,14 @@
 import Ctx.
+import Tp.
+import Nat.
 import Raw.
 import Term.
 import Id.
 import Sigma.
+import Product.
 import TermRawReuse.
+import Lookup.
+import Mem.
 module Typed.
 
 Typed ◂ CtxTp ➔ Raw ➔ ★
@@ -12,3 +17,92 @@ Typed ◂ CtxTp ➔ Raw ➔ ★
 
 termTyped ◂ Π GA : CtxTp. Π t : Term GA. Typed GA (elimId · (Term GA) · Raw (t2r -GA) t)
   = λ GA. λ t. pair · (Term GA) · (λ t' : Term GA. {t' ≃ t}) t β.
+
+isVar ◂ Raw ➔ Bool
+  = foldRaw · Bool (λ n. true) (λ A. λ b. λ ih. false) (λ f. λ ihf. λ a. λ iha. false).
+notVar ◂ Raw ➔ Bool
+  = λ t. not (isVar t).
+isLam ◂ Raw ➔ Bool
+  = foldRaw · Bool (λ n. false) (λ A. λ b. λ ih. true) (λ f. λ ihf. λ a. λ iha. false).
+notLam ◂ Raw ➔ Bool
+  = λ t. not (isLam t).
+isApp ◂ Raw ➔ Bool
+  = foldRaw · Bool (λ n. false) (λ A. λ b. λ ih. false) (λ f. λ ihf. λ a. λ iha. true).
+notApp ◂ Raw ➔ Bool
+  = λ t. not (isApp t).
+
+projVar ◂ ∀ n : Nat. Π t : Raw. {t ≃ var n} ➔ Nat
+  = Λ n. elimRaw · (λ t : Raw. {t ≃ var n} ➔ Nat)
+  (λ n'. λ q. n')
+  (λ A. λ b. λ ih. λ q. δ - χ {notVar (lam A b) ≃ notVar (var n)} - ρ q - β)
+  (λ f. λ ihf. λ a. λ iha. λ q. δ - χ {notVar (app f a) ≃ notVar (var n)} - ρ q - β)
+.
+
+projVar' ◂ Nat ➔ Raw ➔ Nat
+  = λ n. foldRaw · Nat
+  (λ n'. n')
+  (λ A. λ b. λ ih. n)
+  (λ f. λ ihf. λ a. λ iha. n)
+.
+
+invPair2 ◂ ∀ A : ★. ∀ B : ★. ∀ a : A. ∀ a' : A. ∀ b : B. ∀ b' : B.
+  {pair a b ≃ pair a' b'} ➔ {b ≃ b'}
+  = Λ A. Λ B. Λ a. Λ a'. Λ b. Λ b'. λ q.
+  χ {proj2 (pair a b) ≃ proj2 (pair a' b')} -
+  ρ q - β.
+
+isArr ◂ Tp ➔ Bool
+  = foldTp · Bool false (λ A. λ ihA. λ B. λ ihB. true).
+notArr ◂ Tp ➔ Bool = λ A. not (isArr A).
+
+projArrCod ◂ ∀ A : Tp. ∀ B : Tp. Π C : Tp. {C ≃ Arr A B} ➔ Tp
+  = Λ A. Λ B. elimTp · (λ C : Tp. {C ≃ Arr A B} ➔ Tp)
+  (λ q. δ - χ {notArr Base ≃ notArr (Arr A B)} - ρ q - β)
+  (λ A'. λ ihA. λ B'. λ ihB. λ q. B')
+.
+
+projPairCod ◂ ∀ G : Ctx. ∀ A : Tp. ∀ B : Tp. Π GC : CtxTp. {GC ≃ pair G (Arr A B)} ➔ Tp
+  = Λ G. Λ A. Λ B. elimProd · Ctx · Tp · (λ GC : CtxTp. {GC ≃ pair G (Arr A B)} ➔ Tp)
+  (λ G'. λ C. λ q. projArrCod -A -B C (invPair2 · Ctx · Tp -G' -G -C -(Arr A B) q)
+  )
+.
+
+invIVarVar ◂ ∀ A : Tp. ∀ G : Ctx. Π i : Mem · Tp A G. Π n : Nat. {ivar i ≃ var n} ➔ {i ≃ n}
+  = Λ A. Λ G. λ i. λ n. λ q. χ {projVar' n (ivar i) ≃ projVar' n (var n)} - ρ q - β.
+
+invVarLookup ◂ Π G : Ctx. Π A : Tp. Π n : Nat. Typed (pairCtxTp G A) (var n) ➔ Lookup · Tp A G n
+  = λ G. λ A. λ n. foldSigma · (Term (pairCtxTp G A)) · (λ t : Term (pairCtxTp G A). {t ≃ var n}) · (Lookup · Tp A G n)
+  (λ t. elimTerm · (λ GA : CtxTp. λ t : Term GA . { t ≃ var n } ➔ Lookup · Tp (projTp GA) (projCtx GA) n)
+    (Λ G. Λ A. λ i. λ q. pair · (Mem · Tp A G) · (λ i : Mem · Tp A G. {i ≃ n}) i (invIVarVar -A -G i n q))
+    (Λ G. λ A. Λ B. λ b. λ _. λ q. δ - χ {notVar (ilam A b) ≃ notVar (var n)} - ρ q - β)
+    (Λ G. Λ A. Λ B. λ f. λ _. λ a. λ _. λ q. δ - χ {notVar (iapp f a) ≃ notVar (var n)} - ρ q - β)
+    -(pairCtxTp G A) t
+  )
+.
+
+invLamCod ◂ Π GC : CtxTp. Π A : Tp. Π b : Raw. Typed GC (lam A b) ➔ Tp
+  = λ GC. λ A. λ b. foldSigma · (Term GC) · (λ t : Term GC. {t ≃ lam A b}) · Tp
+  (λ t. elimTerm · (λ GC : CtxTp. λ t : Term GC . Π GC' : CtxTp. {GC' ≃ GC} ➔ { t ≃ lam A b } ➔ Tp)
+    (Λ G'. Λ A'. λ i. λ GC'. λ q1. λ q2. δ - χ {notLam (ivar i) ≃ notLam (lam A b)} - ρ q2 - β)
+    (Λ G'. λ A'. Λ B'. λ b'. λ _. λ GC'. λ q1. λ q2. projPairCod -G' -A' -B' GC' q1)
+    (Λ G'. Λ A'. Λ B'. λ f. λ _. λ a. λ _. λ GC'. λ q1. λ q2. δ - χ {notLam (iapp f a) ≃ notLam (lam A b)} - ρ q2 - β)
+    -GC t GC β
+  )
+.
+
+{-
+infer ◂ Π G : Ctx. ∀ A : Tp. Term (pairCtxTp G A) ➔ Sigma · Tp · (λ A' : Tp. {A' ≃ A})
+  = λ G. Λ A. λ t. elimTerm
+  · (λ GA : CtxTp. λ _ : Term GA. Π G' : Ctx. {G' ≃ projCtx GA} ➾ Sigma · Tp · (λ A' : Tp. {A' ≃ projTp GA}))
+  (Λ G. Λ A. λ i. λ G'. Λ q. ●)
+  (Λ G. λ A. Λ B. λ b. λ ih. λ G'. Λ q. pair
+    · Tp · (λ C' : Tp. {C' ≃ Arr A B})
+    (Arr A
+      (proj1 · Tp · (λ B' : Tp. {B' ≃ B}) (ih (ext G' A) -(ρ q - β)))
+    )
+    (ρ (proj2 · Tp · (λ B' : Tp. {B' ≃ B}) (ih (ext G' A) -(ρ q - β))) - β)
+  )
+  (Λ G. Λ A. Λ B. λ f. λ ihf. λ a. λ iha. λ G'. Λ q. ●)
+  -(pairCtxTp G A) t G -β
+.
+-}

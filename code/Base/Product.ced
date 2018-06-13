@@ -10,6 +10,9 @@ pairProd ◂ ∀ A : ★. ∀ B : ★. A ➔ B ➔ Product · A · B =
 elimProd ◂ ∀ A : ★. ∀ B : ★. ∀ P : Product · A · B ➔ ★.
   (Π a : A. Π b : B. P (pairProd · A · B a b)) ➔ Π s : Product · A · B. P s
   = Λ A. Λ B. elimSigma · A · (λ a : A. B).
+foldProd ◂ ∀ A : ★. ∀ B : ★. ∀ C : ★.
+  (Π a : A. Π b : B. C) ➔ Π s : Product · A · B. C
+  = Λ A. Λ B. Λ C. elimProd · A · B · (λ _ : Product · A · B. C).
 
 projProd1 ◂ ∀ A : ★. ∀ B : ★. Product · A · B  ➔  A = Λ A. Λ B. proj1 · A · (λ _ : A. B).
 projProd2 ◂ ∀ A : ★. ∀ B : ★. Product · A · B  ➔  B = Λ A. Λ B. proj2 · A · (λ _ : A. B).
