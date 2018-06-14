@@ -8,8 +8,9 @@ import Sigma.
 import Product.
 import TermRawReuse.
 import Lookup.
+import List.
 import Mem.
-module Typed (infer : Π G : Ctx. ∀ A : Tp. Term (pairCtxTp G A) ➔ Sigma · Tp · (λ A' : Tp. {A' ≃ A})).
+module Typed.
 
 Typed ◂ CtxTp ➔ Raw ➔ ★
   = λ GA : CtxTp. λ t : Raw.
@@ -176,9 +177,45 @@ invLamBod ◂ Π GC : CtxTp. Π A : Tp. Π b : Raw. Π p : Typed GC (lam A b).
   )
 .
 
-TpEq ◂ Tp ➔ ★ = λ A : Tp. Sigma · Tp · (λ A' : Tp. {A' ≃ A}).
-projTpEq1 ◂ ∀ A : Tp. TpEq A ➔ Tp = Λ A. proj1 · Tp · (λ A' : Tp. {A' ≃ A}).
-projTpEq2 ◂ ∀ A : Tp. Π s : TpEq A. {projTpEq1 s ≃ A} = Λ A. proj2 · Tp · (λ A' : Tp. {A' ≃ A}).
+ExEq ◂ Π A : ★. A ➔ ★ = λ A : ★. λ x : A. Sigma · A · (λ x' : A. {x' ≃ x}).
+pairExEq ◂ ∀ A : ★. ∀ x : A. Π x' : A. {x' ≃ x} ➔ ExEq · A x = Λ A. Λ x. pair · A · (λ x' : A. {x' ≃ x}).
+projExEq1 ◂ ∀ A : ★. ∀ x : A. ExEq · A x ➔ A = Λ A. Λ x. proj1 · A · (λ x' : A. {x' ≃ x}).
+projExEq2 ◂ ∀ A : ★. ∀ x : A. Π s : ExEq · A x. {projExEq1 s ≃ x} = Λ A. Λ x. proj2 · A · (λ x' : A. {x' ≃ x}).
+
+TpEq ◂ Tp ➔ ★ = ExEq · Tp.
+pairTpEq ◂ ∀ A : Tp. Π A' : Tp. {A' ≃ A} ➔ TpEq A = pairExEq · Tp.
+projTpEq1 ◂ ∀ A : Tp. TpEq A ➔ Tp = projExEq1 · Tp.
+projTpEq2 ◂ ∀ A : Tp. Π s : TpEq A. {projTpEq1 s ≃ A} = projExEq2 · Tp.
+
+inferMem ◂ ∀ A : ★. Π xs : List · A. ∀ x : A. Mem · A x xs ➔ ExEq · A x
+  = Λ A. λ xs. Λ x. λ i. elimMem · A -x
+  · (λ xs : List · A. λ _ : Mem · A x xs. Π xs' : List · A. {xs' ≃ xs} ➾ ExEq · A x)
+  (Λ xs. λ xs'. Λ q. pairExEq · A -x
+    (headL · A -x -xs xs' (ρ q - β))
+    (ρ q - β)
+  )
+  (Λ y. Λ xs. λ i. λ ih. λ xs'. Λ q.
+    ih (tailL · A -y -xs xs' (ρ q - β)) -(ρ q - β)
+  )
+  -xs i xs -β
+.
+
+inferTerm ◂ Π G : Ctx. ∀ A : Tp. Term (pairCtxTp G A) ➔ TpEq A
+  = λ G. Λ A. λ t. elimTerm
+  · (λ GA : CtxTp. λ _ : Term GA. Π G' : Ctx. {G' ≃ projCtx GA} ➾ TpEq (projTp GA))
+  (Λ G. Λ A. λ i. λ G'. Λ q. ρ ς q - inferMem · Tp G' -A (ρ q - i))
+  (Λ G. λ A. Λ B. λ b. λ ih. λ G'. Λ q. pairTpEq -(Arr A B)
+    (Arr A
+      (projTpEq1 -B (ih (ext G' A) -(ρ q - β)))
+    )
+    (ρ (projTpEq2 -B (ih (ext G' A) -(ρ q - β))) - β)
+  )
+  (Λ G. Λ A. Λ B. λ f. λ ihf. λ a. λ iha. λ G'. Λ q. pairTpEq -B
+    (projPairCod -G -A -B (pairCtxTp G' (projTpEq1 -(Arr A B) (ihf G' -q))) (ρ (projTpEq2 -(Arr A B) (ihf G' -q)) - ρ q - β))
+    (ρ (projTpEq2 -(Arr A B) (ihf G' -q)) - β)
+  )
+  -(pairCtxTp G A) t G -β
+.
 
 invAppDom ◂ Π GB : CtxTp. Π f : Raw. Π a : Raw. Typed GB (app f a) ➔ Tp
   = λ GB. λ f. λ a. foldSigma · (Term GB) · (λ t : Term GB. {t ≃ app f a}) · Tp
@@ -186,7 +223,7 @@ invAppDom ◂ Π GB : CtxTp. Π f : Raw. Π a : Raw. Typed GB (app f a) ➔ Tp
     (Λ G'. Λ A'. λ i. λ GB'. λ q1. λ q2. δ - χ {notApp (ivar i) ≃ notApp (app f a)} - ρ q2 - β)
     (Λ G'. λ A'. Λ B'. λ b'. λ _. λ GB'. λ q1. λ q2. δ - χ {notApp (ilam A' b') ≃ notApp (app f a)} - ρ q2 - β)
     (Λ G'. Λ A'. Λ B'. λ f'. λ _. λ a'. λ _. λ GB'. λ q1. λ q2.
-      projTpEq1 -A' (infer (projCtx GB') -A' (ρ (invCtxTp1 -GB' -G' -B' q1) - a'))
+      projTpEq1 -A' (inferTerm (projCtx GB') -A' (ρ (invCtxTp1 -GB' -G' -B' q1) - a'))
     )
     -GB t GB β
   )
@@ -203,7 +240,7 @@ invAppFun ◂ Π GB : CtxTp. Π f : Raw. Π a : Raw. Π p : Typed GB (app f a).
     (Λ G'. Λ A'. Λ B'. λ f'. λ _. λ a'. λ _. λ GB'. λ q1. λ q2.
       ρ ς (invIAppApp1 -G' -A' -B' f' a' f a q2) -
       ρ ς (invCtxTp1 -GB' -G' -B' q1) -
-      ρ (projTpEq2 -A' (infer (projCtx GB') -A' (ρ (invCtxTp1 -GB' -G' -B' q1) - a'))) -
+      ρ (projTpEq2 -A' (inferTerm (projCtx GB') -A' (ρ (invCtxTp1 -GB' -G' -B' q1) - a'))) -
       ρ (invCtxTp1 -GB' -G' -B' q1) -
       (termTyped' -(pairCtxTp G' (Arr A' B')) f')
     )
@@ -222,7 +259,7 @@ invAppArg ◂ Π GB : CtxTp. Π f : Raw. Π a : Raw. Π p : Typed GB (app f a).
     (Λ G'. Λ A'. Λ B'. λ f'. λ _. λ a'. λ _. λ GB'. λ q1. λ q2.
       ρ ς (invIAppApp2 -G' -A' -B' f' a' f a q2) -
       ρ ς (invCtxTp1 -GB' -G' -B' q1) -
-      ρ (projTpEq2 -A' (infer (projCtx GB') -A' (ρ (invCtxTp1 -GB' -G' -B' q1) - a'))) -
+      ρ (projTpEq2 -A' (inferTerm (projCtx GB') -A' (ρ (invCtxTp1 -GB' -G' -B' q1) - a'))) -
       ρ (invCtxTp1 -GB' -G' -B' q1) -
       (termTyped' -(pairCtxTp G' A') a')
     )
@@ -230,19 +267,4 @@ invAppArg ◂ Π GB : CtxTp. Π f : Raw. Π a : Raw. Π p : Typed GB (app f a).
   )
 .
 
-{-
-infer ◂ Π G : Ctx. ∀ A : Tp. Term (pairCtxTp G A) ➔ Sigma · Tp · (λ A' : Tp. {A' ≃ A})
-  = λ G. Λ A. λ t. elimTerm
-  · (λ GA : CtxTp. λ _ : Term GA. Π G' : Ctx. {G' ≃ projCtx GA} ➾ Sigma · Tp · (λ A' : Tp. {A' ≃ projTp GA}))
-  (Λ G. Λ A. λ i. λ G'. Λ q. ●)
-  (Λ G. λ A. Λ B. λ b. λ ih. λ G'. Λ q. pair
-    · Tp · (λ C' : Tp. {C' ≃ Arr A B})
-    (Arr A
-      (proj1 · Tp · (λ B' : Tp. {B' ≃ B}) (ih (ext G' A) -(ρ q - β)))
-    )
-    (ρ (proj2 · Tp · (λ B' : Tp. {B' ≃ B}) (ih (ext G' A) -(ρ q - β))) - β)
-  )
-  (Λ G. Λ A. Λ B. λ f. λ ihf. λ a. λ iha. λ G'. Λ q. ●)
-  -(pairCtxTp G A) t G -β
-.
--}
+
