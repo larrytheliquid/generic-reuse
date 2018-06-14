@@ -5,11 +5,11 @@ import FogFun.
 import EnrFun.
 import FogFix.
 import EnrFix.
+
+module EverythingTerm.
 import Lookup.
 import Typed.
 import Taking.
-
-module EverythingTerm.
 
 import TermRawReuse.
 import RawTermReuse
