@@ -6,6 +6,7 @@ import FixIndM.
 import NatF.
 import IFixM.
 import Unit.
+import Bool.
 
 Nat ◂ ★ = FixIndM · NatF imapN.
 inNat ◂ NatF · Nat ➔ Nat = inFixIndM · NatF -imapN.
@@ -26,3 +27,10 @@ foldNat ◂ ∀ C : ★. C ➔ (Nat ➔ C ➔ C) ➔ Nat ➔ C
 addAlgM ◂ AlgM · NatF · (Nat ➔ Nat)
   = Λ R. λ rec. λ s. λ m . foldNatF · R · Nat m (λ r. suc (rec r m)) s.
 add ◂ Nat ➔ Nat ➔ Nat = foldFixIndM · NatF -imapN · (Nat ➔ Nat) addAlgM.
+
+isZero ◂ Nat ➔ Bool
+  = foldNat · Bool true (λ n. λ ih. false).
+isSuc ◂ Nat ➔ Bool
+  = λ n. not (isZero n).
+pred ◂ Nat ➔ Nat
+  = foldNat · Nat zero (λ n. λ ih. n).

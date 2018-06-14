@@ -3,7 +3,7 @@ import Unit.
 import Id.
 import Aux.
 
-allPi2piAll' ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★.
+allPi2piAll ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★.
   ∀ Y : ★. ∀ P : Y ➔ ★. ∀ Y' : Π y : Y. P y ➔ ★.
   Π r : Π y : Y. P y ➔ I.
   Π c1 : IdDep · Y · (λ y : Y. ∀ p : P y. X (r y p)).
@@ -16,16 +16,7 @@ allPi2piAll' ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★.
   (f -(r y p) (elimIdDep · Y · (λ y : Y. ∀ p : P y. X (r y p)) c1 y -p))
   ) β.
 
-allArr2piImp' ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : I ➔ ★.
-  ∀ Y : ★. ∀ P : Y ➔ ★. ∀ Y' : ★.
-  Π r : Π y : Y. P y ➔ I.
-  Π c1 : IdDep · Y · (λ y : Y. ∀ p : P y. X (r y p)).
-  Π c2 : Π y : Y. ∀ p : P y. Id · (X' (r y p)) · Y'.
-  Id · (∀ i : I. X i ➔ X' i) · (Π y : Y. P y ➾ Y')
-  = Λ I. Λ X. Λ X'. Λ Y. Λ P. Λ Y'.
-  allPi2piAll' · I · X · (λ i : I. λ x : X i. X' i) · Y · P · (λ y : Y. λ p : P y. Y').
-
-allPi2pi' ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★. ∀ Y : ★. ∀ Y' : Y ➔ ★.
+allPi2pi ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★. ∀ Y : ★. ∀ Y' : Y ➔ ★.
   Π r : Y ➔ I.
   Π c1 : IdDep · Y · (λ y : Y. X (r y)).
   Π c2 : Π y : Y. Id · (X' (r y) (elimIdDep · Y · (λ y : Y. X (r y)) c1 y)) · (Y' y).
@@ -37,30 +28,11 @@ allPi2pi' ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★. �
   (f -(r y) (elimIdDep · Y · (λ y : Y. X (r y)) c1 y))
   ) β.
 
-allArr2arr' ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : I ➔ ★. ∀ Y : ★. ∀ Y' : ★.
+allArr2arr ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : I ➔ ★. ∀ Y : ★. ∀ Y' : ★.
   Π r : Y ➔ I.
   Π c1 : IdDep · Y · (λ y : Y. X (r y)).
   Π c2 : Π y : Y. Id · (X' (r y)) · Y'.
   Id · (∀ i : I. X i ➔ X' i) · (Y ➔ Y')
   = Λ I. Λ X. Λ X'. Λ Y. Λ Y'.
-  allPi2pi' · I · X · (λ i : I. λ x : X i. X' i) · Y · (λ y : Y. Y').
-
-allArr2arr ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : I ➔ ★. ∀ Y : ★. ∀ Y' : ★.
-  Π r : Y ➔ I.
-  Π c1 : IdDep · Y · (λ y : Y. X (r y)).
-  Π c2 : ∀ i : I. Id · (X' i) · Y'.
-  Id · (∀ i : I. X i ➔ X' i) · (Y ➔ Y')
-  = Λ I. Λ X. Λ X'. Λ Y. Λ Y'. λ r. λ c1. λ c2.
-  allArr2arr' · I · X · X' · Y · Y' r c1
-  (λ y . c2 -(r y)).
-
-allPi2pi ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★. ∀ Y : ★. ∀ Y' : Y ➔ ★.
-  Π r : Y ➔ I.
-  Π c1 : IdDep · Y · (λ y : Y. X (r y)).
-  Π c2 : ∀ i : I. Id · (X i) · Y.
-  Π c3 : ∀ i : I. Π x : X i. Id · (X' i x) · (Y' (elimId · (X i) · Y (c2 -i) x)).
-  Id · (∀ i : I. Π x : X i. X' i x) · (Π y : Y. Y' y)
-  = Λ I. Λ X. Λ X'. Λ Y. Λ Y'. λ r. λ c1. λ c2. λ c3.
-  allPi2pi' · I · X · X' · Y · Y' r c1
-  (λ y. c3 -(r y) (elimIdDep · Y · (λ y2 : Y. X (r y2)) c1 y)).
+  allPi2pi · I · X · (λ i : I. λ x : X i. X' i) · Y · (λ y : Y. Y').
 

@@ -1,6 +1,5 @@
 module MemF.
 
-import Nat.
 import List.
 import Sigma.
 import Product.

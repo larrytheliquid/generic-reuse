@@ -4,6 +4,7 @@ import Eq.
 import Id.
 import FixIndM.
 import IFixIndM.
+import Aux.
 import FogFix.
 import EnrFix.
 import NatF.
@@ -17,13 +18,14 @@ import RawF.
 import Raw.
 import TermF.
 import Term.
-module RawTermReuse2
+import All.
+import Raws.
+import Env.
+module RawTermReuse
   (Lookup : Π A : ★. A ➔ List · A ➔ Nat ➔ ★)
-  
   (invZeroTail : ∀ A : ★. Π x : A. Π xs : List · A. Lookup · A x xs zero ➔ List · A)
   (invZeroEq : ∀ A : ★. Π x : A. Π xs : List · A. Π i : Lookup · A x xs zero.
     Eq · (List · A) xs (consL · A x (invZeroTail · A x xs i)))
-
   (invSucHead : ∀ A : ★. Π x : A. Π xs : List · A. Π n : Nat. Lookup · A x xs (suc n) ➔ A)
   (invSucTail : ∀ A : ★. Π x : A. Π xs : List · A. Π n : Nat. Lookup · A x xs (suc n) ➔ List · A)
   (invSucEq : ∀ A : ★. Π x : A. Π xs : List · A. Π n : Nat. Π i : Lookup · A x xs (suc n).
@@ -32,77 +34,19 @@ module RawTermReuse2
     Lookup · A x (invSucTail · A x xs n i) n)
 
   (Typed : CtxTp ➔ Raw ➔ ★)
-  
   (invVarLookup : Π G : Ctx. Π A : Tp. Π n : Nat. Typed (pairCtxTp G A) (var n)
     ➔ Lookup · Tp A G n)
-
   (invLamCod : Π GC : CtxTp. Π A : Tp. Π b : Raw. Typed GC (lam A b) ➔ Tp)
   (invLamEq : Π GC : CtxTp. Π A : Tp. Π b : Raw. Π p : Typed GC (lam A b).
     Eq · Tp (projTp GC) (Arr A (invLamCod GC A b p)))
   (invLamBod : Π GC : CtxTp. Π A : Tp. Π b : Raw. Π p : Typed GC (lam A b).
     Typed (pairCtxTp (ext (projCtx GC) A) (invLamCod GC A b p)) b)
-
   (invAppDom : Π GB : CtxTp. Π f : Raw. Π a : Raw. Typed GB (app f a) ➔ Tp)
   (invAppFun : Π GB : CtxTp. Π f : Raw. Π a : Raw. Π p : Typed GB (app f a).
     Typed (pairCtxTp (projCtx GB) (Arr (invAppDom GB f a p) (projTp GB))) f)
   (invAppArg : Π GB : CtxTp. Π f : Raw. Π a : Raw. Π p : Typed GB (app f a).
     Typed (pairCtxTp (projCtx GB) (invAppDom GB f a p)) a)
 .
-
-------------------------------------------------------------------------------------------
-
-if2nf ◂ ∀ A : ★. ∀ x : A. ∀ X : List · A ➔ ★. ∀ Y : ★.
-  Π c : ∀ xs : List · A. Id · (X xs) · Y.
-  ∀ xs : List · A. Id · (MemF · A x · X xs) · (NatF · Y)
-  = Λ A. Λ x. Λ X. Λ Y. λ c. elimMemF · A -x · X
-  · (λ xs : List · A. IdCod · (MemF · A x · X xs) · (NatF · Y))
-  (Λ xs. pairId · (MemF · A x · X (consL · A x xs)) · (NatF · Y)
-    -(hereF · A -x · X -xs)
-    (zeroF · Y)
-    β
-  )
-  (Λ y. Λ xs. λ i. pairId · (MemF · A x · X (consL · A y xs)) · (NatF · Y)
-    -(thereF · A -x · X -y -xs i)
-    (sucF · Y (elimId · (X xs) · Y (c -xs) i))
-    β
-  )
-.
-
-i2n ◂ ∀ A : ★. ∀ x : A. ∀ xs : List · A. Id · (Mem · A x xs) · Nat 
-  = Λ A. Λ x. ifix2fix · (List · A) · (MemF · A x) · NatF
-  (imapMem · A -x) imapN (if2nf · A -x).
-i2n! ◂ ∀ A : ★. ∀ x : A. ∀ xs : List · A. Mem · A x xs ➔ Nat 
-  = Λ A. Λ x. Λ xs. elimId · (Mem · A x xs) · Nat (i2n · A -x -xs).
-
-------------------------------------------------------------------------------------------
-
-tf2rf ◂ ∀ X : CtxTp ➔ ★. ∀ Y : ★.
-  Π c : ∀ GA : CtxTp. Id · (X GA) · Y.
-  ∀ GA : CtxTp. Id · (TermF · X GA) · (RawF · Y)
-  = Λ X. Λ Y. λ c. elimTermF · X
-  · (λ GA : CtxTp. IdCod · (TermF · X GA) · (RawF · Y))
-  (Λ G. Λ A. λ i. pairId · (TermF · X (pairCtxTp G A)) · (RawF · Y)
-    -(ivarF · X -G -A i)
-    (varF · Y (i2n! · Tp -A -G i))
-    β
-  )
-  (Λ G. λ A. Λ B. λ b. pairId · (TermF · X (pairCtxTp G (Arr A B))) · (RawF · Y)
-    -(ilamF · X -G A -B b)
-    (lamF · Y A (elimId · (X (pairCtxTp (ext G A) B)) · Y (c -(pairCtxTp (ext G A) B)) b))
-    β
-  )
-  (Λ G. Λ A. Λ B. λ f. λ a. pairId · (TermF · X (pairCtxTp G B)) · (RawF · Y)
-    -(iappF · X -G -A -B f a)
-    (appF · Y
-      (elimId · (X (pairCtxTp G (Arr A B))) · Y (c -(pairCtxTp G (Arr A B))) f)
-      (elimId · (X (pairCtxTp G A)) · Y (c -(pairCtxTp G A)) a)
-    )
-    β
-  )
-.
-
-t2r ◂ ∀ GA : CtxTp. Id · (Term GA) · Raw
-  = ifix2fix · CtxTp · TermF · RawF imapTerm imapRaw tf2rf.
 
 ------------------------------------------------------------------------------------------
 
@@ -206,5 +150,7 @@ rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
 
 r2tP ◂ IdDep · Raw · (λ t : Raw. ∀ GA : CtxTp. Typed GA t ➾ Term GA)
   = fix2ifixP · RawF · CtxTp · TermF imapRaw imapTerm · Typed rf2tfP.
+r2tP' ◂ ∀ GA : CtxTp. IdDep · Raw · (λ t : Raw. Typed GA t ➾ Term GA)
+  = Λ GA. supplyPremIdx · Raw · CtxTp · (λ GA : CtxTp. λ t : Raw. Typed GA t ➾ Term GA) r2tP -GA.
 
 ------------------------------------------------------------------------------------------
