@@ -6,6 +6,7 @@ import FixIndM.
 import TpF.
 import IFixM.
 import Unit.
+import Bool.
 
 Tp ◂ ★ = FixIndM · TpF imapTp.
 Base ◂ Tp = inFixIndM · TpF -imapTp (BaseF · Tp).
@@ -22,3 +23,12 @@ elimTp ◂ ∀ P : Tp ➔ ★. P Base ➔ (Π A : Tp. P A ➔ Π B : Tp. P B ➔
 foldTp ◂ ∀ C : ★. C ➔ (Tp ➔ C ➔ Tp ➔ C ➔ C) ➔ Tp ➔ C
   = Λ C. elimTp · (λ n : Tp. C).
 
+isArr ◂ Tp ➔ Bool
+  = foldTp · Bool false (λ A. λ ihA. λ B. λ ihB. true).
+notArr ◂ Tp ➔ Bool = λ A. not (isArr A).
+
+projArrCod ◂ ∀ A : Tp. ∀ B : Tp. Π C : Tp. {C ≃ Arr A B} ➔ Tp
+  = Λ A. Λ B. elimTp · (λ C : Tp. {C ≃ Arr A B} ➔ Tp)
+  (λ q. δ - χ {notArr Base ≃ notArr (Arr A B)} - ρ q - β)
+  (λ A'. λ ihA. λ B'. λ ihB. λ q. B')
+.

@@ -34,3 +34,15 @@ etaSigma ◂ ∀ A : ★. ∀ B : A ➔ ★. Π xs : Sigma · A · B.
   Λ A. Λ B. elimSigma · A · B
   · (λ xs : Sigma · A · B. { xs ≃ pair (proj1 xs) (proj2 xs) })
   (λ a. λ b. β).
+
+invPair1 ◂ ∀ A : ★. ∀ B : ★. ∀ a : A. ∀ a' : A. ∀ b : B. ∀ b' : B.
+  {pair a b ≃ pair a' b'} ➔ {a ≃ a'}
+  = Λ A. Λ B. Λ a. Λ a'. Λ b. Λ b'. λ q.
+  χ {proj1 (pair a b) ≃ proj1 (pair a' b')} -
+  ρ q - β.
+
+invPair2 ◂ ∀ A : ★. ∀ B : ★. ∀ a : A. ∀ a' : A. ∀ b : B. ∀ b' : B.
+  {pair a b ≃ pair a' b'} ➔ {b ≃ b'}
+  = Λ A. Λ B. Λ a. Λ a'. Λ b. Λ b'. λ q.
+  χ {proj2 (pair a b) ≃ proj2 (pair a' b')} -
+  ρ q - β.
