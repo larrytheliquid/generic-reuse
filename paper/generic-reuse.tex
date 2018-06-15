@@ -112,9 +112,7 @@
 \begin{document}
 
 %% Title information
-%% \title{Generic Zero-Cost Reuse of Dependently Typed\\ Programs, Proofs, and Datatypes}         %% [Short Title] is optional;
 \title{Generic Zero-Cost Reuse for Dependent Types}
-%% \title{Generic Zero-Cost Reuse of Dependently Typed Programs}
                                         %% when present, will be used in
                                         %% header instead of Full Title.
 %% \titlenote{with title note}             %% \titlenote is optional;
@@ -138,19 +136,11 @@
 
 %% Author with single affiliation.
 \author{Larry Diehl}
-\affiliation{
-  \institution{University of Iowa}            %% \institution is required
-  \country{U.S.A}                    %% \country is recommended
-}
 \author{Denis Firsov}
-\affiliation{
-  \institution{University of Iowa}            %% \institution is required
-  \country{U.S.A}                    %% \country is recommended
-}
 \author{Aaron Stump}
 \affiliation{
   \institution{University of Iowa}            %% \institution is required
-  \country{U.S.A}                    %% \country is recommended
+  \country{USA}                    %% \country is recommended
 }
 
 %% Abstract
@@ -1979,7 +1969,7 @@ $$
 $$
 
 The \verb;Id; type can be seen as the internalization of this
-judgement, with \verb;IdDep; a corresponding dependent version
+judgement, with \verb;IdDep; corresponding to a dependent version
 (i.e. our informal syntax $(x:X) \leq Y~x$, not covered by Miquel).
 Miquel also showed that the subsumption rule of subtyping is
 admissible in the theory with the derived judgement, and our
@@ -2201,7 +2191,7 @@ this generically via combinators over the type of dependent identity
 functions (\verb;IdDep;). Because partially applying the elimination
 rule of \verb;IdDep; results in the term erasing to an identity
 function, any conversion making use of the result of \verb;elimIdDep;
-requires no runtime overhead.
+has no runtime overhead.
 
 \labsec{conc}
 
