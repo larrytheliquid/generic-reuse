@@ -1514,8 +1514,8 @@ least fixed point type for any \textit{functor}, composed of 4 pieces:
 \item An object mapping (\verb;F ◂ ★ ➔ ★;).
 \item An arrow mapping
   (\verb;fmap ◂ ∀ X,Y : ★. (X ➔ Y) ➔ F X ➔ F Y;).
-\item The identity functor law.
-\item The composition functor law.
+\item A proof of the identity law.
+\item A proof of the composition law.
 \end{enumerate}
 
 \citet{firsov18b} improved the solution by deriving a
@@ -1649,9 +1649,9 @@ underlying untyped terms. For reference, the type signatures for the
 \verb;ListF; and \verb;VecF;, using the same technique as in
 \refsec{back:inductive}, to make it possible to define the
 eliminators.\footnote{
-  There is no predecessor problem to worry about when deriving schemes
-  with induction principles (or, eliminators), because schemes
-  contain no inductive occurrences.
+  There is no predecessor problem to worry about when deriving
+  induction principles (or, eliminators) for schemes, because schemes
+  do not contain inductive occurrences.
 }
 
 Next, we define the identity mappings \verb;imapL; (for \verb;ListF;)
@@ -1667,7 +1667,7 @@ imapV ◂ ∀ A : ★. IIdMapping Nat (VecF A) = λ c. elimVecF
   (pair nilVF β)
   (λ x,xs. pair (consVF x (elimId c xs) β)).
 \end{verbatim}
-The returned value is \verb;Sigma;-type the codomain of \verb;Id; from
+The returned value is the \verb;Sigma;-type codomain of \verb;Id; from
 \refsec{prog:id}, where the first component is the supertype and
 second component is the equality witness. For both \verb;imapL; and
 \verb;imapV;, we mostly rebuild the term with constructors. The
