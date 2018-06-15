@@ -1244,7 +1244,9 @@ append.\footnote{
   as systems like Coq erase proofs during program
   extraction. However, proofs in intentional type theory may sometimes
   have computational content we wish to preserve,
-  and hence it can be valuable to zero-cost reuse such proofs.
+  and hence it can be valuable to zero-cost reuse such proofs. For
+  example, a proof that an element exists in a list can be zero-cost
+  reused as a natural number index into the list.
 }
 First, we create type synonyms for the theorem of list append
 associativity (\verb;AssocL;) and vector append associativity
@@ -2119,7 +2121,13 @@ Besides refining the indices of existing datatypes, ornaments
 also allow data to be added to existing datatypes. For example, vectors can
 be index-refined lists, but lists can also be natural numbers with
 elements added. Our work only covers the index refinement aspect of
-ornaments.
+ornaments. Finally, it would be interesting to explore adapting
+ornaments to our setting to allow indexed (or more indexed) datatype
+definitions to be derived from non-indexed (or less indexed) datatype
+definitions, such that zero-cost coercions could be derived from the
+ornamental structure. This would require restricting the
+addition-of-data aspect of ornaments to only allow \textit{erased}
+arguments to be added to constructors.
 
 \subsection{Type Theory in Color}
 
