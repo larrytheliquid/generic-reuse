@@ -230,7 +230,7 @@ for the unindexed (or less indexed) datatype variants can be
 painful. We may also wish to delay extrinsic verification, thereby
 suffering later while reusing a function over unindexed (or less
 indexed) datatype variants to define a corresponding function over
-more indexed indexed datatypes. We refer to the former direction as
+more indexed datatypes. We refer to the former direction as
 \textit{forgetful reuse}, and to the latter direction as
 \textit{enriching reuse}.
 
@@ -1424,7 +1424,7 @@ We begin with the auxiliary \verb;copyTypeP; combinator
 (from \reffig{aux}), which is a version of \verb;copyTypeP; that also handles
 the premise (i.e. the 3rd piece). Next, we use our enriching
 combinator \verb;arr2allArrP; to handle both inductive arguments of
-append. This leaves leaves us with the goal in the final comment,
+append. This leaves us with the goal in the final comment,
 above. Finally, we discharge the premise by rewriting, via the auxiliary
 combinator \verb;subst; (from \reffig{aux}). As an argument,
 \verb;subst; takes the identity function to apply after rewriting,
@@ -1930,7 +1930,7 @@ as \verb;fix2ifix; allows the user to define a \textit{non-recursive}
 identity algebra, and it produces a \textit{recursive} identity
 function between fixpoints. The primary difference is
 that \verb;fix2ifix; results in a dependent identity function. Hence,
-the index in the dependent result is computed by folding the
+the index in the dependent result is computed by folding
 the Mendler-style algebra (\verb;ralg;) over the inductive input
 \verb;x;. 
 
