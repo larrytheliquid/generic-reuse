@@ -1983,12 +1983,12 @@ the input context (\verb;Ctx;) and output type (\verb;Tp;) of
 \verb;infer;. The examples of this section will use the STLC datatypes
 from this problem domain:
 \begin{verbatim}
-Raw ◂ ★ = Fix RawF imapRaw.
+Raw ◂ ★ = Fix RawF imapR.
 var ◂ Nat ➔ Raw = λ n. in (varF n).
 lam ◂ Tp ➔ Raw ➔ Raw = λ A,b. in (lamF A b).
 app ◂ Raw ➔ Raw ➔ Raw = λ f,a. in (appF f a).
 
-Term ◂ CtxTp ➔ ★ = IFix CtxTp TermF imapTerm.
+Term ◂ CtxTp ➔ ★ = IFix CtxTp TermF imapT.
 ivar ◂ ∀ G : Ctx. ∀ A : Tp. Mem Tp A G ➔ Term (pair G A)
   = λ i. iin (ivarF i).
 ilam ◂ ∀ G : Ctx. Π A : Tp. ∀ B : Tp. Term (pair (ext G A) B) ➔
@@ -1996,18 +1996,27 @@ ilam ◂ ∀ G : Ctx. Π A : Tp. ∀ B : Tp. Term (pair (ext G A) B) ➔
 iapp ◂ ∀ G : Ctx. ∀ A,B : Tp. Term (pair G (Arr A B)) ➔
   Term (pair G A) ➔ Term (pair G B) = λ f,a. iin (iappF f a).
 \end{verbatim}
-The \verb;Raw; terms use de Bruijn indexing, hence they have natural
-numbers in the \verb;var; constructor. Additionally, the lambda terms
-are annotated so that type inference is possible. The checked
-\verb;Term;'s are indexed by \verb;CtxTp;, which is simply the
-non-dependent pair (\verb;Prod;, derived from \verb;Sigma;) of a
-context (\verb;Ctx;, which is a \verb;List; of types \verb;Tp;)
-and a type (\verb;Tp;). The indexed \verb;ivar; constructor contains a
-membership proof (\verb;Mem;, a standard list membership relation),
-ensuring that the type \verb;A; appears in the context \verb;G;.
+The \verb;Raw; terms use de Bruijn indexing, hence the variable
+constructor (\verb;var;) takes a natural number (\verb;Nat;). The
+lambda terms are annotated so that type inference is possible, as seen
+in the \verb;lam; constructor, which uses the unerased \verb;Π;
+quantifer). The checked \verb;Term;'s are indexed by \verb;CtxTp;,
+which is simply the non-dependent pair (\verb;Prod;, derived from
+\verb;Sigma;) of a context (\verb;Ctx;, which is a \verb;List; of
+types \verb;Tp;) and a type (\verb;Tp;, which can be a base type
+\verb;Base;, or a function type \verb;Arr;). The indexed \verb;ivar;
+constructor contains a membership proof (\verb;Mem;, a standard list
+membership relation), ensuring that the type \verb;A; appears in the
+context \verb;G;. Finally, the underlying schemes
+(\verb;RawF; and \verb;TermF;),
+their identity mappings (\verb;imapR; and \verb;imapT;),
+their constructors (e.g. \verb;lamF; and \verb;ilamF;),
+and their eliminators (\verb;elimRawF; and \verb;elimTermF;)
+are defined as in \refsec{data:schemes}, without any
+surprises, and have been omitted for space reasons.
 
 \begin{verbatim}
-infer ◂ Π G : Ctx. Π t : Raw. ➔ 
+infer ◂ Π G : Ctx. Π t : Raw.
   Maybe (Sigma Tp (λ A. Sigma (Term G A) (λ t'. t2r! t' ≃ t)))
 \end{verbatim}
 
