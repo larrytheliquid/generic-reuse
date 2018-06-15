@@ -1974,26 +1974,43 @@ However, the dependent elimination is also erased
 In this section we demonstrate that the techniques of our paper scale
 to more complex and realistic dependently typed programs, rather than
 the pedagogical list and vector running example used thus far. A now
-common example (e.g. it appears in \cite{tutorial:agda})
-of dependently typed programming, due to \citet{viewfromleft}, 
-is writing a type-safe \verb;infer; function from unchecked STLC terms
-(\verb;Raw;) to checked STLC terms (\verb;Term;), where \verb;Raw; is an
-unindexed type and \verb;Term; is a type indexed by the input
-context (\verb;Ctx;) and output type (\verb;Tp;) of \verb;infer;.
+common example (e.g. it appears in \cite{tutorial:agda}) of
+dependently typed programming, due to \citet{viewfromleft}, is writing
+a correct-by-construction \verb;infer; function from unchecked STLC
+terms (\verb;Raw;) to checked STLC terms (\verb;Term;), where
+\verb;Raw; is an unindexed type and \verb;Term; is a type indexed by
+the input context (\verb;Ctx;) and output type (\verb;Tp;) of
+\verb;infer;. The examples of this section will use the STLC datatypes
+from this problem domain:
+\begin{verbatim}
+Raw ◂ ★ = Fix RawF imapRaw.
+var ◂ Nat ➔ Raw = λ n. in (varF n).
+lam ◂ Tp ➔ Raw ➔ Raw = λ A,b. in (lamF A b).
+app ◂ Raw ➔ Raw ➔ Raw = λ f,a. in (appF f a).
+
+Term ◂ CtxTp ➔ ★ = IFix CtxTp TermF imapTerm.
+ivar ◂ ∀ G : Ctx. ∀ A : Tp. Mem Tp A G ➔ Term (pair G A)
+  = λ i. iin (ivarF i).
+ilam ◂ ∀ G : Ctx. Π A : Tp. ∀ B : Tp. Term (pair (ext G A) B) ➔
+  Term (pair G (Arr A B)) = λ A,b. iin (ilamF A b).
+iapp ◂ ∀ G : Ctx. ∀ A,B : Tp. Term (pair G (Arr A B)) ➔
+  Term (pair G A) ➔ Term (pair G B) = λ f,a. iin (iappF f a).
+\end{verbatim}
+The \verb;Raw; terms use de Bruijn indexing, hence they have natural
+numbers in the \verb;var; constructor. Additionally, the lambda terms
+are annotated so that type inference is possible. The checked
+\verb;Term;'s are indexed by \verb;CtxTp;, which is simply the
+non-dependent pair (\verb;Prod;, derived from \verb;Sigma;) of a
+context (\verb;Ctx;, which is a \verb;List; of types \verb;Tp;)
+and a type (\verb;Tp;). The indexed \verb;ivar; constructor contains a
+membership proof (\verb;Mem;, a standard list membership relation),
+ensuring that the type \verb;A; appears in the context \verb;G;.
 
 \begin{verbatim}
-RawFC ◂ ★ ➔ ★
-varFC ◂ ∀ X : ★. Nat ➔ RawFC X
-lamFC ◂ ∀ X : ★. Tp ➔ X ➔ RawFC X
-appFC ◂ ∀ X : ★. X ➔ X ➔ RawFC X
-
-TermFC ◂ (CtxTp ➔ ★) ➔ CtxTp ➔ ★
-ivarFC ◂ ∀ X : CtxTp ➔ ★. ∀ G : Ctx. ∀ A : Tp. Mem Tp A G ➔ TermFC X (pair G A)
-ilamFC ◂ ∀ X : CtxTp ➔ ★. ∀ G : Ctx. Π A : Tp. ∀ B : Tp. 
-  X (pair (ext G A) B) ➔ TermFC X (pair G (Arr A B))
-iappFC ◂ ∀ X : CtxTp ➔ ★. ∀ G : Ctx. ∀ A,B : Tp. X (pair G (Arr A B))           
-  ➔ X (pair G A) ➔ TermFC X (pair G B)
+infer ◂ Π G : Ctx. Π t : Raw. ➔ 
+  Maybe (Sigma Tp (λ A. Sigma (Term G A) (λ t'. t2r! t' ≃ t)))
 \end{verbatim}
+
 
 \subsection{Forgetful Data Reuse}
 \labsec{rel:dfog}
