@@ -1974,7 +1974,7 @@ However, the dependent elimination is also erased
 In this section we demonstrate that the techniques of our paper scale
 to more complex and realistic dependently typed programs, rather than
 the pedagogical list and vector running example used thus far. A now
-common example (e.g. it appears in \cite{tutorial:agda}) of
+common example (e.g. as used by \citet{tutorial:agda}) of
 dependently typed programming, due to \citet{viewfromleft}, is writing
 a correct-by-construction \verb;infer; function from unchecked STLC
 terms (\verb;Raw;) to checked STLC terms (\verb;Term;), where
@@ -1999,21 +1999,21 @@ iapp ◂ ∀ G : Ctx. ∀ A,B : Tp. Term (pair G (Arr A B)) ➔
 The \verb;Raw; terms use de Bruijn indexing, hence the variable
 constructor (\verb;var;) takes a natural number (\verb;Nat;). The
 lambda terms are annotated so that type inference is possible, as seen
-in the \verb;lam; constructor, which uses the unerased \verb;Π;
-quantifer). The checked \verb;Term;'s are indexed by \verb;CtxTp;,
-which is simply the non-dependent pair (\verb;Prod;, derived from
-\verb;Sigma;) of a context (\verb;Ctx;, which is a \verb;List; of
-types \verb;Tp;) and a type (\verb;Tp;, which can be a base type
-\verb;Base;, or a function type \verb;Arr;). The indexed \verb;ivar;
-constructor contains a membership proof (\verb;Mem;, a standard list
-membership relation), ensuring that the type \verb;A; appears in the
-context \verb;G;. Finally, the underlying schemes
-(\verb;RawF; and \verb;TermF;),
-their identity mappings (\verb;imapR; and \verb;imapT;),
-their constructors (e.g. \verb;lamF; and \verb;ilamF;),
-and their eliminators (\verb;elimRawF; and \verb;elimTermF;)
-are defined as in \refsec{data:schemes}, without any
-surprises, and have been omitted for space reasons.
+in the \verb;lam; and \verb;ilam; constructors, which use the unerased
+\verb;Π; quantifer for the domain type \verb;A;. The checked
+\verb;Term;'s are indexed by \verb;CtxTp;, which is simply the
+non-dependent pair (\verb;Prod;, derived from \verb;Sigma;) of a
+context (\verb;Ctx;, which is a \verb;List; of types \verb;Tp;) and a
+type (\verb;Tp;, which can be a base type \verb;Base;, or a function
+type \verb;Arr;). The indexed \verb;ivar; constructor contains a
+membership proof (\verb;Mem;, a standard list membership relation),
+ensuring that the type \verb;A; appears in the context
+\verb;G;. Finally, the underlying schemes (\verb;RawF; and
+\verb;TermF;), their identity mappings (\verb;imapR; and
+\verb;imapT;), their constructors (e.g. \verb;lamF; and \verb;ilamF;),
+and their eliminators (\verb;elimRawF; and \verb;elimTermF;) are
+defined as in \refsec{data:schemes}, without any surprises, and have
+been omitted for space reasons.
 
 \begin{verbatim}
 infer ◂ Π G : Ctx. Π t : Raw.
