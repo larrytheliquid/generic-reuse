@@ -1968,12 +1968,22 @@ elimination (\verb;elimIdDep;, rather than \verb;elimId;).
 However, the dependent elimination is also erased
 (\verb;|elimIdDep c xs| = xs;).
 
-%% \section{Generic Refined Reuse}
-%% \labsec{ref}
+\section{Generic Relational Reuse}
+\labsec{rel}
 
-%% \section{Dependent Premise Enrichment}
-%% %% or Relational Remember Enrichment or Relational Enriching Reuse?
-%% \labsec{dep}
+\begin{verbatim}
+RawFC ◂ ★ ➔ ★
+varFC ◂ ∀ X : ★. Nat ➔ RawFC X
+lamFC ◂ ∀ X : ★. Tp ➔ X ➔ RawFC X
+appFC ◂ ∀ X : ★. X ➔ X ➔ RawFC X
+
+TermFC ◂ (CtxTp ➔ ★) ➔ CtxTp ➔ ★
+ivarFC ◂ ∀ X : CtxTp ➔ ★. ∀ G : Ctx. ∀ A : Tp. Mem Tp A G ➔ TermFC X (pair G A)
+ilamFC ◂ ∀ X : CtxTp ➔ ★. ∀ G : Ctx. Π A : Tp. ∀ B : Tp. 
+  X (pair (ext G A) B) ➔ TermFC X (pair G (Arr A B))
+iappFC ◂ ∀ X : CtxTp ➔ ★. ∀ G : Ctx. ∀ A,B : Tp. X (pair G (Arr A B))           
+  ➔ X (pair G A) ➔ TermFC X (pair G B)
+\end{verbatim}
 
 \section{Related Work}
 \labsec{others}
@@ -2161,9 +2171,6 @@ Thus, while zero-cost conversions
 need to be \textit{explicitly} crafted and applied in our setting, we
 are able to \textit{define} zero-cost conversions (like taking natural numbers to
 finite sets) for which there is no unique solution.
-
-\section{Generic Relational Reuse}
-\labsec{rel}
 
 
 \section{Extensions and Future Work}
