@@ -1971,6 +1971,16 @@ However, the dependent elimination is also erased
 \section{Generic Relational Reuse}
 \labsec{rel}
 
+In this section we demonstrate that the techniques of our paper scale
+to more complex and realistic dependently typed programs, rather than
+the pedagogical list and vector running example used thus far. A now
+common example (e.g. it appears in \cite{tutorial:agda})
+of dependently typed programming, due to \citet{viewfromleft}, 
+is writing a type-safe \verb;infer; function from unchecked STLC terms
+(\verb;Raw;) to checked STLC terms (\verb;Term;), where \verb;Raw; is an
+unindexed type and \verb;Term; is a type indexed by the input
+context (\verb;Ctx;) and output type (\verb;Tp;) of \verb;infer;.
+
 \begin{verbatim}
 RawFC ◂ ★ ➔ ★
 varFC ◂ ∀ X : ★. Nat ➔ RawFC X
@@ -1984,6 +1994,15 @@ ilamFC ◂ ∀ X : CtxTp ➔ ★. ∀ G : Ctx. Π A : Tp. ∀ B : Tp.
 iappFC ◂ ∀ X : CtxTp ➔ ★. ∀ G : Ctx. ∀ A,B : Tp. X (pair G (Arr A B))           
   ➔ X (pair G A) ➔ TermFC X (pair G B)
 \end{verbatim}
+
+\subsection{Forgetful Data Reuse}
+\labsec{rel:dfog}
+
+\subsection{Enriching Data Reuse}
+\labsec{rel:denr}
+
+\subsection{Enriching Program Reuse}
+\labsec{rel:penr}
 
 \section{Related Work}
 \labsec{others}
