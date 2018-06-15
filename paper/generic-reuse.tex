@@ -237,10 +237,15 @@ more indexed indexed datatypes. We refer to the former direction as
 One source of pain is \textit{manually writing} functions
 over some datatypes by reusing functions over differently indexed
 variants of the same underlying datatypes. Another source of pain is
-that reusing functions involves linear time conversions between
-differently indexed types, resulting in a
+that reusing functions involves linear-time conversions
+between differently indexed types, resulting in a
 runtime \textit{performance penalty} incurred by practicing the good software
-engineering practice of code reuse. In this paper we address both of
+engineering practice of code reuse. \footnote{
+  Wherever we say linear-time conversions, we are assuming reasonable
+  implementations of the conversions. Of course, the time complexity
+  can be worse for poorly implemented conversions.
+}
+In this paper we address both of
 these problems, for both the forgetful and enriching directions of
 reuse, by:
 \begin{enumerate}
@@ -280,7 +285,7 @@ The remainder of our paper proceeds as follows:
   providing intuition for why zero-cost conversions are motivated by
   Curry-style type theory.
 \item{\refsec{prob}:} We explain the primary problems
-  (linear time reuse of programs, proofs, and data) we are solving
+  (linear-time reuse of programs, proofs, and data) we are solving
   through concrete examples, and provide manual solutions (zero-cost,
   or constant time, reuse), which our
   primary contribution combinators generalize via generic programming.
@@ -291,7 +296,7 @@ The remainder of our paper proceeds as follows:
 \item{\refsec{data}:} We generically solve the problems of
   (both forgetful and enriching) zero-cost
   data reuse (as combinators for the type of fixpoints).
-\item{\refsec{rel}: We compare what we have done with related
+\item{\refsec{others}: We compare what we have done with related
   work. This includes comparing our results with the closely related
   work of dependently typed reuse via
   ornaments~\cite{ornaments:original} and
@@ -304,7 +309,7 @@ All of our results have been formalized in
 Cedille~\cite{stump17a,stump18}, a dependently typed language
 implementing the theory we work in
 (covered in \refsec{back:cdle}).\footnote{
-  \raggedright{The Cedille code accompanying this paper is here:\\
+  \raggedright{The Cedille formalization accompanying this paper is available at:\\
   \url{https://github.com/larrytheliquid/generic-reuse}}
 }
 
@@ -452,8 +457,13 @@ because the same term can inhabit both types! In a type-annotated
 distinct terms at two distinct types, whose \textit{erasures} are equal.
 
 \paragraph{Curry-Style Data}
-As an example of Curry-style data, consider the standard definitions of
-Church-encoded lists and vectors below:
+As an example of Curry-style data, consider the standard definitions
+of Church-encoded lists and vectors below. Note that a left-pointing
+triangle (\verb;◂;) is type ascription syntax for Cedille definitions,
+rather than a conventional colon (\verb;:;). The direction of the
+triangle is meant to convey that the definition will be checked using
+the checking (rather than inferring) mode of a bidirectional type
+checker.
 \begin{verbatim}
 List ◂ ★ ➔ ★ = λ A. ∀ X : ★. X ➔ (A ➔ X ➔ X) ➔ X.
 nilL ◂ ∀ A : ★. List A = Λ A,X. λ cN,cC. cN.
@@ -568,10 +578,10 @@ in both the forgetful (e.g. \verb;Vec; to \verb;List;, and
 \labsec{prob:linear}
 
 First, we review how to manually reuse data and programs using
-linear time conversions, which is already possible in popular dependently
+linear-time conversions, which is already possible in popular dependently
 typed languages. Then (in \refsec{prob:manual}),
 we show how Cedille lets us manually derive
-zero-cost (or constant time) conversions from the linear time
+zero-cost (or constant time) conversions from the linear-time
 conversions. To aid readability, from now on we omit implicit
 abstractions (e.g. \verb;Λ A;) and implicit applications
 (e.g. \verb;-A;).\footnote{
@@ -647,7 +657,7 @@ when given evidence that \verb;t ≃ t';. The proof of \verb;v2lPresLen;
 is an easy induction, which rewrites by the inductive hypothesis
 (\verb;ih;) in the cons case of the input vector.
 
-It is not possible to reuse a function of type \verb;AppL; to define
+It is not possible to a reuse a function of type \verb;AppL; to define
 a function of type \verb;AppV; in general, because the result of the second function
 has specific index requirements (namely, that the output vector
 length is the sum of the input vector lengths). Enriching
@@ -658,7 +668,9 @@ indices.\footnote{
   does not require a premise, but in general enriching data reuse is
   also modulo a premise. For example, a list can only be enriched to
   an ordered list (\txt{OList}) modulo a premise that the list is
-  sorted (as discussed in \refsec{future}).
+  sorted. In \refsec{rel}, we give an example of enriching a raw
+  lambda-term to a typed lambda-term, provided a premise that the raw
+  term is well-typed with respect to a typing relation.
   }
 The premise necessary to define \verb;AppV; in terms of \verb;AppL; requires
 list length (\verb;len;) to distribute through list append (\verb;appL;):
@@ -696,8 +708,8 @@ append, so that we may finally return the result of applying
 \subsection{Manual Solution: Zero-Cost Reuse}
 \labsec{prob:manual}
 
-Now we derive zero-cost (constant time) data and program conversions
-from the linear time equivalents of \refsec{prob:linear}.
+Now we derive zero-cost (constant-time) data and program conversions
+from the linear-time equivalents of \refsec{prob:linear}.
 Linear time reuse
 (e.g. in \refsec{prob:linear}) is already possible in conventional
 Church-style type theories, but zero-cost reuse is additionally
@@ -850,7 +862,7 @@ premise (\verb;LenDistAppL appL;) of \verb;appL2appV; is syntax for a
 non-dependent implicit (or, erased) product (i.e. a \verb;∀; with no
 dependency on the quantified variable).
 The fact that the zero-cost conversion \verb;appL2appV!; uses an
-erased premise (compared to the non-erased premise in the linear time
+erased premise (compared to the non-erased premise in the linear-time
 conversion \verb;appL2appV;) is \textit{crucial},
 allowing \verb;appL2appV!; to also erase to the identity function:
 
@@ -868,7 +880,7 @@ identity function (similar to how \verb;|appV2appL!|; reduces).
 %% aka The Generic (or, Combinatory) Solution
 
 \refsec{prob:manual} gives a zero-cost solution to the problem of
-linear time data and program reuse problem presented in
+linear-time data and program reuse problem presented in
 \refsec{prob:linear}. However, the reused definitions in
 \refsec{prob:manual} are \textit{manually} derived. Beginning with
 this section, and for the remainder of this paper, we solve the
@@ -907,11 +919,11 @@ $|\mathcal{F}|=(\lam{x}{x}$), and the existence of a typing derivation
 for the judgement $\Gamma\vdash \mathcal{F} : \Pi a : A.~B~a$.
 
 \refsec{prob:linear} manually defines zero-cost conversions
-using a proof that the linear time conversion is (after erasure)
+using a proof that the linear-time conversion is (after erasure)
 an identity operation. Hence, the zero-cost conversion depends on 2 parts:
 \begin{enumerate}
-\item The linear time conversion.
-\item A proof that the linear time conversion is extensionally an
+\item The linear-time conversion.
+\item A proof that the linear-time conversion is extensionally an
   identity function. 
 \end{enumerate}
 
@@ -981,7 +993,12 @@ We will also use non-dependent identity function counterparts
 where \verb;A : ★;, but also \verb;B : ★; (rather than \verb;B : A ➔ ★;).
 These are trivially derivable from the dependent versions, so we
 omit their definitions. Note that our derived non-dependent \verb;Id;
-type is isomorphic to the \verb;Id; typed introduced by \citet{firsov18b}.
+type is isomorphic to the \verb;Id; typed introduced by
+\citet{firsov18b}. Also, note that the usage of the non-dependent
+\verb;Id; type to zero-cost convert between values of different types
+is similar to how the \verb;Coercible; type class is
+used in Haskell, and the relationship between them is further
+explained in our related work (\refsec{others:hask}).
 
 Recall our informal notation of type
 \verb;IdDep A B; as $(a : A) \leq B~a$.
@@ -993,7 +1010,7 @@ products. Indeed, our \verb;Id A B; is inhabited when
 \verb;A; is a subtype of \verb;B;, and correspondingly all of
 our combinators can also be understood as internalized subtyping
 inference rules (we discuss the relationship with subtyping further in
-our related work, \refsec{rel:judg}).
+our related work, \refsec{others:judg}).
 When there is an identity function
 from \verb;A; to \verb;B; (i.e. \verb;Id A B;), and both
 \verb;A; and \verb;B; be are functions, it becomes confusing to talk
@@ -1137,8 +1154,8 @@ vectors. In these applications, \verb;r; is the length function
 \verb;n; and \verb;m;. Finally, we covariantly forget the return type from a
 list to a vector using the forgetful data reuse function \verb;v2l;.
 
-Note that \verb;appV2appL;, above, simultaneously captures the linear
-time conversion function and the extensional identity proof
+Note that \verb;appV2appL;, above, simultaneously captures the
+linear-time conversion function and the extensional identity proof
 from \refsec{prob:manual}
 (i.e. the former \verb;appV2appL; and \verb;appV2appLId;).
 We can recover the actual zero-cost
@@ -1485,7 +1502,7 @@ subst ◂ ∀ Y : ★. ∀ I : ★. ∀ X : I ➔ ★.
 \labsec{data}
 
 In this section we give the \textit{generic} zero-cost solution to the problem of
-linear time data reuse presented in \refsec{prob:linear}, and manually
+linear-time data reuse presented in \refsec{prob:linear}, and manually
 solved in \refsec{prob:manual}. In \refsec{data:fix}, we review a
 type of least fixed points, used to generically encode datatypes.
 \refsec{data:fog} covers generic forgetful data reuse, and
@@ -1531,8 +1548,9 @@ laws need to be proved.
 Furthermore, the class of datatypes representable by the
 \citet{firsov18b} encoding expands to include infinitary types and
 positive (not merely strictly-positive) types. \citet{firsov18b} is an
-``efficient'' lambda-encoding (using Mendler-style F-algebras), in the
-sense that inductive types support a constant time ``predecessor''
+``efficient'' lambda-encoding (using Mendler-style F-algebras,
+described in \refsec{data:mendler}), in the
+sense that inductive types support a constant-time ``predecessor''
 operation (e.g. \verb;pred; for \verb;Nat;, and \verb;tail; for
 \verb;List;), using only linear space in the encoding.
 Expert readers may have noticed that the tail \verb;xs : List;
@@ -1956,10 +1974,10 @@ However, the dependent elimination is also erased
 %% \labsec{dep}
 
 \section{Related Work}
-\labsec{rel}
+\labsec{others}
 
 \subsection{Subtyping}
-\labsec{rel:judg}
+\labsec{others:judg}
 %% miquel judgement but also barras coercion
 
 \citet{miquel01} shows that in a Curry-style type theory with implicit
@@ -1987,7 +2005,7 @@ Inspired by the internalized subtyping judgement of Miquel,
 reuse conversions for Church-encoded datatypes.
 This work was extended by \citet{diehl} to the enriching direction.
 In \refsec{prob:manual}, we derive zero-cost data reuse in terms of a
-linear time conversion and its extensional identity proof, using
+linear-time conversion and its extensional identity proof, using
 $\phi$. In contrast, the zero-cost conversions of
 \citet{barras:implicit} and \citet{diehl} require no extensional
 identity proof, as the conversions erase to the identity function by a
@@ -1998,7 +2016,7 @@ definitions, an abstraction like \verb;IdDep; is necessary,
 and hence also a rule like $\phi$ (used to eliminate it).
 
 %% \subsection{Coercive Subtyping}
-%% \labsec{rel:coe}
+%% \labsec{others:coe}
 
 %% Coercive subtyping~\cite{luo:coercive}
 %% extends the standard subtyping judgement with an
@@ -2006,6 +2024,7 @@ and hence also a rule like $\phi$ (used to eliminate it).
 %% when translating between the subtypes.
 
 \subsection{Coercible in Haskell}
+\labsec{others:hask}
 
 Breitner et al. describe a GHC extension to Haskell (available
 starting with GHC 7.8) for a type class \verb|Coercible a b|, which
@@ -2015,7 +2034,7 @@ defined using Haskell's \verb|newtype| statement, which is designed to
 give programmers the power to erect abstraction barriers that cannot
 be crossed outside of the module defining the \verb|newtype|.  Within
 such a module, however, \verb|Coercible a b| and the associated
-function \verb|coerce : a -> b| allow programmers to apply zero-cost
+function \verb|coerce :: a -> b| allow programmers to apply zero-cost
 casts to change between a \verb|newtype| and its definition.
 
 \verb|Coercible| had to be added as primitive to GHC, along with a
@@ -2134,6 +2153,10 @@ Thus, while zero-cost conversions
 need to be \textit{explicitly} crafted and applied in our setting, we
 are able to \textit{define} zero-cost conversions (like taking natural numbers to
 finite sets) for which there is no unique solution.
+
+\section{Generic Relational Reuse}
+\labsec{rel}
+
 
 \section{Extensions and Future Work}
 \labsec{future}
