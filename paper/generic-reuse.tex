@@ -2024,6 +2024,19 @@ infer ◂ Π G : Ctx. Π t : Raw.
 \subsection{Forgetful Data Reuse}
 \labsec{rel:dfog}
 
+\begin{verbatim}
+tf2rf ◂ ∀ X : CtxTp ➔ ★. ∀ Y : ★.
+  Π c : ∀ GA : CtxTp. Id (X GA) Y.
+  ∀ GA : CtxTp. Id (TermF X GA) (RawF Y)
+  = λ c. elimTermF
+  (λ i. pair (varF (elimId i2n i)) β)
+  (λ b. pair (lamF A (elimId c b)) β)
+  (λ f,a. pair (appF (elimId c f) (elimId c a)) β).
+
+t2r ◂ ∀ GA : CtxTp. Id (Term GA) Raw
+  = ifix2fix imapT imapR tf2rf.
+\end{verbatim}
+
 \subsection{Enriching Data Reuse}
 \labsec{rel:denr}
 
