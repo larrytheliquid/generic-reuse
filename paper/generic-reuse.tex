@@ -2045,55 +2045,58 @@ rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
   Π c1 : Id Y Raw.
   Π c2 : IdDep Y (λ y. ∀ GA : CtxTp. Typed GA (elimId c1 y) ➾ X GA).
   IdDep (RawF Y) (λ ys. ∀ GA : CtxTp.
-    Typed GA (in (elimId (imapRaw c1) ys))
-    ➾ TermF X GA)
+    Typed GA (in (elimId (imapRaw c1) ys)) ➾ TermF X GA)
   = λ c1,c2. elimRawF
-  (λ n. pair
-    (Λ GA,p.
-      ρ (etaCtxTp GA) -
-      ivarF -(proj1 GA) -(proj2 GA)
-        (n2iP! · Tp -(proj2 GA) n -(proj1 GA)
-          -(invVarLookup (proj1 GA) (proj2 GA) n (ρ ς (etaCtxTp GA) - p))
-        )
-    )
-    β
-  )
-  (λ A,y. pair
-    (Λ GC,p.
-      ρ (etaCtxTp GC) -
-      ρ (invLamEq GC A (elimId c1 y) p) -
-      ilamF · X -(proj1 GC) A -(invLamCod GC A (elimId c1 y) p)
-        (elimIdDep -Y -(λ y. ∀ GA : CtxTp. Typed GA (elimId · Y · Raw c1 y) ➾ X GA)
-          c2 y
-          -(pair (ext (proj1 GC) A) (invLamCod GC A (elimId c1 y) p))
-          -(invLamBod GC A (elimId c1 y) p)
-        )
-    )
-    β
-  )
-  (λ y1,y2. pair
-    (Λ GB,p.
-      ρ (etaCtxTp GB) -
-      iappF · X -(proj1 GB) -(invAppDom GB (elimId c1 y1) (elimId c1 y2) p) -(proj2 GB)
-        (elimIdDep -Y -(λ y. ∀ GA : CtxTp. Typed GA (elimId · Y · Raw c1 y) ➾ X GA)
-          c2 y1
-          -(pair (proj1 GB) (Arr (invAppDom GB (elimId c1 y1) (elimId c1 y2) p) (proj2 GB)))
-          -(invAppFun GB (elimId c1 y1) (elimId c1 y2) p)
-        )
-        (elimIdDep -Y -(λ y. ∀ GA : CtxTp. Typed GA (elimId · Y · Raw c1 y) ➾ X GA)
-          c2 y2
-          -(pair (proj1 GB) (invAppDom GB (elimId c1 y1) (elimId c1 y2) p))
-          -(invAppArg GB (elimId c1 y1) (elimId c1 y2) p)
-        )
-    )
-    β
-  )
-.
+  (λ n. pair (Λ GA,p. ρ (etaSigma GA) - ivarF
+    (elimId n2iP n -(v = invVarLookup
+      (proj1 GA) (proj2 GA) n (ρ ς (etaSigma GA) - p)))) β)
+  (λ A,y. pair (Λ GC,p. ρ (etaSigma GC) 
+    - ρ (invLamEq GC A (elimId c1 y) p) - ilamF
+    A -(B = invLamCod GC A (elimId c1 y) p)
+    (elimIdDep
+      -(P = λ y. ∀ GA : CtxTp. Typed GA (elimId c1 y) ➾ X GA)
+      c2 y -(GA = pair (consL A (proj1 GC))
+        (invLamCod GC A (elimId c1 y) p))
+      -(v = invLamBod GC A (elimId c1 y) p))) β)
+  (λ y1,y2. pair (Λ GB,p. ρ (etaSigma GB) - iappF 
+    -(invAppDom GB (elimId c1 y1) (elimId c1 y2) p) -(proj2 GB)
+    (elimIdDep
+      -(P = λ y. ∀ GA : CtxTp. Typed GA (elimId c1 y) ➾ X GA)
+      c2 y1 -(GA = pair (proj1 GB)
+        (Arr (invAppDom GB (elimId c1 y1) (elimId c1 y2) p) (proj2 GB)))
+      -(v = invAppFun GB (elimId c1 y1) (elimId c1 y2) p))
+    (elimIdDep
+      -(P = λ y. ∀ GA : CtxTp. Typed GA (elimId c1 y) ➾ X GA)
+      c2 y2 -(GA = pair (proj1 GB)
+        (invAppDom GB (elimId c1 y1) (elimId c1 y2) p))
+      -(v = invAppArg GB (elimId c1 y1) (elimId c1 y2) p))) β).
 
 r2tP ◂ IdDep Raw (λ t. ∀ GA : CtxTp. Typed GA t ➾ Term GA)
-  = fix2ifixP TermF imapRaw imapTerm rf2tfP.
+  = fix2ifixP TermF imapR imapT rf2tfP.
 \end{verbatim}
 
+\begin{figure}
+\centering
+
+\begin{verbatim}
+(Typed ◂ CtxTp ➔ Raw ➔ ★)
+(invVarLookup ◂ Π G : Ctx. Π A : Tp. Π n : Nat. 
+  Typed (pairCtxTp G A) (var n) ➔ Lookup A G n)
+(invLamCod ◂ Π GC : CtxTp. Π A : Tp. Π b : Raw. Typed GC (lam A b) ➔ Tp)
+(invLamEq ◂ Π GC : CtxTp. Π A : Tp. Π b : Raw. Π p : Typed GC (lam A b).
+  projTp GC ≃ Arr A (invLamCod GC A b p))
+(invLamBod ◂ Π GC : CtxTp. Π A : Tp. Π b : Raw. Π p : Typed GC (lam A b).
+  Typed (pairCtxTp (ext (projCtx GC) A) (invLamCod GC A b p)) b)
+(invAppDom ◂ Π GB : CtxTp. Π f : Raw. Π a : Raw. Typed GB (app f a) ➔ Tp)
+(invAppFun ◂ Π GB : CtxTp. Π f : Raw. Π a : Raw. Π p : Typed GB (app f a).
+  Typed (pairCtxTp (projCtx GB) (Arr (invAppDom GB f a p) (projTp GB))) f)
+(invAppArg ◂ Π GB : CtxTp. Π f : Raw. Π a : Raw. Π p : Typed GB (app f a).
+  Typed (pairCtxTp (projCtx GB) (invAppDom GB f a p)) a)
+\end{verbatim}
+
+\caption{Inversion lemmas for \texttt{Raw} to \texttt{Term} data enrichment with a premise.} 
+\labfig{inv}
+\end{figure}
 
 \subsection{Enriching Program Reuse}
 \labsec{rel:penr}
