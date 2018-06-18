@@ -2090,6 +2090,10 @@ r2tP ◂ IdDep Raw (λ t. ∀ GA : CtxTp. Typed GA t ➾ Term GA)
 \centering
 
 \begin{verbatim}
+(Lookup : Π A : ★. A ➔ List A ➔ Nat ➔ ★)
+(n2iP ◂ ∀ A : ★. ∀ x : A. 
+  IdDep Nat (λ n. ∀ xs : List A. Lookup A x xs n ➾ Mem A x xs))
+
 (Typed ◂ CtxTp ➔ Raw ➔ ★)
 (invVarLookup ◂ Π G : Ctx. Π A : Tp. Π n : Nat. 
   Typed (pair G A) (var n) ➔ Lookup A G n)
@@ -2097,15 +2101,19 @@ r2tP ◂ IdDep Raw (λ t. ∀ GA : CtxTp. Typed GA t ➾ Term GA)
 (invLamEq ◂ Π GC : CtxTp. Π A : Tp. Π b : Raw. Π p : Typed GC (lam A b).
   proj2 GC ≃ Arr A (invLamCod GC A b p))
 (invLamBod ◂ Π GC : CtxTp. Π A : Tp. Π b : Raw. Π p : Typed GC (lam A b).
-  Typed (pair (ext (proj1 GC) A) (invLamCod GC A b p)) b)
+  Typed (pair (consL A (proj1 GC)) (invLamCod GC A b p)) b)
 (invAppDom ◂ Π GB : CtxTp. Π f : Raw. Π a : Raw. Typed GB (app f a) ➔ Tp)
 (invAppFun ◂ Π GB : CtxTp. Π f : Raw. Π a : Raw. Π p : Typed GB (app f a).
   Typed (pair (proj1 GB) (Arr (invAppDom GB f a p) (proj2 GB))) f)
 (invAppArg ◂ Π GB : CtxTp. Π f : Raw. Π a : Raw. Π p : Typed GB (app f a).
   Typed (pair (proj1 GB) (invAppDom GB f a p)) a)
+(termTyped ◂ Π GA : CtxTp. Π t : Term GA. Typed GA (elimId t2r t))
+
+(Taking ◂ Ctx2 ➔ Raws ➔ ★)
+(envTaking ◂ Π GD : Ctx2. Π e : Env GD. Taking GD (elimId ts2rs e))
 \end{verbatim}
 
-\caption{Inversion lemmas for \texttt{Raw} to \texttt{Term} data enrichment with a premise.} 
+\caption{\texttt{Lookup}, \texttt{Typed}, and \texttt{Taking} premises and lemmas for relational data enrichment.}
 \labfig{inv}
 \end{figure}
 
