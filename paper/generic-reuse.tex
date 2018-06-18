@@ -2041,6 +2041,17 @@ t2r ◂ ∀ GA : CtxTp. Id (Term GA) Raw
 \labsec{rel:denr}
 
 \begin{verbatim}
+fix2ifixP ◂ ∀ G : ★ ➔ ★. ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★).
+  Π imapG : IdMapping G. Π imapF : IIdMapping I F.
+  ∀ P : I ➔ FixIndM G imapG ➔ ★.
+  Π c : ∀ Y : ★. ∀ X : I ➔ ★.
+    Π c1 : Id Y (FixIndM G imapG).
+    Π c2 : IdDep Y (λ y. ∀ i : I. P i (elimId c1 y) ➾ X i).
+    IdDep (G Y) (λ ys. ∀ i : I. P i (in (elimId (imapG c1) ys)) ➾ F X i).
+  IdDep (FixIndM G imapG) (λ y. ∀ i : I. P i y ➾ IFix I F imapF i)
+\end{verbatim}
+
+\begin{verbatim}
 rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
   Π c1 : Id Y Raw.
   Π c2 : IdDep Y (λ y. ∀ GA : CtxTp. Typed GA (elimId c1 y) ➾ X GA).
@@ -2081,17 +2092,17 @@ r2tP ◂ IdDep Raw (λ t. ∀ GA : CtxTp. Typed GA t ➾ Term GA)
 \begin{verbatim}
 (Typed ◂ CtxTp ➔ Raw ➔ ★)
 (invVarLookup ◂ Π G : Ctx. Π A : Tp. Π n : Nat. 
-  Typed (pairCtxTp G A) (var n) ➔ Lookup A G n)
+  Typed (pair G A) (var n) ➔ Lookup A G n)
 (invLamCod ◂ Π GC : CtxTp. Π A : Tp. Π b : Raw. Typed GC (lam A b) ➔ Tp)
 (invLamEq ◂ Π GC : CtxTp. Π A : Tp. Π b : Raw. Π p : Typed GC (lam A b).
-  projTp GC ≃ Arr A (invLamCod GC A b p))
+  proj2 GC ≃ Arr A (invLamCod GC A b p))
 (invLamBod ◂ Π GC : CtxTp. Π A : Tp. Π b : Raw. Π p : Typed GC (lam A b).
-  Typed (pairCtxTp (ext (projCtx GC) A) (invLamCod GC A b p)) b)
+  Typed (pair (ext (proj1 GC) A) (invLamCod GC A b p)) b)
 (invAppDom ◂ Π GB : CtxTp. Π f : Raw. Π a : Raw. Typed GB (app f a) ➔ Tp)
 (invAppFun ◂ Π GB : CtxTp. Π f : Raw. Π a : Raw. Π p : Typed GB (app f a).
-  Typed (pairCtxTp (projCtx GB) (Arr (invAppDom GB f a p) (projTp GB))) f)
+  Typed (pair (proj1 GB) (Arr (invAppDom GB f a p) (proj2 GB))) f)
 (invAppArg ◂ Π GB : CtxTp. Π f : Raw. Π a : Raw. Π p : Typed GB (app f a).
-  Typed (pairCtxTp (projCtx GB) (invAppDom GB f a p)) a)
+  Typed (pair (proj1 GB) (invAppDom GB f a p)) a)
 \end{verbatim}
 
 \caption{Inversion lemmas for \texttt{Raw} to \texttt{Term} data enrichment with a premise.} 
@@ -2311,7 +2322,7 @@ the same length. This can be solved via a
 straightforward auxiliary combinator that introduces a new index quantification,
 along with an equality that constrains the new index to equal the old index.
 
-\subsection{Index-Index Combinators}
+\subsection{Differently Indexed Combinators}
 
 In this paper we only considered relating non-indexed types (e.g. list)
 to indexed types (e.g. vector). In general, we may want to relate
@@ -2320,22 +2331,10 @@ to ordered vectors in the introduction. Our combinators
 straightforwardly generalize to 2 indexed types, \verb;X : I ➔ ★; and
 \verb;Y : J ➔ ★;, along with a function that translates
 the more refined index to the less refined index
-(of type \verb;I ➔ J;). In fact, our formalization is defined using this
-more general representation, and we derive the combinators of this
-paper using the \verb;Unit; type as the index type \verb;J; of family \verb;Y;.
+(of type \verb;I ➔ J;). 
 
-\subsection{Dependent Premise Combinators}
-
-The class of datatypes enrichable by our data reuse combinator \verb;fix2ifix;
-requires the index (\verb;I;) to be computable from the non-indexed
-type as a \textit{total} function (the refining function
-\verb;r;). This excludes reusing datatypes where the index can be
-computed as a \textit{partial} function from the non-indexed type,
-plus extra data. We believe this would be possible by defining an
-enhanced data enrichment combinator with an \textit{erased premise}, that
-the supertype could depend on. We leave this extension to future work,
-although we have already defined a dependent-premise version of
-enriching program and proof reuse.
+%% TODO \subsection{Non-Indexed Premise Combinators}
+%% backreference alternative to interop partialiality monad
 
 \section{Conclusion}
 
