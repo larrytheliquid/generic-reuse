@@ -343,10 +343,11 @@ contain sufficient information to type terms algorithmically.  But
 true to the extrinsic nature of the theory, these annotations play no
 computational role.  Indeed, they are erased both during compilation
 and before formal reasoning about terms within the type theory, in
-particular by definitional equality (see \reffig{cdle} and \reffig{erase}).
+particular by definitional equality (see \reffig{cdle}).
 
 \begin{figure}
 \centering
+\minipage[b]{0.75\textwidth}  
   \[
   \begin{array}{cc}
     \infer{\Gamma\vdash \abs{\Lambda}{x}{T'}{t} : \abs{\forall}{x}{T'}{T}}{\Gamma,x:T'\vdash t : T & \!\!x\not\in\textit{FV}(|t|)} & 
@@ -363,12 +364,8 @@ particular by definitional equality (see \reffig{cdle} and \reffig{erase}).
 
   \end{array}
   \]
-\caption{Introduction and elimination rules for additional type constructs} 
-\labfig{cdle}
-\end{figure}
-
-\begin{figure}
-\centering
+\endminipage\hfill 
+\minipage[b]{0.25\textwidth}
 \[
   \begin{array}{lll}
     |\abs{\Lambda}{x}{T}{t}| & = & |t| \\
@@ -381,8 +378,9 @@ particular by definitional equality (see \reffig{cdle} and \reffig{erase}).
     |t.2| & = & |t| 
   \end{array}
   \]
-\caption{Erasure rules for additional type constructs} 
-\labfig{erase}
+\endminipage
+\caption{Introduction, elimination, and erasure rules for additional type constructs} 
+\labfig{cdle}
 \end{figure}
 
 %% TODO should we say lambdaPomega?
@@ -439,7 +437,7 @@ and intersection types:
 It is important to understand that the described constructs are erased
 before the formal reasoning (e.g. when checking if 2 terms are
 definitionally equal), according to the erasure rules in
-\reffig{erase}.
+\reffig{cdle}.
 
 \subsection{Curry-Style Typing}
 \labsec{back:curry}
@@ -480,7 +478,7 @@ Notice that the only difference between the list constructor terms
 (\verb;nilL; and \verb;consL;) and vector constructor terms
 (\verb;nilV; and \verb;consV;) is the number of implicit
 abstractions (e.g. \verb;Λ n;) and implicit applications
-(e.g. \verb;-n;). According to the erasure rules of \reffig{erase},
+(e.g. \verb;-n;). According to the erasure rules of \reffig{cdle},
 this means that after erasure, \verb;nilL; and \verb;nilV; share the
 same underlying untyped term
 (and the same holds for \verb;consL; and \verb;consV;):
@@ -556,7 +554,7 @@ also assume a corresponding $\iota$-type definition of \verb;Vec;
 An important thing to point out is that \verb;List; is
 defined as the intersection of the \verb;ListChurch; and
 \verb;ListInductive; types, and that intersection pairs (i.e. $[t_1,t_2]$) erase to their
-first components (i.e. $t_1$ of type \verb;ListChurch;) by \reffig{erase}.
+first components (i.e. $t_1$ of type \verb;ListChurch;) by \reffig{cdle}.
 Hence, the erased $\iota$-style \verb;nilL; is the same as the erased
 Church-style \verb;nilL; (and the same holds for both styles of
 \verb;consL;).
@@ -744,7 +742,7 @@ v2l! ◂ ∀ A : ★. ∀ n : Nat. Vec A n ➔ List A
   = λ xs. φ (v2lId xs) - (v2l xs) {xs}.
 \end{verbatim}
 The \verb;φ; expression erases to the term within the braces
-(\verb;{xs};) by the erasure rules of \reffig{erase}, hence
+(\verb;{xs};) by the erasure rules of \reffig{cdle}, hence
 the erasure \verb;|v2l!|; is the identity function.
 Thus, \verb;v2l!; converts a vector to a list in
 constant time, as applying \verb;v2l!; is definitionally equal to
@@ -972,7 +970,7 @@ elimIdDep ◂ ∀ A : ★. ∀ B : A ➔ ★. IdDep A B ➔ Π a : A. B a
 The elimination rule \verb;elimIdDep; uses \verb;φ; to return the input
 \verb;a;, originally at type \verb;A;, at type (\verb;B a;) using the
 extensional identity proof (\verb;proj2 (c a);), where \verb;c : IdDep A B;.
-From the erasure rules of CDLE (in \reffig{erase}), it follows
+From the erasure rules of CDLE (in \reffig{cdle}), it follows
 that for any dependent identity function \verb;c; of type \verb;IdDep A B;,
 \verb;|elimIdDep c| = ; $|\mathcal{F}|$ \verb; = (λ a. a);.
 
