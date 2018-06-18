@@ -2017,7 +2017,7 @@ been omitted for space reasons.
 
 \begin{verbatim}
 infer ◂ Π G : Ctx. Π t : Raw.
-  Maybe (Sigma Tp (λ A. Sigma (Term G A) (λ t'. t2r! t' ≃ t)))
+  Maybe (Sigma Tp (λ A. Sigma (Term G A) (λ t'. elimId t2r t' ≃ t)))
 \end{verbatim}
 
 
@@ -2039,6 +2039,61 @@ t2r ◂ ∀ GA : CtxTp. Id (Term GA) Raw
 
 \subsection{Enriching Data Reuse}
 \labsec{rel:denr}
+
+\begin{verbatim}
+rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
+  Π c1 : Id Y Raw.
+  Π c2 : IdDep Y (λ y. ∀ GA : CtxTp. Typed GA (elimId c1 y) ➾ X GA).
+  IdDep (RawF Y) (λ ys. ∀ GA : CtxTp.
+    Typed GA (in (elimId (imapRaw c1) ys))
+    ➾ TermF X GA)
+  = λ c1,c2. elimRawF
+  (λ n. pair
+    (Λ GA,p.
+      ρ (etaCtxTp GA) -
+      ivarF -(proj1 GA) -(proj2 GA)
+        (n2iP! · Tp -(proj2 GA) n -(proj1 GA)
+          -(invVarLookup (proj1 GA) (proj2 GA) n (ρ ς (etaCtxTp GA) - p))
+        )
+    )
+    β
+  )
+  (λ A,y. pair
+    (Λ GC,p.
+      ρ (etaCtxTp GC) -
+      ρ (invLamEq GC A (elimId c1 y) p) -
+      ilamF · X -(proj1 GC) A -(invLamCod GC A (elimId c1 y) p)
+        (elimIdDep -Y -(λ y. ∀ GA : CtxTp. Typed GA (elimId · Y · Raw c1 y) ➾ X GA)
+          c2 y
+          -(pair (ext (proj1 GC) A) (invLamCod GC A (elimId c1 y) p))
+          -(invLamBod GC A (elimId c1 y) p)
+        )
+    )
+    β
+  )
+  (λ y1,y2. pair
+    (Λ GB,p.
+      ρ (etaCtxTp GB) -
+      iappF · X -(proj1 GB) -(invAppDom GB (elimId c1 y1) (elimId c1 y2) p) -(proj2 GB)
+        (elimIdDep -Y -(λ y. ∀ GA : CtxTp. Typed GA (elimId · Y · Raw c1 y) ➾ X GA)
+          c2 y1
+          -(pair (proj1 GB) (Arr (invAppDom GB (elimId c1 y1) (elimId c1 y2) p) (proj2 GB)))
+          -(invAppFun GB (elimId c1 y1) (elimId c1 y2) p)
+        )
+        (elimIdDep -Y -(λ y. ∀ GA : CtxTp. Typed GA (elimId · Y · Raw c1 y) ➾ X GA)
+          c2 y2
+          -(pair (proj1 GB) (invAppDom GB (elimId c1 y1) (elimId c1 y2) p))
+          -(invAppArg GB (elimId c1 y1) (elimId c1 y2) p)
+        )
+    )
+    β
+  )
+.
+
+r2tP ◂ IdDep Raw (λ t. ∀ GA : CtxTp. Typed GA t ➾ Term GA)
+  = fix2ifixP TermF imapRaw imapTerm rf2tfP.
+\end{verbatim}
+
 
 \subsection{Enriching Program Reuse}
 \labsec{rel:penr}
