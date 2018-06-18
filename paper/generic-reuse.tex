@@ -2120,6 +2120,26 @@ r2tP ◂ IdDep Raw (λ t. ∀ GA : CtxTp. Typed GA t ➾ Term GA)
 \subsection{Enriching Program Reuse}
 \labsec{rel:penr}
 
+\begin{verbatim}
+arr2allArrP2 ◂ ∀ Y,Y',I : ★.
+  ∀ P : I ➔ Y ➔ ★. ∀ P' : I ➔ Y' ➔ ★.
+  ∀ X,X' : I ➔ ★. Π c1 : ∀ i : I. Id (X i) Y.
+  Π c1' : Π i : I. Π x : X i. P i (elimId c1 x).
+  Π c2 : ∀ i : I. IdDep Y' (λ y'. P' i y' ➾ X' i).
+  IdDep (Y ➔ Y') (λ f.
+    (Π y : Y. Π i : I. P i y ➔ P' i (f y)) ➾
+    ∀ i : I. X i ➔ X' i)
+\end{verbatim}
+
+\begin{verbatim}
+subR2subT ◂ IdDep SubR (λ f. TpPres f ➾ SubT)
+  = arr2allArrP2 ts2rs envTaking
+  (Λ GD. freshProdP2 -(proj1 GD)
+  (arr2allArrP2 t2r termTyped
+  (Λ GA. skipP2 (r2tP -(pair (proj2 GD) (proj2 GA)))
+  ))).
+\end{verbatim}
+
 \section{Related Work}
 \labsec{others}
 
