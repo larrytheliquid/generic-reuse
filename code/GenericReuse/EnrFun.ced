@@ -60,7 +60,7 @@ arr2allArrP ◂ ∀ Y : ★. ∀ Y' : ★. ∀ P : Y ➔ Y' ➔ ★.
     (Π y : Y. P y (f y)) ➾
     ∀ i : I. X i ➔ X' i)
   = Λ Y. Λ Y'. Λ P. Λ I. Λ X. Λ X'.
-  pi2allPiP · Y · (λ y : Y. Y') · (λ y : Y. λ y' : Y'. P y y') · I · X · (λ i : I. λ x : X i. X' i).
+  pi2allPiP · Y · (λ y : Y. Y') · P · I · X · (λ i : I. λ x : X i. X' i).
 
 pi2allPiP2 ◂ ∀ Y : ★. ∀ Y' : Y ➔ ★. ∀ I : ★.
   ∀ P : I ➔ Y ➔ ★. ∀ P' : Π i : I. Π y : Y. P i y ➔ Y' y ➔ ★.

@@ -1258,8 +1258,7 @@ assocV2assocL ◂ ∀ appV : AppV.
   allPi2pi len l2v (λ zs.
   // Id (appV (appV xs ys) zs ≃ appV xs (appV ys zs)))
   //    (appV (appV xs ys) zs ≃ appV xs (appV ys zs)))
-  id
-  )))).
+  id)))).
 \end{verbatim}
 Notice that the identity function \verb;assocV2assocL; is parameterized
 by any implementation (\verb;appV;) of the type of vector append
@@ -1279,7 +1278,7 @@ solvable by the auxiliary identity combinator for identity functions
 (\verb;id; from \reffig{aux}). Before erasure, the supertype of the
 final goal has instances of \verb;elimId appV2appL appV;, instead of
 \verb;appV;. Similarly, before erasure, the final goal has instances
-of \verb;elimId v2l xs;, instead of \verb;xs; (and the same for
+of \verb;elimId v2l xs;, instead of \verb;xs; (and similarly for
 \verb;ys; and \verb;zs;).  However, because these are zero-cost
 conversions, after erasure (as depicted in the comment above) the goal
 is simply solvable by \verb;id;.
@@ -1325,19 +1324,15 @@ whose type is equal to the subtype's domain (e.g. \verb;List A;).
 The codomain of the premise can depend on the subtype (e.g. \verb;f;),
 in addition to the domain of the premise (\verb;xs;).
 The definition of \verb;arr2allArrP; follows:
-
 \begin{verbatim}
-arr2allArrP ◂ ∀ Y : ★. ∀ Y' : ★. ∀ P : Y ➔ Y' ➔ ★.
-  ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : I ➔ ★. Π r : Y ➔ I.
+arr2allArrP ◂ ∀ Y,Y' : ★. ∀ P : Y ➔ Y' ➔ ★. ∀ I : ★. ∀ X,X' : I ➔ ★.
+  Π r : Y ➔ I.
   Π c1 : ∀ i : I. Id (X i) Y.
-  Π c1' : ∀ i : I. Π x : X i. i ≃ r (elimId (c1 i) x).
-  Π c2 : Π y : Y. IdDep Y' (λ y'. P y y' ➾ X' (r y)).
+  Π c1' : ∀ i : I. Π x : X i. i ≃ r (elimId c1 x).
+  Π c2 : ∀ i : I. Π x : X i. 
+    IdDep Y' (λ y'. P (elimId c1 x) y' ➾ X' (r (elimId c1 x))).
   IdDep (Y ➔ Y') (λ f. (Π y : Y. P y (f y)) ➾ ∀ i : I. X i ➔ X' i)
-  = λ r,c1,c1',c2,f. pair (Λ p,i. λ x. elimIdDep
-    (ρ (c1' -i x) - (c2 (elimId (c1 -i) x)))
-    (f (elimId (c1 -i) x))
-    -(p (elimId (c1 -i) x))
-  ) β.
+  = Λ Y,Y',P,I,X,X'. pi2allPiP -Y -(λ y. Y') -P -I -X -(λ i,x. X' i).
 \end{verbatim}
 Enriching \verb;arr2allArrP; shares the following implicit arguments
 with forgetful \verb;allArr2arr; (from \refsec{prog:fog}):
@@ -1354,11 +1349,11 @@ arguments:
   (\verb;x : X i;) to equal the refinement (using refinement
   function \verb;r;) of the zero-cost converting \verb;x;
   (using the identity function \verb;c1;),
-  e.g. \verb;n ≃ len (elimId c1 xs);, where
-  \verb;xs : Vec A n;.
+  e.g. \verb;n ≃ len (elimId v2l xs);, where
+  \verb;xs : Vec A n; and \verb;c1; is \verb;v2l;.
 
 \item The argument \verb;c2; is the
-  \textit{covariant dependent identity function between codomains}.
+  \textit{covariant dependent identity function}.
   It enriches the non-indexed subtype codomain \verb;Y';
   as the indexed supertype codomain \verb;X' i;.
   The enrichment codomain also gets an additional implicit premise
@@ -1366,10 +1361,10 @@ arguments:
   codomain.
 \end{itemize}
 
-Notice that \verb;c2; is parameterized by the non-indexed
-type \verb;y : Y;,
-e.g. \verb;List A;, rather than the index \verb;i : I;,
-e.g. \verb;Nat;. This makes \verb;arr2allArrP; easier to use, as the
+Notice that \verb;X';, in the supertype  of argument \verb;c2;, is
+applied to the refinement \verb;r (elimId c1 x));,
+rather than the index \verb;i;.
+This makes \verb;arr2allArrP; easier to use, as the
 implementation automatically rewrites by \verb;c1'; (the index
 preservation property)! We point out the consequence of this automatic
 rewrite in the following example.
@@ -1387,31 +1382,36 @@ appL2appV ◂ IdDep AppL (λ appL. LenDistAppL appL ➾ AppV)
   // IdDep (∀ A : ★. ●) (λ x. (∀ A : ★. ●) ➾ ∀ A : ★. ●)
   = copyTypeP (Λ A.
   // IdDep (List A ➔ ●) (λ f. (Π xs : List A. ●) ➾ ∀ n : Nat. Vec A n ➔ ●)
-  arr2allArrP (len -A) (v2l -A) (v2lPresLen -A) (λ xs.
+  arr2allArrP len v2l v2lPresLen (Λ n. λ xs.
   // IdDep (List A ➔ ●) (λ g. (Π ys : List A. ●) ➾ ∀ m : Nat. Vec A m ➔ ●)
-  arr2allArrP (len -A) (v2l -A) (v2lPresLen -A) (λ ys.
+  arr2allArrP len v2l v2lPresLen (Λ m. λ ys.
   // IdDep (List A) (λ zs. len zs ≃ add (len xs) (len ys)
   //                       ➾ Vec A (add (len xs) (len ys)))
-  subst (l2v -A)
-  ))).
+  subst l2v))).
 \end{verbatim}
 
-We begin with the auxiliary \verb;copyTypeP; combinator
-(from \reffig{aux}), which is a version of \verb;copyTypeP; that also handles
-the premise (i.e. the 3rd piece). Next, we use our enriching
+We begin with the auxiliary \verb;copyTypeP; combinator (from
+\reffig{aux}), which is a version of \verb;copyTypeP; that also
+handles the premise (i.e. the 3rd piece). Next, we use our enriching
 combinator \verb;arr2allArrP; to handle both inductive arguments of
-append. This leaves us with the goal in the final comment,
-above. Finally, we discharge the premise by rewriting, via the auxiliary
-combinator \verb;subst; (from \reffig{aux}). As an argument,
-\verb;subst; takes the identity function to apply after rewriting,
-which is the enriching data reuse \verb;l2v; in this example.
+append, to which we supply a proof of length preservation
+(\verb;v2lPresLen; from \refsec{prob:linear}) as an additional
+argument. This leaves us with the goal type (after erasure) in the
+final comment.  Before erasure, as explained in the
+\verb;assocV2assocL; example of \refsec{prog:fog}, \verb;xs; is the
+zero-cost conversion \verb;elimId v2l xs; (and similarly for \verb;ys;
+and \verb;zs;).  Finally, we discharge the premise by rewriting, via
+the auxiliary combinator \verb;subst; (from \reffig{aux}). As an
+argument, \verb;subst; takes the identity function to apply after
+rewriting, which is the enriching data reuse \verb;l2v; in this
+example.
 
 The final goal type includes the sum of the lengths of both input
 vectors, rather than the sum of two vector indices.
 This convenience is a result
 of the automatic rewriting performed in the implementation of our
 \verb;arr2allArrP; combinator! In contrast, the manual definition of
-\verb;appL2appV; in \refsec{prob:manual} needed to manually rewrite
+\verb;appL2appV; in \refsec{prob:linear} needed to manually rewrite
 by \verb;v2lPresLen; for both append inputs.
 
 \subsubsection{Proof Reuse Combinator}
