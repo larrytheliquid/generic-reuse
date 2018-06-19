@@ -1142,8 +1142,8 @@ contravariantly enriching both arguments from lists to
 vectors. In these applications, \verb;r; is the length function
 (\verb;len;), and \verb;c1; is the enriching data reuse function
 \verb;l2v;. Additionally, \verb;c2; becomes the remainder of the
-\verb;appV2appL; definition, giving us access to index arguments
-\verb;n; and \verb;m;. Finally, we covariantly forget the return type from a
+\verb;appV2appL; definition, giving us access to the list arguments
+\verb;xs; and \verb;ys;. Finally, we covariantly forget the return type from a
 list to a vector using the forgetful data reuse function \verb;v2l;.
 
 Note that \verb;appV2appL;, above, simultaneously captures the
@@ -1250,11 +1250,11 @@ assocV2assocL ◂ ∀ appV : AppV.
   // Id (∀ A : ★. ●) (∀ A : ★. ●)
   = copyType (Λ A.
   // Id (∀ n : Nat. Π xs : Vec A n. ●) (Π xs : List A. ●)
-  allPi2pi (len -A) (l2v -A) (v2l -A) (Λ n. λ xs.
+  allPi2pi len l2v (λ xs.
   // Id (∀ m : Nat. Π ys : Vec A m. ●) (Π ys : List A. ●)
-  allPi2pi (len -A) (l2v -A) (v2l -A) (Λ m. λ ys.
+  allPi2pi len l2v (λ ys.
   // Id (∀ o : Nat. Π zs : Vec A o. ●) (Π zs : List A. ●)
-  allPi2pi (len -A) (l2v -A) (v2l -A) (Λ o. λ zs.
+  allPi2pi len l2v (λ zs.
   // Id (appV (appV xs ys) zs ≃ appV xs (appV ys zs)))
   //    (appV (appV xs ys) zs ≃ appV xs (appV ys zs)))
   id
@@ -1273,20 +1273,15 @@ previously defined identity function \verb;appV2appL;.
 
 Once again, we begin solving \verb;assocV2assocL; by copying the type
 parameter \verb;A; via \verb;copyType;. Next, we apply \verb;allPi2pi;
-to handle the 3 primary arguments to the theorem. Compared to
-\verb;allArr2arr;, \verb;allPi2pi; receives the additional covariant
-argument \verb;c2;, e.g. \verb;(λ n. v2l -A -n);. Also, the final
-\verb;c3; argument gets to abstract over the indexed type, in addition
-to the index, e.g. \verb;λ n,xs;. The final goal is solvable by the
-auxiliary identity combinator for identity functions
-(\verb;id; from \reffig{aux}). Before erasure, the supertype of the final goal has
-instances of \verb;elimId appV2appL appV;, instead of
-\verb;appV;. Similarly, before erasure, the final goal
-has instances of \verb;elimId v2l xs;, instead of
-\verb;xs; (and the same for \verb;ys; and \verb;zs;).
-However, because these are zero-cost conversions, after
-erasure (as depicted in the comment above)
-the goal is simply solvable by \verb;id;.
+to handle the 3 primary arguments to the theorem. The final goal is
+solvable by the auxiliary identity combinator for identity functions
+(\verb;id; from \reffig{aux}). Before erasure, the supertype of the
+final goal has instances of \verb;elimId appV2appL appV;, instead of
+\verb;appV;. Similarly, before erasure, the final goal has instances
+of \verb;elimId v2l xs;, instead of \verb;xs; (and the same for
+\verb;ys; and \verb;zs;).  However, because these are zero-cost
+conversions, after erasure (as depicted in the comment above) the goal
+is simply solvable by \verb;id;.
 
 \subsection{Enriching Reuse}
 \labsec{prog:enr}
