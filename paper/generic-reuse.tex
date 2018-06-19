@@ -1417,30 +1417,34 @@ by \verb;v2lPresLen; for both append inputs.
 \subsubsection{Proof Reuse Combinator}
 
 We include the definition of the enriching proof reuse combinator
-(\verb;pi2allPiP;), for reference, below.
-We do not describe it in detail, as the extensions to handle the
-dependent arguments in codomains \verb;X'; and \verb;Y';,
-as well as the additional \verb;c1'; through \verb;c3;
-arguments, follow the
-same pattern as \verb;allPi2pi; from \refsec{prog:fog}.
+(\verb;pi2allPiP;), for reference, below.  We do not describe it in
+detail, as the extensions to handle the dependent arguments in
+codomains \verb;X'; and \verb;Y';, as well as the dependent version of
+the \verb;c2; argument, follow the same pattern as \verb;allPi2pi;
+from \refsec{prog:fog}.
 
 \begin{verbatim}
 pi2allPiP ◂ ∀ Y : ★. ∀ Y' : Y ➔ ★. ∀ P : Π y : Y. Y' y ➔ ★.
-  ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★. Π r : Y ➔ I.
+  ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★.
+  Π r : Y ➔ I.
   Π c1 : ∀ i : I. Id (X i) Y.
-  Π c1' : ∀ i : I. Π x : X i. i ≃ r x.
-  Π c2 : IdDep Y (λ y. X (r y)).
-  Π c3 : Π y : Y. IdDep (Y' y) (λ y'. P y y' ➾ X' (r y) (elimIdDep c2 y)).
-  IdDep (Π y : Y. Y' y) 
-    (λ f. (Π y : Y. P y (f y)) ➾ ∀ i : I. Π x : X i. X' i x)
-  = λ r,c1,c1',c2,c3,f. pair (Λ p,i. λ x. elimIdDep
-    (ρ (c1' -i x) - (c3 (elimId (c1 -i) x)))
-    (f (elimId (c1 -i) x))
-    -(p (elimId (c1 -i) x))
-  ) β.
+  Π c1' : ∀ i : I. Π x : X i. i ≃ r (elimId c1 x).
+  Π c2 : ∀ i : I. Π x : X i. IdDep (Y' (elimId c1 x)) (λ y'.
+    P (elimId c1 x) y' ➾ X' (r (elimId c1 x)) (ρ ς (c1' x) - x)).
+  IdDep (Π y : Y. Y' y) (λ f. (Π y : Y. P y (f y)) ➾
+    ∀ i : I. Π x : X i. X' i x)
+= λ r,c1,c2,f. pair (Λ p,i. λ x. elimIdDep (ρ (c1' -i x) - c2 x)
+  (f (elimId c1 x)) -(p (elimId c1 x))) β.
 \end{verbatim}
 
-We also omit the example of enriching proof reuse of list append
+Note that in the type of \verb;c2;, the second argument of the
+dependent supertype codomain \verb;X'; must use \verb;c1'; to rewrite
+\verb;r (elimId c1 x); to \verb;i;, because the variable \verb;x; has
+type \verb;X i;. The \verb;ς; operator of Cedille takes an equality
+proof of type \verb;t ≃ t';, and returns the symmetric version of type
+\verb;t' ≃ t;.
+
+We omit the example of enriching proof reuse of list append
 associativity. It is very similar to the forgetful proof reuse example
 of vector append associativity, because \verb;v2lPresLen; becomes an
 additional argument, making the premise the trivial \verb;Unit; type.
