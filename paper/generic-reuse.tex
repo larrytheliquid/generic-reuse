@@ -2106,12 +2106,9 @@ r2tP ◂ IdDep Raw (λ t. ∀ GA : CtxTp. Typed GA t ➾ Term GA)
 (invAppArg ◂ Π GB : CtxTp. Π f : Raw. Π a : Raw. Π p : Typed GB (app f a).
   Typed (pair (proj1 GB) (invAppDom GB f a p)) a)
 (termTyped ◂ Π GA : CtxTp. Π t : Term GA. Typed GA (elimId t2r t))
-
-(Taking ◂ Ctx2 ➔ Raws ➔ ★)
-(envTaking ◂ Π GD : Ctx2. Π e : Env GD. Taking GD (elimId ts2rs e))
 \end{verbatim}
 
-\caption{\texttt{Lookup}, \texttt{Typed}, and \texttt{Taking} premises and lemmas for relational data enrichment.}
+\caption{\texttt{Lookup} and \texttt{Typed} premises, and their lemmas, for relational data enrichment.}
 \labfig{inv}
 \end{figure}
 
