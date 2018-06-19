@@ -341,11 +341,6 @@ true to the extrinsic nature of the theory, these annotations play no
 computational role.  Indeed, they are erased both during compilation
 and before formal reasoning about terms within the type theory, in
 particular by definitional equality (see \reffig{cdle}).
-After erasure, Cedille programs consist of untyped
-lambda calculus terms. Hence, the cost model of Cedille is similar to
-that of other untyped lambda calculus implementations, such as
-Racket~\cite{lang:racket}, which is the output language of compiled
-Cedille programs.
 
 \begin{figure}
 \centering
@@ -582,7 +577,13 @@ linear-time conversions, which is already possible in popular dependently
 typed languages. Then (in \refsec{prob:manual}),
 we show how Cedille lets us manually derive
 zero-cost (or constant time) conversions from the linear-time
-conversions. To aid readability, from now on we omit implicit
+conversions. 
+After erasure, Cedille programs consist of untyped
+lambda calculus terms. Hence, the cost model of Cedille is similar to
+that of other untyped lambda calculus implementations, such as
+Racket~\cite{lang:racket}, which is the output language of compiled
+Cedille programs.
+Finally, to aid readability, from now on we omit implicit
 abstractions (e.g. \verb;Λ A;) and implicit applications
 (e.g. \verb;-A;).\footnote{
   While we omit most implicit abstractions and applications in this
