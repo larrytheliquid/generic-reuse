@@ -1335,14 +1335,20 @@ arr2allArrP ◂ ∀ Y,Y' : ★. ∀ P : Y ➔ Y' ➔ ★. ∀ I : ★. ∀ X,X' 
   = Λ Y,Y',P,I,X,X'. pi2allPiP -Y -(λ y. Y') -P -I -X -(λ i,x. X' i).
 \end{verbatim}
 Enriching \verb;arr2allArrP; shares the following implicit arguments
-with forgetful \verb;allArr2arr; (from \refsec{prog:fog}):
-\verb;Y;, \verb;Y';, \verb;I;, \verb;X;, and \verb;X';, as well as the
-following explicit arguments: \verb;r; and \verb|c1|.
-However, the premise \verb;P; appears as an additional implicit
-argument, which may depend on both the domain (\verb;Y;) and codomain
-(\verb;Y';) of the subtype. Now we explain the differing explicit
-arguments:
+with forgetful \verb;allArr2arr; (from \refsec{prog:fog}): \verb;Y;,
+\verb;Y';, \verb;I;, \verb;X;, and \verb;X';, as well as the explicit
+argument \verb;r;.  However, the premise \verb;P; appears as an
+additional implicit argument of the subtype, which may depend on both
+the domain (\verb;Y;) and codomain (\verb;Y';). Now we explain the
+differing explicit arguments:
 \begin{itemize}
+\item The argument \verb;c2; is the
+  \textit{contravariant non-dependent identity function}.
+  It forgets the indexed supertype domain \verb;X i;,
+  e.g. \verb;Vec A n;,
+  as the non-indexed subtype domain \verb;Y;,
+  e.g. \verb;List A;. 
+
 \item The argument \verb;c1'; is the
   \textit{index preservation property}.
   It requires the index \verb;i; of the supertype domain
@@ -1419,9 +1425,8 @@ by \verb;v2lPresLen; for both append inputs.
 We include the definition of the enriching proof reuse combinator
 (\verb;pi2allPiP;), for reference, below.  We do not describe it in
 detail, as the extensions to handle the dependent arguments in
-codomains \verb;X'; and \verb;Y';, as well as the dependent version of
-the \verb;c2; argument, follow the same pattern as \verb;allPi2pi;
-from \refsec{prog:fog}.
+codomains \verb;X'; and \verb;Y'; follow the same pattern as
+\verb;allPi2pi; from \refsec{prog:fog}.
 
 \begin{verbatim}
 pi2allPiP ◂ ∀ Y : ★. ∀ Y' : Y ➔ ★. ∀ P : Π y : Y. Y' y ➔ ★.
