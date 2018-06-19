@@ -1038,7 +1038,6 @@ reusing the proof of vector append associativity).
 The examples in this section assume the existence of
 identity functions (i.e. values of type \verb;IdDep;)
 to convert between lists and vectors:
-
 \begin{verbatim}
 v2l ◂ ∀ A : ★. ∀ n : Nat. Id (Vec A n) (List A)
 l2v ◂ ∀ A : ★. IdDep (List A) (λ xs. Vec A (len xs))
@@ -1566,11 +1565,10 @@ implementation is a straightforward generalization of the non-indexed
 version by \citet{firsov18b}:
 
 \begin{verbatim}
-IIdMapping ◂ Π I : ★. ((I ➔ ★) ➔ (I ➔ ★)) ➔ ★ = λ I,F. 
-  ∀ X,Y : I ➔ ★. (∀ i : I. Id (X i) (Y i)) ➔
-    ∀ i : I. Id (F X i) (F Y i).
+IIdMapping ◂ Π I : ★. ((I ➔ ★) ➔ I ➔ ★) ➔ ★ = λ I,F. ∀ X,Y : I ➔ ★. 
+  (∀ i : I. Id (X i) (Y i)) ➔ ∀ i : I. Id (F X i) (F Y i).
 
-IFix ◂ Π I : ★. Π F : (I ➔ ★) ➔ (I ➔ ★). 
+IFix ◂ Π I : ★. Π F : (I ➔ ★) ➔ I ➔ ★. 
   Π imap : IIdMapping I F. I ➔ ★
 \end{verbatim}
 
@@ -1653,12 +1651,10 @@ which eliminator is used:
 
 \begin{verbatim}
 imapL ◂ ∀ A : ★. IdMapping (ListF A) = λ c. elimListF
-  (pair nilLF β)
-  (λ x,xs. pair (consLF x (elimId c xs) β)).
+  (pair nilLF β) (λ x,xs. pair (consLF x (elimId c xs) β)).
 
 imapV ◂ ∀ A : ★. IIdMapping Nat (VecF A) = λ c. elimVecF
-  (pair nilVF β)
-  (λ x,xs. pair (consVF x (elimId c xs) β)).
+  (pair nilVF β) (λ x,xs. pair (consVF x (elimId c xs) β)).
 \end{verbatim}
 The returned value is the \verb;Sigma;-type codomain of \verb;Id; from
 \refsec{prog:id}, where the first component is the supertype and
@@ -1693,7 +1689,7 @@ non-indexed fixpoint (hence, this the forgetful direction of data
 reuse). The type of \verb;ifix2fix; follows:
 
 \begin{verbatim}
-ifix2fix ◂ ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★). ∀ G : ★ ➔ ★. 
+ifix2fix ◂ ∀ I : ★. ∀ F : (I ➔ ★) ➔ I ➔ ★. ∀ G : ★ ➔ ★. 
   Π imapF : IIdMapping I F. 
   Π imapG : IdMapping G.
   Π c : ∀ X : I ➔ ★. ∀ Y : ★. 
@@ -1762,8 +1758,7 @@ identity algebra. For legibility, we provide the identity algebra
 vf2lf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ Y :  ★. 
   Π c : ∀ n : Nat. Id (X n) Y.
   ∀ n : Nat. Id (VecF A X n) (ListF A Y)
-  = λ c. elimVecF
-  (pair nilLF β)
+  = λ c. elimVecF (pair nilLF β)
   (λ x,xs. pair (consLF x (elimId c xs) β)).
 
 v2l ◂ ∀ A : ★. ∀ n : Nat. Id (Vec A n) (List A) =
@@ -1864,7 +1859,7 @@ length (\verb;len;) of the input list (\verb;xs;).
 The type of \verb;fix2ifix; follows:
 
 \begin{verbatim}
-fix2ifix ◂ ∀ G : ★ ➔ ★. ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★).
+fix2ifix ◂ ∀ G : ★ ➔ ★. ∀ I : ★. ∀ F : (I ➔ ★) ➔ I ➔ ★.
   Π imapG : IdMapping G.
   Π imapF : IIdMapping I F. 
   Π ralg : AlgM G I. 
@@ -1932,8 +1927,7 @@ lf2vf ◂ ∀ A : ★. ∀ Y : ★. ∀ X : Nat ➔ ★.
  Π r : Y ➔ Nat. 
  Π c : IdDep Y (λ y. X (r y)).
  IdDep (ListF A Y ) (λ xs. VecF A X (lenAlgM r xs))
-  = λ c. elimListF
-  (pair nilVF β)
+  = λ c. elimListF (pair nilVF β)
   (λ x,xs. pair (consVF x (elimIdDep c xs) β)).
  
 l2v ◂ ∀ A : ★. IdDep (List A) (λ xs. Vec A (len xs))
@@ -2024,7 +2018,7 @@ t2r ◂ ∀ GA : CtxTp. Id (Term GA) Raw
 \labsec{rel:denr}
 
 \begin{verbatim}
-fix2ifixP ◂ ∀ G : ★ ➔ ★. ∀ I : ★. ∀ F : (I ➔ ★) ➔ (I ➔ ★).
+fix2ifixP ◂ ∀ G : ★ ➔ ★. ∀ I : ★. ∀ F : (I ➔ ★) ➔ I ➔ ★.
   Π imapG : IdMapping G. Π imapF : IIdMapping I F.
   ∀ P : I ➔ FixIndM G imapG ➔ ★.
   Π c : ∀ Y : ★. ∀ X : I ➔ ★.
