@@ -1056,19 +1056,16 @@ return types. For example, below, \verb;allArr2arr; has return type
 We define \verb;allArr2arr; as:
 
 \begin{verbatim}
-allArr2arr ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : I ➔ ★. ∀ Y : ★. ∀ Y' : ★.
+allArr2arr ◂ ∀ I : ★. ∀ X,X' : I ➔ ★. ∀ Y,Y' : ★.
   Π r : Y ➔ I.
   Π c1 : IdDep Y (λ y. X (r y)).
-  Π c2 : ∀ i : I. Id (X' i) Y'.
+  Π c2 : Π y : Y. Id (X' (r y)) Y'.
   Id (∀ i : I. X i ➔ X' i) (Y ➔ Y')
-  = λ r,c1,c2,f. pair (λ y. elimId 
-    (c2 -(r y))
-    (f -(r y) (elimIdDep c1 y))
-  ) β.
+  = Λ I,X,X',Y,Y'. allPi2pi -I -X -(λ i,x. X' i) -Y -(λ y. Y').
 \end{verbatim}
 The combinator \verb;allArr2arr; is a generic solution to forgetful
-\textit{non-dependent function} reuse (or, forgetful \textit{program} reuse). For
-example, it can solve a problem like the one below, where black boxes
+\textit{non-dependent function} reuse (or, forgetful \textit{program}
+reuse) For example, it can solve a problem like the one below, where black boxes
 (\verb;●;) represent arbitrary (not necessarily the same) types:
 
 \begin{verbatim}
@@ -1098,26 +1095,22 @@ and now we explain the explicit arguments:
   non-indexed type \verb;Y;, e.g. \verb;len : List A ➔ Nat;.
 
 \item The argument \verb;c1; is the
-  \textit{contravariant dependent identity function between domains}.
+  \textit{contravariant dependent identity function}.
   It enriches the non-indexed supertype domain \verb;y : Y;,
-  e.g. \verb;xs : List A;.
+  e.g. \verb;xs : List A;,
   to the indexed subtype domain \verb;X (r y);,
   e.g. \verb;Vec A (len xs);.
   The index is the refinement
   of the non-indexed input \verb;y;, e.g. \verb;(len xs);).
 
 \item The argument \verb;c2; is the
-  \textit{covariant non-dependent identity function between codomains}.
-  It forgets the indexed subtype codomain \verb;X' i;
+  \textit{covariant non-dependent identity function}.
+  It forgets the indexed subtype codomain \verb;X' (r y);
   as the non-indexed supertype codomain \verb;Y';.
 \end{itemize}
 
-Notice that \verb;c2; is parameterized by the index type \verb;i : I;,
-e.g. \verb;Nat;, rather than the non-indexed type \verb;y : Y;,
-e.g. \verb;List A;. In the implementation of \verb;allArr2arr;, we
-generate the type index \verb;I; by automatically applying the
-refinement function (\verb;r;) to a value of the non-indexed type
-(\verb;y : Y;), making our combinator easier to use.
+Non-dependent \verb;allArr2arr; is defined in terms of its dependent
+version, \verb;allPi2Pi;, which we present subsequently.
 
 \subsubsection{Program Reuse Example}
 
@@ -1131,12 +1124,11 @@ appV2appL ◂ Id AppV AppL
   = // Id (∀ A : ★. ●) (∀ A : ★. ●)
   copyType (Λ A. 
   // Id (∀ n : Nat. Vec A n ➔ ●) (List A ➔ ●)
-  allArr2arr (len -A) (l2v -A) (Λ n. 
+  allArr2arr len l2v (λ xs. 
   // Id (∀ m : Nat. Vec A m ➔ ●) (List A ➔ ●)
-  allArr2arr (len -A) (l2v -A) (Λ m. 
-  // Id (Vec A (add n m)) (List A)
-  v2l -A -(add n m)
-  ))).
+  allArr2arr len l2v (λ ys. 
+  // Id (Vec A (add (len xs) (len ys))) (List A)
+  v2l))).
 \end{verbatim}
 Our example includes goal types in comments, where each goal above
 illustrates the part of the problem solved by a combinator
@@ -1187,53 +1179,39 @@ the supertype codomain may depend on the supertype (list) domain.
 The definition of \verb;allPi2pi; follows:
 
 \begin{verbatim}
-allPi2pi ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★.
-  ∀ Y : ★. ∀ Y' : Y ➔ ★. Π r : Y ➔ I.
+allPi2pi ◂ ∀ I : ★. ∀ X : I ➔ ★. ∀ X' : Π i : I. X i ➔ ★. 
+  ∀ Y : ★. ∀ Y' : Y ➔ ★.
+  Π r : Y ➔ I.
   Π c1 : IdDep Y (λ y. X (r y)).
-  Π c2 : ∀ i : I. Id (X i) Y.
-  Π c3 : ∀ i : I. Π x : X i. Id (X' i x) (Y' (elimId (c2 -i) x))).
+  Π c2 : Π y : Y. Id (X' (r y) (elimIdDep c1 y)) (Y' y).
   Id (∀ i : I. Π x : X i. X' i x) (Π y : Y. Y' y)
-  = λ r,c1,c2,c3,f. pair (λ y. elimId 
-    (c3 -(r y) (elimIdDep c1 y))
-    (f -(r y) (elimIdDep c1 y))
-  ) β.
+  = λ r,c1,c2,f. pair (λ y. elimId (c2 y) (f -(r y) (elimIdDep c1 y))) β.
 \end{verbatim}
 Compared to \verb;allArr2arr;, the \verb;I;, \verb;X;, \verb;Y;,
 \verb;r;, and \verb;c1; arguments are the same. However, now the
 subtype codomain \verb;X'; may depend on its indexed domain
 \verb;X i;, and the supertype codomain \verb;Y'; may depend on its
-non-indexed domain \verb;Y;. Now we explain the remaining explicit
-arguments to \verb;allPi2pi;:
+non-indexed domain \verb;Y;. The explicit argument \verb;c2; is also
+different:
 
 \begin{itemize}
-\item The argument \verb;c2; is the
-  \textit{covariant dependent identity function between domains}.
-  It forgets the indexed subtype domain \verb;X i;,
-  e.g. \verb;Vec A n;,
-  as the non-indexed subtype domain \verb;Y;,
-  e.g. \verb;List A;. We use this additional
-  covariant function between domains (compared to the contravariant
-  version \verb;c1;) in the type of the \verb;c3; argument.
-
-\item The argument \verb;c3; is the
-  \textit{covariant non-dependent identity function between codomains}.
-  It forgets the indexed subtype codomain \verb;X' i x;
-  as the non-indexed supertype codomain \verb;Y' (elimId (c2 -i) x);.
-  The \verb;Y; index to \verb;Y'; is zero-cost converted
-  from \verb;x; using the extra covariant argument \verb;c2;. 
+\item The argument \verb;c2; is still the \textit{covariant
+  non-dependent identity function}. However, now it forgets the
+  indexed subtype codomain \verb;X' (r y) (elimIdDep c1 y); as the
+  non-indexed supertype codomain \verb;Y' y;. In the \verb;X';
+  application, \verb;y; is zero-cost converted from \verb;Y; to
+  \verb;X (r y); via the contravariant argument \verb;c1;.
 \end{itemize}
 
-The need for the conversion above, and hence the additional covariant argument
-\verb;c2;, stems from the convenience of argument \verb;c3; being
-parameterized by index \verb;I; and indexed type \verb;X i;, rather
-than non-indexed type \verb;Y;. In other words, it is needed for
-argument \verb;c3; to assume that its parameter has already been
-zero-cost converted via \verb;elimIdDep c1 y; (as performed in the
-implementation of \verb;allPi2pi;). Recall that
-\verb;allArr2arr; already automated the refinement \verb;r y;, and
-now \verb;allPi2pi; additionally automates the zero-cost conversion
-\verb;elimIdDep c1 y;, because the codomains of \verb;allPi2pi; can
-depend on the domains.
+Notice that \verb;allPi2pi; is reminiscent of the subtyping rule
+between dependent functions. However, it is different in that it
+requires the additional \verb;r; argument to handle the additional
+\verb;∀ i : I.; quantification in the subtype. Furthermore, the zero-cost
+conversion \verb;elimIdDep c1 y; is explicitly performed in the type of
+argument \verb;c2;, which depends on argument \verb;c1;. In a
+subtyping rule the dependency and the zero-cost conversion would be
+hidden, because the subsumption rule would implicitly change the type of
+\verb;y; by appealing to the subtyping premise represented by \verb;c1;.
 
 \subsubsection{Proof Reuse Example}
 
