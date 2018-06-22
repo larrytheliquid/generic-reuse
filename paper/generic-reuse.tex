@@ -1949,7 +1949,7 @@ However, the dependent elimination is also erased
 \labsec{rel}
 
 In this section we demonstrate that the techniques of our paper scale
-to more complex and realistic dependently typed programs, rather than
+to more complex dependently typed programs, rather than
 the pedagogical list and vector running example used thus far. A now
 common example (e.g. as used by \citet{tutorial:agda}) of
 dependently typed programming, due to \citet{viewfromleft}, is writing
@@ -1992,14 +1992,13 @@ and their eliminators (\verb;elimRawF; and \verb;elimTermF;) are
 defined as in \refsec{data:schemes}, without any surprises, and have
 been omitted for space reasons.
 
-\begin{verbatim}
-infer ◂ Π G : Ctx. Π t : Raw.
-  Maybe (Sigma Tp (λ A. Sigma (Term G A) (λ t'. elimId t2r t' ≃ t)))
-\end{verbatim}
-
-
 \subsection{Forgetful Data Reuse}
 \labsec{rel:dfog}
+
+Forgetful data reuse from \verb;Term; to \verb;Raw; uses
+\verb;ifix2fix; (from \refsec{data:fog}) to forget
+\verb;TermF; as \verb;RawF; via the helper function
+\verb;tf2rf;. 
 
 \begin{verbatim}
 tf2rf ◂ ∀ X : CtxTp ➔ ★. ∀ Y : ★.
@@ -2013,6 +2012,12 @@ tf2rf ◂ ∀ X : CtxTp ➔ ★. ∀ Y : ★.
 t2r ◂ ∀ GA : CtxTp. Id (Term GA) Raw
   = ifix2fix imapT imapR tf2rf.
 \end{verbatim}
+
+The lambda and application cases use the zero-cost conversion \verb;c;
+to translate each \verb;X GA; to a \verb;Y;. The variable case uses the
+omitted forgetful data reuse \verb;i2n; of type
+\verb;Id (Mem A x xs) Nat;, which similarly forgets membership proofs
+as natural numbers.
 
 \subsection{Enriching Data Reuse}
 \labsec{rel:denr}
