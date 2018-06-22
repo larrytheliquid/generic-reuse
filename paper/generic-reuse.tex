@@ -2085,9 +2085,8 @@ larger than previous examples because the erased index
 use dash (\verb;-;) to explicitly supply implicit arguments, but now
 we use the new syntax of a variable name along with an equal sign to
 only supply relevant (non-inferrable) implicit arguments
-(e.g. for explicitly supplying a premise and
-the motive of an eliminator,  we use \verb;e = ●; and \verb;P = ●; below,
-respectively). 
+(e.g. for explicitly supplying an index and a premise,
+below we use \verb;GA = ●; and \verb;e = ●;, respectively). 
 
 \begin{verbatim}
 rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
@@ -2099,24 +2098,18 @@ rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
   (λ n. pair (Λ GA,p. ρ (etaSigma GA) - ivarF
     (elimId n2iP n -(e = invVarLookup
       (proj1 GA) (proj2 GA) n (ρ ς (etaSigma GA) - p)))) β)
-  (λ A,y. pair (Λ GC,p. ρ (etaSigma GC) 
-    - ρ (invLamEq GC A (elimId c1 y) p) - ilamF
+  (λ A,y. pair (Λ GC,p. ρ (etaSigma GC) - 
+    ρ (invLamEq GC A (elimId c1 y) p) - ilamF
     A -(B = invLamCod GC A (elimId c1 y) p)
-    (elimIdDep
-      -(P = λ y. ∀ GA : CtxTp. Typed GA (elimId c1 y) ➾ X GA)
-      c2 y -(GA = pair (consL A (proj1 GC))
+    (elimIdDep c2 y -(GA = pair (consL A (proj1 GC))
         (invLamCod GC A (elimId c1 y) p))
       -(e = invLamBod GC A (elimId c1 y) p))) β)
   (λ y1,y2. pair (Λ GB,p. ρ (etaSigma GB) - iappF 
     -(invAppDom GB (elimId c1 y1) (elimId c1 y2) p) -(proj2 GB)
-    (elimIdDep
-      -(P = λ y. ∀ GA : CtxTp. Typed GA (elimId c1 y) ➾ X GA)
-      c2 y1 -(GA = pair (proj1 GB)
+    (elimIdDep c2 y1 -(GA = pair (proj1 GB)
         (Arr (invAppDom GB (elimId c1 y1) (elimId c1 y2) p) (proj2 GB)))
       -(e = invAppFun GB (elimId c1 y1) (elimId c1 y2) p))
-    (elimIdDep
-      -(P = λ y. ∀ GA : CtxTp. Typed GA (elimId c1 y) ➾ X GA)
-      c2 y2 -(GA = pair (proj1 GB)
+    (elimIdDep c2 y2 -(GA = pair (proj1 GB)
         (invAppDom GB (elimId c1 y1) (elimId c1 y2) p))
       -(e = invAppArg GB (elimId c1 y1) (elimId c1 y2) p))) β).
 
@@ -2133,6 +2126,36 @@ to their typed \verb;Term; equivalents
 (\verb;X GA;), once given a suitable index (\verb;GA : CtxTp;) and premise
 \verb;Typed GA (elimId c1 y);.
 
+For the lambda (\verb;ilamF;) and application (\verb;iappF;) cases,
+the index (\verb;GA : CtxTp;) and \verb;Typing; premise are additional
+arguments we must supply to get an identity coercion back from
+\verb;c2;, which functions as an inductive hypothesis would for the
+purposes of this combinator. We explicitly supply both of these
+implicit arguments by appealing to inversion lemmas from our
+abstractly specified \verb;Typing; premise in \reffig{inv}. For
+example, in the \verb;ilamF; case we get the lambda codomain via
+\verb;invLamCod; and the inductive \verb;Typed; premise of the lambda
+body via \verb;invLamBod;.
+
+Note that any implementation of \verb;Typed; works for our example,
+so long as the inversion lemmas are provable. Obvious choices are an
+indexed datatype version of \verb;Typed; (i.e. a binary relation), or
+\verb;Typed GA t; as \verb;infer (proj1 GA) t ≃ just (proj2 GA);,
+making the precondition state that type inference succeeds. In our
+Cedille formalization, we use a third appealing ``free'' definition,
+exploiting Cedille's heterogeneous equality, namely
+\verb;Typed GA t; as \verb;Sigma (Term GA) (λ t'. t' ≃ t);.
+
+Finally, the variable case (\verb;ivarF;) appeals to the omitted
+enrichment \verb;n2iP; from natural numbers to membership proofs
+(\verb;IdDep Nat (λ n. ∀ xs : List A. Lookup A x xs n ➾ Mem A x xs));).
+The premise is an abstract \verb;Lookup; relation, of type
+\verb;Π A : ★. A ➔ List A ➔ Nat ➔ ★;, stating that the element appears
+at the natural number position of the (zero-indexed) list, where
+\verb;Lookup; is also abstractly specified in terms of its obvious
+inversion lemmas. The definition of \verb;n2iP; is similar to
+\verb;r2tP;, but simpler because it only has two cases and they have
+less-complicated arguments.
 
 
 
@@ -2140,10 +2163,6 @@ to their typed \verb;Term; equivalents
 \centering
 
 \begin{verbatim}
-(Lookup : Π A : ★. A ➔ List A ➔ Nat ➔ ★)
-(n2iP ◂ ∀ A : ★. ∀ x : A. 
-  IdDep Nat (λ n. ∀ xs : List A. Lookup A x xs n ➾ Mem A x xs))
-
 (Typed ◂ CtxTp ➔ Raw ➔ ★)
 (invVarLookup ◂ Π G : Ctx. Π A : Tp. Π n : Nat. 
   Typed (pair G A) (var n) ➔ Lookup A G n)
@@ -2160,7 +2179,8 @@ to their typed \verb;Term; equivalents
 (termTyped ◂ Π GA : CtxTp. Π t : Term GA. Typed GA (elimId t2r t))
 \end{verbatim}
 
-\caption{\texttt{Lookup} and \texttt{Typed} premises, and their lemmas, for relational data enrichment.}
+\caption{An abstract well-typedness relation,\texttt{Typed}, specified
+  in terms of its inversion lemmas, and used as the premise of STLC term enrichment.}
 \labfig{inv}
 \end{figure}
 
