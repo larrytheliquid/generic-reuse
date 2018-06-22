@@ -1682,7 +1682,7 @@ The combinator \verb;ifix2fix; is a generic solution to forgetful
 example, it can solve a problem like the one below:
 
 \begin{verbatim}
-Id (IFix Nat (VecF A) (imapV A) n) (Fix (ListF A) (imapL A))
+Id (IFix Nat (VecF A) imapV n) (Fix (ListF A) imapL)
 \end{verbatim}
 Above, the subtype is an indexed fixpoint and the supertype is a
 non-indexed fixpoint (hence, this the forgetful direction of data
@@ -1745,8 +1745,8 @@ derived generically as the fixpoints of their schemes and identity
 mappings:
 
 \begin{verbatim}
-List ◂ ★ ➔ ★ = λ A. Fix (ListF A) (imapL A).
-Vec ◂ ★ ➔ Nat ➔ ★ = λ A,n. IFix Nat (VecF A) (imapV A) n.
+List ◂ ★ ➔ ★ = λ A. Fix (ListF A) imapL.
+Vec ◂ ★ ➔ Nat ➔ ★ = λ A,n. IFix Nat (VecF A) imapV n.
 \end{verbatim}
 Next, we define an identity function (\verb;v2l;) from
 \verb;Vec A n; to \verb;List A; by applying
@@ -1850,8 +1850,8 @@ to enriching \textit{fixpoint} reuse
 For example, it can solve a problem like the one below:
 
 \begin{verbatim}
-IdDep (Fix (ListF A) (imapL A))
-  (λ xs. IFix Nat (VecF A) (imapV A) (foldM lenAlgM xs))
+IdDep (Fix (ListF A) imapL)
+  (λ xs. IFix Nat (VecF A) imapV (foldM lenAlgM xs))
 \end{verbatim}
 Notice that \verb;fix2ifix; must return a \textit{dependent} identity
 function, because the index of the output vector is computed as the
@@ -1865,7 +1865,7 @@ fix2ifix ◂ ∀ G : ★ ➔ ★. ∀ I : ★. ∀ F : (I ➔ ★) ➔ I ➔ ★
   Π ralg : AlgM G I. 
   Π c : ∀ Y : ★. ∀ X : I ➔ ★. Π r : Y ➔ I. 
     IdDep Y (λ y. X (r y)) ➔ 
-    IdDep (G Y) (λ xs. F X (ralg -Y r xs)).
+    IdDep (G Y) (λ ys. F X (ralg -Y r ys)).
   IdDep (Fix G imapG) 
     (λ x. IFix I F imapF (foldM ralg x))
 \end{verbatim}
@@ -1882,8 +1882,8 @@ differing explicit arguments:
   e.g. \verb;lenAlgM A; for \verb;ListF A;.
 
 \item The argument \verb;c; is the \textit{dependent identity algebra}. It
-  enriches the non-indexed subtype scheme (\verb;xs : G Y;)
-  to the indexed supertype scheme (\verb;F X (ralg r xs);),
+  enriches the non-indexed subtype scheme (\verb;ys : G Y;)
+  to the indexed supertype scheme (\verb;F X (ralg r ys);),
   while assuming
   how to enrich the abstract non-indexed subtype (\verb;y : Y;) as
   the abstract indexed supertype (\verb;X (r y);).
@@ -1900,7 +1900,7 @@ subtype (\verb;y : Y;) by applying an abstract
 \textit{refinement function} (\verb;r;).
 Correspondingly, the index of the produced supertype
 (\verb;F X;) is computed from the non-indexed
-subtype (\verb;xs : G Y;) by applying the
+subtype (\verb;ys : G Y;) by applying the
 \textit{refinement algebra} (\verb;ralg r;), while using \verb;r; for
 the \verb;rec;(ursive) function of the Mendler-style algebra.
 
@@ -2022,6 +2022,21 @@ as natural numbers.
 \subsection{Enriching Data Reuse}
 \labsec{rel:denr}
 
+The enriching data reuse combinator \verb;ifix2fix; (from
+\refsec{data:enr}) can be used when the index of the enriched type can
+be computed by as a total function (via the refinement algebra) from
+the non-indexed type. When enriching a \verb;Raw; term to a
+\verb;Term;, we are faced with the problem below:
+
+\begin{verbatim}
+IdDep Fix RawF imapR (λ t. ∀ GA : CtxTp. Typed GA t ➾ IFix CtxTp TermF imapT)
+  = fix2ifixP TermF imapR imapT rf2tfP.
+\end{verbatim}
+
+Above, \verb;Typed GA t; is an erased premise necessary for the
+enrichment to be possible. To solve such a problem we define the
+generalized data enrichment \verb;fix2ifixP;:
+
 \begin{verbatim}
 fix2ifixP ◂ ∀ G : ★ ➔ ★. ∀ I : ★. ∀ F : (I ➔ ★) ➔ I ➔ ★.
   Π imapG : IdMapping G. Π imapF : IIdMapping I F.
@@ -2032,6 +2047,19 @@ fix2ifixP ◂ ∀ G : ★ ➔ ★. ∀ I : ★. ∀ F : (I ➔ ★) ➔ I ➔ �
     IdDep (G Y) (λ ys. ∀ i : I. P i (in (elimId (imapG c1) ys)) ➾ F X i).
   IdDep (FixIndM G imapG) (λ y. ∀ i : I. P i y ➾ IFix I F imapF i)
 \end{verbatim}
+
+Besides the implicit arguments that \verb;fix2ifixP; shares with
+\verb;fix2ifix;, the premise \verb;P; is an additional implicit
+argument, which may dependent on the index (also implicitly quantified
+as part of the premise) and the non-dependent data.
+
+The explicit refinement algebra \verb;r; no longer appears. The
+identity algebra \verb;c; generalizes to enrich the non-indexed
+subtype scheme (\verb;ys : G Y;) to the indexed supertype scheme
+(\verb;F X i;), once provided the index (\verb;i : I;) and the premise
+(of type \verb;P i ys;) as erased arguments. These arguments must be
+erased for the zero-cost coercion to indeed be an indentity function
+from non-indexed to indexed data.
 
 \begin{verbatim}
 rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
