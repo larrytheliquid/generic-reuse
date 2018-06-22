@@ -2024,8 +2024,9 @@ as natural numbers.
 
 The enriching data reuse combinator \verb;ifix2fix; (from
 \refsec{data:enr}) can be used when the index of the enriched type can
-be computed by as a total function (via the refinement algebra) from
-the non-indexed type. When enriching a \verb;Raw; term to a
+be computed as a total function (via the refinement \textit{algebra}) from
+the non-indexed type.
+When enriching a \verb;Raw; term to a
 \verb;Term;, we are faced with the problem below:
 
 \begin{verbatim}
@@ -2033,9 +2034,12 @@ IdDep Fix RawF imapR (λ t. ∀ GA : CtxTp. Typed GA t ➾ IFix CtxTp TermF imap
   = fix2ifixP TermF imapR imapT rf2tfP.
 \end{verbatim}
 
+\subsubsection{Data Reuse Combinator}
+
 Above, \verb;Typed GA t; is an erased premise necessary for the
-enrichment to be possible. To solve such a problem we define the
-generalized data enrichment \verb;fix2ifixP;:
+enrichment to be possible. To solve such a problem, we define the
+generalized \verb;fix2ifixP; combinator, which allows for data
+enrichment with a \textit{premise}:
 
 \begin{verbatim}
 fix2ifixP ◂ ∀ G : ★ ➔ ★. ∀ I : ★. ∀ F : (I ➔ ★) ➔ I ➔ ★.
@@ -2059,7 +2063,31 @@ subtype scheme (\verb;ys : G Y;) to the indexed supertype scheme
 (\verb;F X i;), once provided the index (\verb;i : I;) and the premise
 (of type \verb;P i ys;) as erased arguments. These arguments must be
 erased for the zero-cost coercion to indeed be an indentity function
-from non-indexed to indexed data.
+from non-indexed to indexed data. As expected in \verb;c;,
+\verb;c2; is used to convert a non-indexed inductive occurrence
+(\verb;Y;) to an indexed version (\verb;X i;), under an erased premise
+(\verb;P i (elimId c1 y);). However, to type the premise we must
+convert the abstract \verb;Y; to a concrete non-indexed
+fixpoint (\verb;FixIndM G imapG;), and for this we have the
+additional \verb;c1; argument.
+
+\subsubsection{Data Reuse Example}
+
+To enrich a \verb;Raw; term as a typed \verb;Term;, under a
+well-typedness premise (\verb;Typing;), below we apply our new
+combinator \verb;fix2ifixP; to the helper enriching dependent identity
+algebra \verb;rf2tfP;. In many places of this paper we omit implicit
+arguments, as there is a nice coincidence between when arguments are
+erased and inferrable. In the example below, \verb;rf2tfP; is much
+larger than previous examples because the erased index
+(\verb;GA : CtxTp;) and the erased premise (of type
+\verb;Typed GA (elimId c1 y);) are not inferrable. As previously, we
+use dash (\verb;-;) to explicitly supply implicit arguments, but now
+we use the new syntax of a variable name along with an equal sign to
+only supply relevant (non-inferrable) implicit arguments
+(e.g. for explicitly supplying a premise and
+the motive of an eliminator,  we use \verb;e = ●; and \verb;P = ●; below,
+respectively). 
 
 \begin{verbatim}
 rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
@@ -2069,7 +2097,7 @@ rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
     Typed GA (in (elimId (imapRaw c1) ys)) ➾ TermF X GA)
   = λ c1,c2. elimRawF
   (λ n. pair (Λ GA,p. ρ (etaSigma GA) - ivarF
-    (elimId n2iP n -(v = invVarLookup
+    (elimId n2iP n -(e = invVarLookup
       (proj1 GA) (proj2 GA) n (ρ ς (etaSigma GA) - p)))) β)
   (λ A,y. pair (Λ GC,p. ρ (etaSigma GC) 
     - ρ (invLamEq GC A (elimId c1 y) p) - ilamF
@@ -2078,23 +2106,35 @@ rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
       -(P = λ y. ∀ GA : CtxTp. Typed GA (elimId c1 y) ➾ X GA)
       c2 y -(GA = pair (consL A (proj1 GC))
         (invLamCod GC A (elimId c1 y) p))
-      -(v = invLamBod GC A (elimId c1 y) p))) β)
+      -(e = invLamBod GC A (elimId c1 y) p))) β)
   (λ y1,y2. pair (Λ GB,p. ρ (etaSigma GB) - iappF 
     -(invAppDom GB (elimId c1 y1) (elimId c1 y2) p) -(proj2 GB)
     (elimIdDep
       -(P = λ y. ∀ GA : CtxTp. Typed GA (elimId c1 y) ➾ X GA)
       c2 y1 -(GA = pair (proj1 GB)
         (Arr (invAppDom GB (elimId c1 y1) (elimId c1 y2) p) (proj2 GB)))
-      -(v = invAppFun GB (elimId c1 y1) (elimId c1 y2) p))
+      -(e = invAppFun GB (elimId c1 y1) (elimId c1 y2) p))
     (elimIdDep
       -(P = λ y. ∀ GA : CtxTp. Typed GA (elimId c1 y) ➾ X GA)
       c2 y2 -(GA = pair (proj1 GB)
         (invAppDom GB (elimId c1 y1) (elimId c1 y2) p))
-      -(v = invAppArg GB (elimId c1 y1) (elimId c1 y2) p))) β).
+      -(e = invAppArg GB (elimId c1 y1) (elimId c1 y2) p))) β).
 
 r2tP ◂ IdDep Raw (λ t. ∀ GA : CtxTp. Typed GA t ➾ Term GA)
   = fix2ifixP TermF imapR imapT rf2tfP.
 \end{verbatim}
+
+Besides appealing to the $\eta$-equality of pairs (\verb;etaSigma;)
+in various places for the pair of the context and type
+(e.g. \verb;GA : CtxTp;) used as the index of \verb;Term;,
+\verb;rf2tfP; mostly performs case-analysis via \verb;elimRawF;, using
+\verb;c2; to enrich abstract inductive \verb;Raw; terms (\verb;y : Y;)
+to their typed \verb;Term; equivalents
+(\verb;X GA;), once given a suitable index (\verb;GA : CtxTp;) and premise
+\verb;Typed GA (elimId c1 y);.
+
+
+
 
 \begin{figure}
 \centering
