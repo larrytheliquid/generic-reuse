@@ -2234,17 +2234,30 @@ We omit the obvious dependent version (\verb;pi2allPiP2;). For space
 reasons, we also omit the definition of \verb;arr2allArrP2;, which is
 an obvious alteration of \verb;arr2allArrP;. In fact, in our
 implementation both \verb;arr2allArrP; and \verb;arr2allArrP2; are
-defined in terms of a more genercal version that does not perform any
+defined in terms of a more general version that does not perform any
 automation (i.e. a combinator without a \verb;c1'; argument).
 
 \subsubsection{Data Reuse Example}
 
+We enrich the type-preserving one-step $\beta$-reduction function
+by applying \verb;arr2allArrP2; once for the single
+argument of the unary function:
+
 \begin{verbatim}
 stepR2stepT ◂ IdDep StepR (λ f. TpPres f ➾ StepT)
-  = arr2allArrP2
-  t2r termTyped
+  // IdDep (Raw ➔ ●) (λ f. (Π t : Raw. Π GA : CtxTp. Typed GA t ➔ ●) ➾
+  //   ∀ GA : CtxTp. Term GA ➔ ●)
+  = arr2allArrP2 t2r termTyped
+  // ∀ GA : CtxTp. IdDep Raw (λ t. Typed GA t ➾ Term GA)
   (supplyPrem r2tP).
 \end{verbatim}
+
+After applying \verb;arr2allArrP2;, the goal has the erased index part
+of the argument (\verb;∀ GA : CtxTp;) on the outside of the dependent
+identity function type. We solve the goal by applying the auxiliary
+combinator \verb;supplyPrem; (from \reffig{aux}) to our enriching
+data reuse result for terms (\verb;r2tP; from \refsec{rel:denr}),
+which expects \verb;∀ GA : CtxTp; as part of the supertype premise.
 
 \section{Related Work}
 \labsec{others}
