@@ -1460,8 +1460,7 @@ additional argument, making the premise the trivial \verb;Unit; type.
 id ◂ ∀ A : ★. Id A A = λ a. pair a β.
 
 copyType ◂ ∀ F : ★ ➔ ★. ∀ G : ★ ➔ ★.
-  (∀ A : ★. Id (F A) (G A)) ➔
-   Id (∀ A : ★. F A) (∀ A : ★. G A)
+  (∀ A : ★. Id (F A) (G A)) ➔ Id (∀ A : ★. F A) (∀ A : ★. G A)
   = λ c,xs. pair (Λ A. elimId (c -A) (xs -A)) β.
 
 copyTypeP ◂ ∀ F : ★ ➔ ★. ∀ P : Π A : ★. F A ➔ ★. ∀ G : ★ ➔ ★.
@@ -1469,16 +1468,18 @@ copyTypeP ◂ ∀ F : ★ ➔ ★. ∀ P : Π A : ★. F A ➔ ★. ∀ G : ★ 
   IdDep (∀ A : ★. F A) (λ xs. (∀ A : ★. P A (xs -A)) ➾ ∀ A : ★. G A)
   = λ c,xs. pair (Λ p,A. elimIdDep (c -A) (xs -A) -(p -A)) β.
 
-subst ◂ ∀ Y : ★. ∀ I : ★. ∀ X : I ➔ ★.
-  ∀ r : Y ➔ I. ∀ i : I.
-  IdDep Y (λ y. X (r y)) ➔
-  IdDep Y (λ y. r y ≃ i ➾ X i)
+subst ◂ ∀ Y : ★. ∀ I : ★. ∀ X : I ➔ ★.∀ r : Y ➔ I. ∀ i : I.
+  IdDep Y (λ y. X (r y)) ➔ IdDep Y (λ y. r y ≃ i ➾ X i)
   = λ c,y. pair (Λ q. ρ ς q - elimIdDep c y) β.
+
+supplyPrem ◂ ∀ Y : ★. ∀ I : ★. ∀ X : I ➔ Y ➔ ★.
+  IdDep Y (λ y. ∀ i : I. X i y) ➔ ∀ i : I. IdDep Y (X i)
+  = λ c,y. pair (elimIdDep c y) β.
 \end{verbatim}
 
 \caption{Auxiliary identity combinator, combinators to copy a shared
-  impredicative quantification, and combinator to rewrite by
-  an equality constraint.} 
+  impredicative quantification, combinator to rewrite by
+  an equality constraint, and combinator to supply a premise.} 
 \labfig{aux}
 \end{figure}
 
@@ -2187,24 +2188,62 @@ less-complicated arguments.
 \subsection{Enriching Program Reuse}
 \labsec{rel:penr}
 
+For our example, we show how to enrich a one-step $\beta$-reduction
+function (\verb;stepR; of type \verb;StepR;) between \verb;Raw; terms to one
+between typed \verb;Term;'s (of type \verb;StepT;), provided the
+premise that the raw step function preserves types (\verb;TpPres;).
+
 \begin{verbatim}
-arr2allArrP2 ◂ ∀ Y,Y',I : ★.
-  ∀ P : I ➔ Y ➔ ★. ∀ P' : I ➔ Y' ➔ ★.
+StepR ◂ ★ = Raw ➔ Raw.
+TpPres ◂ StepR ➔ ★ = λ stepR. 
+  Π t : Raw. Π GA : CtxTp. Typed GA t ➔ Typed GA (stepR t).
+StepT ◂ ★ = ∀ GA : CtxTp. Term GA ➔ Term GA.
+\end{verbatim}
+
+\subsubsection{Data Reuse Combinator}
+
+Recall from \refsec{prog:enr} that the enriching program reuse
+combinator \verb;arr2allArrP; takes the total refinement function \verb;r;
+as an argument, in addition to the index preservation property
+argument \verb;c1';, which is used to automatically perform a rewrite
+by the property. Below we define \verb;arr2allArrP2;, which is a
+version that works with data that must be reused with a premise.
+
+\begin{verbatim}
+arr2allArrP2 ◂ ∀ Y,Y',I : ★. ∀ P : I ➔ Y ➔ ★. ∀ P' : I ➔ Y' ➔ ★.
   ∀ X,X' : I ➔ ★. Π c1 : ∀ i : I. Id (X i) Y.
   Π c1' : Π i : I. Π x : X i. P i (elimId c1 x).
   Π c2 : ∀ i : I. IdDep Y' (λ y'. P' i y' ➾ X' i).
-  IdDep (Y ➔ Y') (λ f.
-    (Π y : Y. Π i : I. P i y ➔ P' i (f y)) ➾
+  IdDep (Y ➔ Y') (λ f. (Π y : Y. Π i : I. P i y ➔ P' i (f y)) ➾
     ∀ i : I. X i ➔ X' i)
 \end{verbatim}
 
+Notice that the premise has been broken into two pieces (compared to
+\verb;arr2allArrP;), where \verb;P; now is the premise on the
+non-indexed data (of type \verb;Y;), and \verb;P'; is a premise on the
+output of the function being enriched (as before). Now \verb;c1'; is a
+proof that the indexed data (\verb;x : X i;) implies that the premise
+holds for its forgetful variant (\verb;P i (elimId c1 x);). The
+automation performed by \verb;arr2allArrP2; is automatically supplying
+this evidence to the \verb;P; argument of the erased premise. Also
+notice that in the erased premise, the user may assume a non-erased
+(explicitly quantified) index argument (\verb;Π i : I;), because the
+entire functional premise is erased anyway.
+
+We omit the obvious dependent version (\verb;pi2allPiP2;). For space
+reasons, we also omit the definition of \verb;arr2allArrP2;, which is
+an obvious alteration of \verb;arr2allArrP;. In fact, in our
+implementation both \verb;arr2allArrP; and \verb;arr2allArrP2; are
+defined in terms of a more genercal version that does not perform any
+automation (i.e. a combinator without a \verb;c1'; argument).
+
+\subsubsection{Data Reuse Example}
+
 \begin{verbatim}
-subR2subT ◂ IdDep SubR (λ f. TpPres f ➾ SubT)
-  = arr2allArrP2 ts2rs envTaking
-  (Λ GD. freshProdP2 -(proj1 GD)
-  (arr2allArrP2 t2r termTyped
-  (Λ GA. skipP2 (r2tP -(pair (proj2 GD) (proj2 GA)))
-  ))).
+stepR2stepT ◂ IdDep StepR (λ f. TpPres f ➾ StepT)
+  = arr2allArrP2
+  t2r termTyped
+  (supplyPrem r2tP).
 \end{verbatim}
 
 \section{Related Work}
@@ -2353,13 +2392,9 @@ Besides refining the indices of existing datatypes, ornaments
 also allow data to be added to existing datatypes. For example, vectors can
 be index-refined lists, but lists can also be natural numbers with
 elements added. Our work only covers the index refinement aspect of
-ornaments. Finally, it would be interesting to explore adapting
-ornaments to our setting to allow indexed (or more indexed) datatype
-definitions to be derived from non-indexed (or less indexed) datatype
-definitions, such that zero-cost coercions could be derived from the
-ornamental structure. This would require restricting the
-addition-of-data aspect of ornaments to only allow \textit{erased}
-arguments to be added to constructors.
+ornaments. It would be interesting to explore adapting a
+restriction of ornaments, where only erased data can be added,
+to deriving zero-cost coercions.
 
 \subsection{Type Theory in Color}
 
