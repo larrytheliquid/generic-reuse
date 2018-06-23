@@ -2360,6 +2360,18 @@ constructors of related types to be the same untyped terms. However,
 for the price of a smaller class of reusable types, we gain the
 ability to perform conversions at zero-cost.
 
+Note that dependent interoperability and zero-cost conversions solve
+related, but different, problems. Consider the \verb;headV; function
+for vectors, \verb;headV ◂ ∀ A : ★. ∀ n : Nat. Vec A (suc n) ➔ A;.
+Dependent interoperability could use this to define a partial head
+function for lists, whereas we cannot perform forgetful function
+when the domain is partial. At best, it would be easy to define a
+forgetful function reuse combinator with a \textit{premise}, that would allow
+us to reuse \verb;headV; to define
+\verb;headL ◂ ∀ A : ★. ∀ n : Nat. Π xs : List A. NonEmpty xs ➾ A;
+(this example would also use our data reuse combinator with a premise,
+\verb;fix2ifixP;, from \refsec{rel:denr}).
+
 Finally, \citet{dagand:interop} automates the assembly of combinators
 to reuse programs by registering them as instances of Coq's type
 class mechanism. Cedille does not currently have type classes, but we could
