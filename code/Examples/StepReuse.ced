@@ -1,0 +1,47 @@
+import Id.
+import Ctx.
+import Tp.
+import Raw.
+import Term.
+import Aux.
+import FogFun.
+import EnrFun.
+module StepReuse
+  (Typed : CtxTp ➔ Raw ➔ ★)
+  (t2r : ∀ GA : CtxTp. Id · (Term GA) · Raw)
+  (termTyped : Π GA : CtxTp. Π t : Term GA. Typed GA (elimId · (Term GA) · Raw (t2r -GA) t))
+  (r2tP : ∀ GA : CtxTp. IdDep · Raw · (λ t : Raw. Typed GA t ➾ Term GA))
+.
+
+StepR ◂ ★ = Raw ➔ Raw.
+TpPres ◂ StepR ➔ ★ = λ stepR : StepR. Π t : Raw. Π GA : CtxTp. Typed GA t ➔ Typed GA (stepR t).
+StepT ◂ ★ = ∀ GA : CtxTp. Term GA ➔ Term GA.
+
+stepR2stepT ◂ IdDep · StepR · (λ f : StepR. TpPres f ➾ StepT)
+  = arr2allArrP2
+  · Raw · Raw · CtxTp
+  · Typed · Typed · Term · Term
+  t2r termTyped
+  r2tP.
+
+{-
+TpPres2 ◂ Raw ➔ CtxTp ➔ Raw ➔ ★ = λ t : Raw. λ GA : CtxTp. λ t' : Raw. Typed GA t ➔ Typed GA t'.
+TpPres1 ◂ Raw ➔ Raw ➔ ★ = λ t : Raw. λ t' : Raw. Π GA : CtxTp. TpPres2 t GA t'.
+TpPres ◂ StepR ➔ ★ = λ stepR : StepR. Π t : Raw. TpPres1 t (stepR t).
+
+stepR2stepT' ◂ IdDep · StepR · (λ f : StepR. TpPres f ➾ StepT)
+  = arr2allArrP'
+  · Raw · Raw · TpPres1
+  · CtxTp · Term · Term
+  t2r
+  (Λ GA. λ t.
+  applyDep
+  · Raw · (Term GA) · CtxTp · (TpPres2 (elimId · (Term GA) · Raw (t2r -GA) t))
+  -GA
+  (apply
+  · Raw · (Term GA) · (Typed GA (elimId · (Term GA) · Raw (t2r -GA) t))
+  · (Typed GA)
+  -(termTyped GA t)
+  (r2tP -GA)
+  )).
+-}
