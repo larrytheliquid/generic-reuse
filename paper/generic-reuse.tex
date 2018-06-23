@@ -1506,8 +1506,8 @@ least fixed point type for any \textit{functor}, composed of 4 pieces:
 \item An object mapping (\verb;F ◂ ★ ➔ ★;).
 \item An arrow mapping
   (\verb;fmap ◂ ∀ X,Y : ★. (X ➔ Y) ➔ F X ➔ F Y;).
-\item A proof of the identity law.
-\item A proof of the composition law.
+\item A proof of the identity law for \verb;fmap;.
+\item A proof of the composition law for \verb;fmap;.
 \end{enumerate}
 
 \citet{firsov18b} improved the solution by deriving a
@@ -1609,31 +1609,16 @@ arguments.
 Our later examples will refer to the scheme for lists (\verb;ListF;),
 and the scheme for vectors (\verb;VecF;), whose Church-encodings
 appear below:
-
 \begin{verbatim}
-ListF ◂ ★ ➔ ★ ➔ ★ = λ A,X. 
-  ∀ C : ★. C ➔ (A ➔ X ➔ C) ➔ C.
+ListF ◂ ★ ➔ ★ ➔ ★ = λ A,X. ∀ C : ★. C ➔ (A ➔ X ➔ C) ➔ C.
 
-VecF ◂ ★ ➔ (Nat ➔ ★) ➔ Nat ➔ ★ = λ A,X,n.
-  ∀ C : ★.
-  (n ≃ zero ➾ C) ➔
-  (∀ m : Nat. n ≃ suc m ➾ A ➔ X m ➔ C)
-  ➔ C.
+VecF ◂ ★ ➔ (Nat ➔ ★) ➔ Nat ➔ ★ = λ A,X,n. 
+  ∀ C : Nat ➔ ★. C zero ➔ (∀ n : Nat. A ➔ X n ➔ C (suc n)) ➔ C n.
 \end{verbatim}
-Importantly, the impredicatively quantified return type
-(\verb;∀ C : ★;) does not appear in the recursive
-tail position of the cons case of either scheme. Intead, the
-non-indexed \verb;X; appears there for \verb;ListF;, while the indexed
-\verb;X m; appears there for \verb;VecF;.
-
-Another important detail is that the natural number \verb;n; in
-\verb;VecF; is a parameter, rather than an index, because \verb;C; is
-merely a type (\verb;★;), rather than a family (\verb;Nat ➔ ★;).
-
-Finally, notice that the nil and cons cases of \verb;VecF; have
-additional \textit{implicit} index equality constraint
-arguments. Because both the natural number (in the cons case of
-\verb;VecF;) and the equality constraints are implicit arguments, the
+Like \verb;Vec; from \refsec{back:curry}
+(the only difference is that the inductive argument is the abstract \verb;X n; of
+the scheme, rather than an inductive \verb;C n;), the cons case of
+\verb;VecF; has the natural number as an implicit argument, so the
 constructors of \verb;ListF; and \verb;VecF; erase to the same
 underlying untyped terms. For reference, the type signatures for the
 \verb;ListF; and \verb;VecF; constructors and eliminators appear in
