@@ -2471,7 +2471,10 @@ to ordered vectors in the introduction. Our combinators
 straightforwardly generalize to 2 indexed types, \verb;X : I ➔ ★; and
 \verb;Y : J ➔ ★;, along with a function that translates
 the more refined index to the less refined index
-(of type \verb;I ➔ J;). 
+(of type \verb;I ➔ J;). Our work could then be used in the common
+scenario where data remains the same but only the index changes,
+e.g. zero-cost converting a list of elements less than $n$, to a list
+of elements less than $n + m$.
 
 %% TODO \subsection{Non-Indexed Premise Combinators}
 %% backreference alternative to interop partialiality monad
