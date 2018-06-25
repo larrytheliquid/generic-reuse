@@ -280,13 +280,13 @@ Our \textbf{primary contributions} are:
 
 Our work has 2 notable limitations:
 \begin{enumerate}
-\item We can only perform zero-cost coercions when indexed types
+\item We can only perform zero-cost conversions when indexed types
   store their index data as \textit{erased} arguments
   (or more accurately, when the erased and non-erased arguments of
   non-indexed and indexed types match). This may not
   always be desirable, and has consequences such as needing to
   recompute the length of a vector if it is needed dynamically.
-\item Forgetul program (or proof) reuse is not possible when the domain of the
+\item Forgetful program (or proof) reuse is not possible when the domain of the
   indexed function is constrained, such as the vector head function, by using
   our \verb;allArr2arr; combinator. We discuss this further in
   \refsec{others:interop}, including how a small extension of our work
@@ -468,7 +468,7 @@ underlying untyped term can be typed multiple different
 ways. Therefore, if it is possible to type a term as both a list and a
 vector, then there is actually no need to do any conversion at all
 because the same term can inhabit both types! In a type-annotated
-(rather than type-assignement) setting, this translates to having 2
+(rather than type-assignment) setting, this translates to having 2
 distinct terms at two distinct types, whose \textit{erasures} are equal.
 
 \paragraph{Curry-Style Data}
@@ -1999,7 +1999,7 @@ identity algebra \verb;c; generalizes to enrich the non-indexed
 subtype scheme (\verb;ys : G Y;) to the indexed supertype scheme
 (\verb;F X i;), once provided the index (\verb;i : I;) and the premise
 (of type \verb;P i ys;) as erased arguments. These arguments must be
-erased for the zero-cost coercion to indeed be an indentity function
+erased for the zero-cost conversion to indeed be an identity function
 from non-indexed to indexed data. As expected in \verb;c;,
 \verb;c2; is used to convert a non-indexed inductive occurrence
 (\verb;Y;) to an indexed version (\verb;X i;), under an erased premise
@@ -2063,7 +2063,7 @@ to their typed \verb;Term; equivalents
 
 For the lambda (\verb;ilamF;) and application (\verb;iappF;) cases,
 the index (\verb;GA : CtxTp;) and \verb;Typing; premise are additional
-arguments we must supply to get an identity coercion back from
+arguments we must supply to get an identity conversion back from
 \verb;c2;, which functions as an inductive hypothesis would for the
 purposes of this combinator. We explicitly supply both of these
 implicit arguments by appealing to inversion lemmas from our
