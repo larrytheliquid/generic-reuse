@@ -278,7 +278,7 @@ Our \textbf{primary contributions} are:
   generically encoded datatypes).
 \end{enumerate}
 
-Our work has 2 notable limitations:
+Our work has two notable limitations:
 \begin{enumerate}
 \item We can only perform zero-cost conversions when indexed types
   store their index data as \textit{erased} arguments
@@ -326,7 +326,7 @@ The remainder of our paper proceeds as follows:
   to our work, not covered herein, as well as planned future work.}
 \end{itemize}
 All of our results have been formalized in
-Cedille~\cite{stump17a,stump18}, a dependently typed language
+Cedille~\cite{stump17a,stump18,lang:cedille}, a dependently typed language
 implementing the theory we work in
 (covered in \refsec{back:cdle}).\footnote{
   \raggedright{The Cedille formalization accompanying this paper is available at:\\
@@ -342,7 +342,7 @@ implementing the theory we work in
 We briefly summarize the type theory, the Calculus of Lambda
 Eliminations (CDLE), that the results of this paper depend on.  For
 full details on CDLE, including semantics and soundness results,
-please see the previous papers~\cite{stump17a,stump18}.  The main
+please see the previous papers~\cite{stump17a,stump18,lang:cedille}.  The main
 metatheoretic property proved in the previous work is logical
 consistency: there are types which are not inhabited.  Cedille is an
 implementation of CDLE, and all the code appearing in this paper is
@@ -364,7 +364,7 @@ particular by definitional equality (see \reffig{cdle}).
 
 \begin{figure}
 \centering
-\minipage[b]{0.75\textwidth}  
+\minipage[b]{0.72\textwidth}  
   \[
   \begin{array}{cc}
     \infer{\Gamma\vdash \abs{\Lambda}{x}{T'}{t} : \abs{\forall}{x}{T'}{T}}{\Gamma,x:T'\vdash t : T & \!\!x\not\in\textit{FV}(|t|)} & 
@@ -382,7 +382,7 @@ particular by definitional equality (see \reffig{cdle}).
   \end{array}
   \]
 \endminipage\hfill 
-\minipage[b]{0.25\textwidth}
+\minipage[b]{0.28\textwidth}
 \[
   \begin{array}{lll}
     |\abs{\Lambda}{x}{T}{t}| & = & |t| \\
@@ -626,7 +626,7 @@ l2v ◂ ∀ A : ★. Π xs : List A. Vec A (len xs)
   = elimList nilV (λ x,ih. consV x ih).
 \end{verbatim}
 The conversion above requires induction, rather than iteration,
-because the codomain \verb;Vec A (len xs); depends on the domain
+because the codomain \texttt{Vec A (len xs)} depends on the domain
 \verb;List A;. If we explicitly supplied the motive \verb;P; to
 \verb;elimList;, it would depend on its argument
 (i.e. \verb;P = λ xs. Vec A (len xs);).
@@ -646,7 +646,7 @@ appV2appL ◂ AppV ➔ AppL
 The function \verb;appV2appL; first reuses vector append
 (\verb;appV;) by applying \verb;appV; to the result of
 translating both list arguments (\verb;xs; and \verb;ys;) to
-vectors (via \verb;v2l;). Then, it translates the result of
+vectors (via \verb;l2v;). Then, it translates the result of
 \verb;appV; from a vector to a list (via \verb;v2l;).
 
 \paragraph{Linear Time Enriching Program Reuse}
@@ -1007,7 +1007,7 @@ inference rules (we discuss the relationship with subtyping further in
 our related work, \refsec{others:judg}).
 When there is an identity function
 from \verb;A; to \verb;B; (i.e. \verb;Id A B;), and both
-\verb;A; and \verb;B; be are functions, it becomes confusing to talk
+\verb;A; and \verb;B; are functions, it becomes confusing to talk
 about domains and codomains (e.g. ``domain'' could refer to the
 identity function domain \verb;A;, or the
 domain of the non-identity function \verb;A;,
@@ -1043,7 +1043,7 @@ of using our generic data reuse combinators.
 
 All the names of our combinators are short descriptions of their
 return types. For example, below, \verb;allArr2arr; has return type
-\verb;Id (∀ i : I. X i ➔ X' i) (Y ➔ Y');. Mnemonically,
+\texttt{Id (∀ i : I. X i ➔ X' i) (Y ➔ Y')}. Mnemonically,
 \verb;allArr2arr; returns an identity function from \verb;allArr;
 ($\forall\rightarrow$) to (\verb;2;) \verb;arr; ($\rightarrow$).
 We define \verb;allArr2arr; as:
@@ -1375,10 +1375,10 @@ appL2appV ◂ IdDep AppL (λ appL. LenDistAppL appL ➾ AppV)
   //                       ➾ Vec A (add (len xs) (len ys)))
   subst l2v))).
 \end{verbatim}
-We begin with the auxiliary \verb;copyTypeP; combinator (from
-\reffig{aux}), which is a version of \verb;copyTypeP; that also
+We begin with the auxiliary \texttt{copyTypeP} combinator (from
+\reffig{aux}), which is a version of \texttt{copyTypeP} that also
 handles the premise (i.e. the 3rd piece). Next, we use our enriching
-combinator \verb;arr2allArrP; to handle both inductive arguments of
+combinator \texttt{arr2allArrP} to handle both inductive arguments of
 append, to which we supply a proof of length preservation
 (\verb;v2lPresLen; from \refsec{prob:linear}) as an additional
 argument. This leaves us with the goal type (after erasure) in the
@@ -2313,9 +2313,10 @@ constructors of related types to be the same untyped terms. However,
 for the price of a smaller class of reusable types, we gain the
 ability to perform conversions at zero-cost.
 
-Note that dependent interoperability and zero-cost conversions solve
+Note that dependent interoperability~\cite{dagand:interopfoundations}
+and zero-cost conversions solve
 related, but different, problems. Consider the \verb;headV; function
-for vectors, \verb;headV ◂ ∀ A : ★. ∀ n : Nat. Vec A (suc n) ➔ A;.
+for vectors, \texttt{headV ◂ ∀ A : ★. ∀ n : Nat. Vec A (suc n) ➔ A}.
 Dependent interoperability could use this to define a partial head
 function for lists, whereas we cannot perform forgetful function
 when the domain is partial. At best, it would be easy to define a
