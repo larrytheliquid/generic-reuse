@@ -7,25 +7,29 @@
 %% For single-blind review submission, w/ CCS and ACM Reference
 %\documentclass[acmsmall,review]{acmart}\settopmatter{printfolios=true}
 %% For final camera-ready submission, w/ required CCS and ACM Reference
-\documentclass[acmsmall]{acmart}\settopmatter{}
+%% \documentclass[acmsmall]{acmart}\settopmatter{}
+\documentclass[acmsmall,screen]{acmart}
 
 %% Journal information
 %% Supplied to authors by publisher for camera-ready submission;
 %% use defaults for review submission.
-\acmJournal{PACMPL}
-\acmVolume{1}
-\acmNumber{CONF} % CONF = POPL or ICFP or OOPSLA
-\acmArticle{1}
+\setcopyright{rightsretained}
+\acmPrice{}
+\acmDOI{10.1145/3236799}
 \acmYear{2018}
-\acmMonth{3}
-\acmDOI{} % \acmDOI{10.1145/nnnnnnn.nnnnnnn}
-\startPage{1}
+\copyrightyear{2018}
+\acmJournal{PACMPL}
+\acmVolume{2}
+\acmNumber{ICFP}
+\acmArticle{104}
+\acmMonth{9}
+%% \startPage{1}
 
 %% Copyright information
 %% Supplied to authors (based on authors' rights management selection;
 %% see authors.acm.org) by publisher for camera-ready submission;
 %% use 'none' for review submission.
-\setcopyright{none}
+%% \setcopyright{none}
 %\setcopyright{acmcopyright}
 %\setcopyright{acmlicensed}
 %\setcopyright{rightsretained}
@@ -136,7 +140,15 @@
 
 %% Author with single affiliation.
 \author{Larry Diehl}
+\affiliation{
+  \institution{University of Iowa}            %% \institution is required
+  \country{USA}                    %% \country is recommended
+}
 \author{Denis Firsov}
+\affiliation{
+  \institution{University of Iowa}            %% \institution is required
+  \country{USA}                    %% \country is recommended
+}
 \author{Aaron Stump}
 \affiliation{
   \institution{University of Iowa}            %% \institution is required
@@ -170,20 +182,20 @@ Curry-style theory.
 \begin{CCSXML}
 <ccs2012>
 <concept>
-<concept_id>10011007.10011006.10011008</concept_id>
-<concept_desc>Software and its engineering~General programming languages</concept_desc>
+<concept_id>10011007.10011006.10011008.10011009.10011012</concept_id>
+<concept_desc>Software and its engineering~Functional languages</concept_desc>
 <concept_significance>500</concept_significance>
 </concept>
 <concept>
-<concept_id>10003456.10003457.10003521.10003525</concept_id>
-<concept_desc>Social and professional topics~History of programming languages</concept_desc>
-<concept_significance>300</concept_significance>
+<concept_id>10011007.10011006.10011039</concept_id>
+<concept_desc>Software and its engineering~Formal language definitions</concept_desc>
+<concept_significance>100</concept_significance>
 </concept>
 </ccs2012>
 \end{CCSXML}
 
-\ccsdesc[500]{Software and its engineering~General programming languages}
-\ccsdesc[300]{Social and professional topics~History of programming languages}
+\ccsdesc[500]{Software and its engineering~Functional languages}
+\ccsdesc[100]{Software and its engineering~Formal language definitions}
 %% End of generated code
 
 
@@ -515,7 +527,6 @@ appL ◂ ∀ A : ★. List A ➔ List A ➔ List A
   = Λ A. λ xs. xs -(List A ➔ List A)
   (λ ys. ys)
   (Λ xs. λ x,ih,ys. consL -A x (ih ys)).
-
 appV ◂ ∀ A : ★. ∀ n : Nat. Vec A n ➔ 
   ∀ m : Nat. Vec A m ➔ Vec A (add n m)
   = Λ A. λ xs. xs -(λ n. ∀ m : Nat. Vec A m ➔ Vec A (add n m))
@@ -770,8 +781,8 @@ pattern as the forgetful direction, by first proving an extensional identity
 (\verb;l2vId;), and then using it to define a zero-cost version
 (\verb;l2v!;) via \verb;φ;:
 \begin{verbatim}
-l2vId ◂ ∀ A : ★. Π xs : List A. l2v xs ≃ xs
-   = elimVec β (λ x,ih. ρ ih - β).
+l2vId ◂ ∀ A : ★. Π xs : List A. l2v xs ≃ xs 
+  = elimVec β (λ x,ih. ρ ih - β).
 l2v! ◂ ∀ A : ★. Π xs : List A. Vec A (len xs)
   = λ xs. φ (l2vId xs) - (l2v xs) {xs}.
 \end{verbatim}
@@ -1366,11 +1377,9 @@ being the premise, whose type is duplicated from the subtype domain).
 \begin{verbatim}
 appL2appV ◂ IdDep AppL (λ appL. LenDistAppL appL ➾ AppV)
   // IdDep (∀ A : ★. ●) (λ x. (∀ A : ★. ●) ➾ ∀ A : ★. ●)
-  = copyTypeP (Λ A. 
-  // IdDep (List A ➔ ●) 
+  = copyTypeP (Λ A.                          // IdDep (List A ➔ ●) 
   //   (λ f. (Π xs : List A. ●) ➾ ∀ n : Nat. Vec A n ➔ ●)
-  arr2allArrP len v2l v2lPresLen (Λ n. λ xs. 
-  // IdDep (List A ➔ ●) 
+  arr2allArrP len v2l v2lPresLen (Λ n. λ xs. // IdDep (List A ➔ ●) 
   //   (λ g. (Π ys : List A. ●) ➾ ∀ m : Nat. Vec A m ➔ ●)
   arr2allArrP len v2l v2lPresLen (Λ m. λ ys.
   // IdDep (List A) (λ zs. len zs ≃ add (len xs) (len ys)
@@ -1564,7 +1573,7 @@ nilVF ◂ ∀ A : ★. ∀ X : Nat ➔ ★. VecF A X zero
 consVF ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ n : Nat. A ➔ X n ➔ VecF A X (suc n)
 elimVecF ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ P : Π n : Nat. VecF A X n ➔ ★.
   P zero nilVF ➔
-  (∀ n : Nat. Π a : A. Π x : X n. P (suc n) (consVF x xs)) ➔ 
+  (∀ n : Nat. Π x : A. Π xs : X n. P (suc n) (consVF x xs)) ➔ 
   ∀ n : Nat. Π xs : VecF A X n. P n xs
 \end{verbatim}
 
@@ -1715,7 +1724,6 @@ vf2lf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ Y :  ★.
   ∀ n : Nat. Id (VecF A X n) (ListF A Y)
   = λ c. elimVecF (pair nilLF β)
   (λ x,xs. pair (consLF x (elimId c xs) β)).
-
 v2l ◂ ∀ A : ★. ∀ n : Nat. Id (Vec A n) (List A) =
   ifix2fix imapV imapL vf2lf. 
 \end{verbatim}
@@ -1876,7 +1884,6 @@ lf2vf ◂ ∀ A : ★. ∀ Y : ★. ∀ X : Nat ➔ ★.
  IdDep (ListF A Y ) (λ xs. VecF A X (lenAlgM r xs))
   = λ c. elimListF (pair nilVF β)
   (λ x,xs. pair (consVF x (elimIdDep c xs) β)).
- 
 l2v ◂ ∀ A : ★. IdDep (List A) (λ xs. Vec A (len xs))
   = fix2ifix imapL imapV lenAlgM lf2vf.
 \end{verbatim}
@@ -1954,7 +1961,6 @@ tf2rf ◂ ∀ X : CtxTp ➔ ★. ∀ Y : ★.
   (λ i. pair (varF (elimId i2n i)) β)
   (λ b. pair (lamF A (elimId c b)) β)
   (λ f,a. pair (appF (elimId c f) (elimId c a)) β).
-
 t2r ◂ ∀ GA : CtxTp. Id (Term GA) Raw
   = ifix2fix imapT imapR tf2rf.
 \end{verbatim}
@@ -2053,7 +2059,6 @@ rf2tfP ◂ ∀ Y : ★. ∀ X : CtxTp ➔ ★.
     (elimIdDep c2 y2 -(GA = pair (proj1 GB)
         (invAppDom GB (elimId c1 y1) (elimId c1 y2) p))
       -(e = invAppArg GB (elimId c1 y1) (elimId c1 y2) p))) β).
-
 r2tP ◂ IdDep Raw (λ t. ∀ GA : CtxTp. Typed GA t ➾ Term GA)
   = fix2ifixP TermF imapR imapT rf2tfP.
 \end{verbatim}
@@ -2437,6 +2442,7 @@ e.g. zero-cost converting a list of elements less than $n$, to a list
 of elements less than $n + m$.
 
 \section{Conclusion}
+\labsec{conc}
 
 We have demonstrated how to reuse programs, proofs, and types at
 zero-cost, in both the forgetful and enriching directions. We achieve
@@ -2446,13 +2452,10 @@ rule of \verb;IdDep; results in the term erasing to an identity
 function, any conversion making use of the result of \verb;elimIdDep;
 has no runtime overhead.
 
-\labsec{conc}
-
 \begin{acks}
-  We would like to thank the anonymous reviewers of this paper for
-  their insightful feedback.  We gratefully acknowledge NSF support
-  under award 1524519, and DoD support under award FA9550-16-1-0082
-  (MURI program).
+  We gratefully acknowledge feedback from anonymous reviewers, NSF
+  support under award 1524519, and DoD support under award
+  FA9550-16-1-0082 (MURI program).
 \end{acks}
 
 %% Bibliography
