@@ -21,3 +21,4 @@ _TZ_*
 *.out
 html
 .cedille
+*.cut
