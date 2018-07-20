@@ -34,8 +34,14 @@ This directory includes reuse examples via our combinators:
 * [Program Reuse of append and Proof Reuse of associativity](code/Examples/AppendReuse.ced)
   * forgetful `appV2appL` & enriching `appL2appV`
   * forgetful `assocV2assocL` & enriching `assocL2assocV`
-* [Data Reuse of vectors (forgetful `v2l`) and lists (enriching `l2v`)](code/Examples/ListVecReuse.ced)
-* [Data Reuse of typed terms (forgetful `t2r`) and raw terms (enriching `r2tP`)](code/Examples/RawTermReuse.ced)
+* Data Reuse of vectors and lists
+  * [Forgetful `v2l`](code/Examples/VecListReuse.ced)
+  * [Enriching `l2v`](code/Examples/ListVecReuse.ced)
+* Data Reuse of unchecked/raw and checked/typed STLC terms
+  * [Forgetful `t2r`](code/Examples/TermRawReuse.ced)
+  * [Enriching `r2tP`](code/Examples/RawTermReuse.ced)
+* [Program Reuse of STLC step function (enriching `stepR2stepT`)](code/Examples/StepReuse.ced)
+* [Program Reuse of STLC substitution function (enriching `subR2subT`)](code/Examples/SubReuse.ced)
 
 [Datatypes](code/Datatypes)
 ---------------------------
