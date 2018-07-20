@@ -14,14 +14,22 @@ module StepReuse
 .
 
 StepR ◂ ★ = Raw ➔ Raw.
+TpPres ◂ StepR ➔ ★ = λ stepR : StepR. Π t : Raw. Π GA : CtxTp. Typed GA t ➔ Typed GA (stepR t).
+StepT ◂ ★ = ∀ GA : CtxTp. Term GA ➔ Term GA.
 
+stepR2stepT ◂ IdDep · StepR · (λ f : StepR. TpPres f ➾ StepT)
+  = arr2allArrP2
+  · Raw · Raw · CtxTp
+  · Typed · Typed · Term · Term
+  t2r termTyped
+  r2tP.
+
+{-
 TpPres2 ◂ Raw ➔ CtxTp ➔ Raw ➔ ★ = λ t : Raw. λ GA : CtxTp. λ t' : Raw. Typed GA t ➔ Typed GA t'.
 TpPres1 ◂ Raw ➔ Raw ➔ ★ = λ t : Raw. λ t' : Raw. Π GA : CtxTp. TpPres2 t GA t'.
 TpPres ◂ StepR ➔ ★ = λ stepR : StepR. Π t : Raw. TpPres1 t (stepR t).
 
-StepT ◂ ★ = ∀ GA : CtxTp. Term GA ➔ Term GA.
-
-stepR2stepT ◂ IdDep · StepR · (λ f : StepR. TpPres f ➾ StepT)
+stepR2stepT' ◂ IdDep · StepR · (λ f : StepR. TpPres f ➾ StepT)
   = arr2allArrP'
   · Raw · Raw · TpPres1
   · CtxTp · Term · Term
@@ -36,3 +44,4 @@ stepR2stepT ◂ IdDep · StepR · (λ f : StepR. TpPres f ➾ StepT)
   -(termTyped GA t)
   (r2tP -GA)
   )).
+-}

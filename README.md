@@ -36,7 +36,6 @@ This directory includes reuse examples via our combinators:
   * forgetful `assocV2assocL` & enriching `assocL2assocV`
 * [Data Reuse of vectors (forgetful `v2l`) and lists (enriching `l2v`)](code/Examples/ListVecReuse.ced)
 * [Data Reuse of typed terms (forgetful `t2r`) and raw terms (enriching `r2tP`)](code/Examples/RawTermReuse.ced)
-* [Enriching Program Reuse of a type-preserving semantic step function (`stepR2stepT`)](code/Examples/StepReuse.ced)
 
 [Datatypes](code/Datatypes)
 ---------------------------

@@ -8,6 +8,7 @@ import Nat.
 import IFixM.
 import Sigma.
 import Eq.
+import Bool.
 
 List ◂ ★ ➔ ★ = λ A : ★. FixIndM · (ListF · A) (imapL · A).
 inL ◂ ∀ A : ★. ListF · A · (List · A)  ➔ List · A
@@ -45,4 +46,19 @@ NonEmpty ◂ Π A : ★. List · A ➔ ★ = λ A : ★. λ xs : List · A.
 
 lenPred ◂ ∀ A : ★. Π xs : List · A. NonEmpty · A xs ➔ Nat
   = Λ A. λ xs. proj1 · Nat · (λ n : Nat. Eq · Nat (suc n) (len · A xs)).
+
+isNilL ◂ ∀ A : ★. List · A ➔ Bool
+  = Λ A. foldList · A · Bool true (λ x. λ xs. λ ih. false).
+
+headL ◂ ∀ A : ★. ∀ y : A. ∀ ys : List · A. Π xs : List · A. {xs ≃ consL y ys} ➔ A
+  = Λ A. Λ y. Λ ys. elimList · A · (λ xs : List · A. {xs ≃ consL y ys} ➔ A)
+  (λ q. δ - χ {isNilL nilL ≃ isNilL (consL y ys)} - ρ q - β)
+  (λ x'. λ xs'. λ ih. λ q. x')
+.
+
+tailL ◂ ∀ A : ★. ∀ y : A. ∀ ys : List · A. Π xs : List · A. {xs ≃ consL y ys} ➔ List · A
+  = Λ A. Λ y. Λ ys. elimList · A · (λ xs : List · A. {xs ≃ consL y ys} ➔ List · A)
+  (λ q. δ - χ {isNilL nilL ≃ isNilL (consL y ys)} - ρ q - β)
+  (λ x'. λ xs'. λ ih. λ q. xs')
+.
 
