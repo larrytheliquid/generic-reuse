@@ -35,8 +35,9 @@ file, (for example, to manually insert a syntax or type error), press
 `q` to quit navi mode. After editing, press `M-s` to re-check the
 file, and then `r` to ensure there are no errors, or to jump to the
 first error location if there is one.  For example, you can try
-checking the file `code/Everything.ced`, which imports all parts of
-our development.
+checking the files `code/EverythingList.ced` and
+`code/EverythingTerm.ced` , which import all parts of our
+development.
 
 This is all that is required to have Cedille type check files
 contained in our artifact.  If you feel more adventurous, feel free to
@@ -62,7 +63,7 @@ terms inferrable by a sufficiently advanced unification algorithm,
 which is not currently implemented by Cedille. Hence, the Cedille code
 is more verbose, but we did our best to use type synonyms where
 possible to maintain the readability of our code. Futher details about
-Cedille syntax can be found in Section 2.1 and Figure 2 of the paper.
+Cedille syntax can be found in Section 2.1 and Figure 1 of the paper.
 
 Cedille's syntax distinguishes type application from
 term application, where type application uses a center dot. For
@@ -93,9 +94,9 @@ sufficient.
 Everything
 ----------
 
-As a sanity check, `code/Everything.ced` imports all of the files
-mentioned below, so if it passes type checking then everything type
-checks.
+As a sanity check, `code/EverythingList.ced` and
+`code/EverythingTerm.ced` import all of the files mentioned below, so
+if they pass type checking then everything type checks.
 
 Type of Dependent Identity Functions
 ------------------------------------
@@ -117,8 +118,11 @@ non-indexed and indexed types of identity mappings (Section 5.1),
 `IdMapping` and `IIdMapping`, respectively.
 
 Files `code/Datatypes/ListF.ced` and `code/Datatypes/VecF.ced` contain
-the list and vector schemes (Figure 3) and identity mappings (Section 5.2),
-`ListF` & `imapL` and `VecF` & `imapV`, respectively.
+the list and vector schemes (Figure 3) and identity mappings (Section
+5.2), `ListF` & `imapL` and `VecF` & `imapV`, respectively.
+Similarly, files `code/Datatypes/RawF.ced` and
+`code/Datatypes/TermF.ced` contain the schemes and identity mappings
+for raw and typed terms (alluded to in Section 6).
 
 Forgetful Program & Proof Reuse Combinators
 -------------------------------------------
@@ -126,18 +130,19 @@ Forgetful Program & Proof Reuse Combinators
 File `code/GenericReuse/FogFun.ced` contains the forgetful program
 (non-dependent function) reuse combinator `allArr2arr` (Section 4.2.1)
 and the forgetful proof (dependent function) reuse combinator
-`allPi2pi` (Section 4.2.3). Note that these are defined in terms of
-more general versions of the combinators, whose names are suffixed by
-the prime symbol: `allArr2arr'` and `allPi2pi'`. However, inlining the
-prime definitions results in the definitions of the paper.
+`allPi2pi` (Section 4.2.3).
 
 Enriching Program & Proof Reuse Combinators
 -------------------------------------------
 
-File `code/GenericReuse/EnrFun.ced` contains the
-enriching program (non-dependent function) reuse combinator
-`arr2allArrP` (Section 4.3.1) and the enriching proof (dependent
-function) reuse combinator `pi2allPiP` (Section 4.3.3).
+File `code/GenericReuse/EnrFun.ced` contains the enriching program
+(non-dependent function) reuse combinators `arr2allArrP` (Section
+4.3.1) and `arr2allArrP2` (Section 6.3.1), and the enriching proof
+(dependent function) reuse combinator `pi2allPiP` (Section 4.3.3).
+Note that these are defined in terms of more general versions of the
+combinators, whose names are suffixed by the prime symbol:
+`arr2allArrP'` and `pi2allPiP'`. However, inlining the prime
+definitions results in the definitions of the paper.
 
 Forgetful Data Reuse Combinator
 -------------------------------
@@ -149,7 +154,8 @@ Enriching Data Reuse Combinator
 -------------------------------
 
 File `code/GenericReuse/EnrFix.ced` contains the enriching data
-(fixpoint) reuse combinator `fix2ifix` (Section 5.5.1).
+(fixpoint) reuse combinators `fix2ifix` (Section 5.5.1) and
+`fix2ifixP` (Section 6.2.1).
 
 Program Reuse Examples
 ----------------------
@@ -176,55 +182,28 @@ produced.
 Data Reuse Examples
 -------------------
 
-File `code/Examples/ListVecReuse.ced` contains examples of reusing
-lists and vectors:
+File `code/Examples/VecListReuse.ced` contains an example of reusing
+vectors as lists, and file `code/Examples/ListVecReuse.ced` contains
+an example of reusing lists as vectors:
 1. Forgetful reuse of vectors as lists `v2l` & `vf2lf` (Section 5.3.2)
 2. Enriching reuse of lists as vectors `l2v` & `lf2vf` (Section 5.5.2)
 
 Again, you can verify that bang versions of these definitions, like
 `v2l!`, erase to the identity function.
 
-Auxiliary Combinators
----------------------
-
-File `code/GenericReuse/Aux.ced` contains the auxiliary combinators
-from Figure 2 in the paper: `id`, `copyType`, `copyTypeP`, and `subst`
-(as well as others not in the paper).
-
-
-Part 3: Mandatory Revisions
-===========================
-
-For completeness, we have also included code addressing the mandatory
-revisions of our paper. Because the text describing the revisions has
-not yet been written, we do not expect you to verify this part, but we
-include it below in case you are interested.
-
-Enriching Data Reuse Combinator with a Premise
-----------------------------------------------
-
-As mentioned in Part 2, file `code/GenericReuse/EnrFix.ced` contains
-`fix2ifix`, which enriches data by providing an algebra (representing
-a total function). Thus, lists can be enriched to vectors by
-calculating the index via the length algebra. Some indexed types
-(e.g. typed STLC terms) cannot have their indices be computed by a
-total function from their untyped counterparts. Hence, the file also
-contains the combinator `fix2ifixP`, which allows data to be enriched
-if it satisfies a premise (e.g. the typing relation of an untyped STLC
-term).
-
-Data Reuse Examples
--------------------
+Relational Data Reuse Examples
+------------------------------
 
 Data reuse is between typed (the positive result of type checking)
 STLC `Term`s (code/Datatypes/Term.ced) and untyped (prior to type
 checking) `Raw` terms (code/Datatypes/Raw.ced).
 
-File `code/Examples/RawTermReuse.ced` contains examples of reusing
-raw and typed terms:
-1. Forgetful reuse of typed terms as raw terms `t2r` & `tf2rf`
+File `code/Examples/TermRawReuse.ced` contains an example of reusing
+typed terms as raw terms, and file `code/Examples/RawTermReuse.ced`
+contains an example of reusing raw terms as typed terms:
+1. Forgetful reuse of typed terms as raw terms `t2r` & `tf2rf` (Section 6.1)
 2. Forgetful reuse of list membership proofs as natural numbers `i2n` & `if2nf`
-3. Enriching reuse of raw terms as typed terms `r2tP` & `rf2tfP`
+3. Enriching reuse of raw terms as typed terms `r2tP` & `rf2tfP` (Section 6.2.2)
 4. Enriching reuse of natural numbers as list membership proofs `n2iP` & `nf2ifP`
 
 The list membership proofs are used to ensure that a type appears in
@@ -233,27 +212,43 @@ the context, as an argument to the well-typed variable constructor of
 number as its argument, representing the de Bruijn index.
 
 Raw terms are enrichable if they satisfy a typing relation (`Typed`),
-given abstractly as a module parameter. Any implementation of `Typed`
-works, as long as it is possible to satisfy the required inversion
-lemmas (e.g. `invLamEq`), which also appear as module parameters.
+given abstractly as a module parameter (Figure 4). Any implementation
+of `Typed` works, as long as it is possible to satisfy the required
+inversion lemmas (e.g. `invLamEq`), which also appear as module
+parameters.  An example instantiation of these module parameters
+appears in `code/EverythingTerm.ced`, which uses
+`code/Datatypes/Typed.ced` as a possible implementation of
+a typing relation (`Typed`).
 
 Similarly, a natural number is enrichable to a membership proof if it
 satisfies an abstract `Lookup` relation saying that an element appears
 in the list at a particular natural number position. `Lookup` can also
-be implemented many different ways, and is specified by its required
-inversion lemmas.
+be implemented many different ways (e.g. `code/Datatypes/Lookup.ced`),
+and is specified by its required inversion lemmas.
 
-Program Reuse Examples
-----------------------
+Relational Program Reuse Examples
+---------------------------------
 
 For program reuse, we show how to enrich a one-step
 (beta) reduction function on raw terms to a
 type-preserving version on typed terms.
 
 File `code/Examples/StepReuse.ced` contains an example of enriching
-program reuse of a step function as the term `stepR2stepT`.  The
-premise to `stepR2stepT` is that the step function for raw terms must
-preserve types, as specified by `TpPres`.
+program reuse of a step function as the term `stepR2stepT` (Section
+6.3.2).  The premise to `stepR2stepT` is that the step function for
+raw terms must preserve types, as specified by `TpPres`.
+
+File `code/Examples/StepReuse.ced` contains an additional example (not
+in the paper) of enriching program reuse of a substitution function as the
+term `subR2subT`. The premise to `subR2subT` is also that the substitution
+function for raw terms must preserve types, as specified by `TpPres`.
+
+Auxiliary Combinators
+---------------------
+
+File `code/GenericReuse/Aux.ced` contains the auxiliary combinators
+from Figure 2 in the paper: `id`, `copyType`, `copyTypeP`, and `subst`
+(as well as others not in the paper).
 
 
 
