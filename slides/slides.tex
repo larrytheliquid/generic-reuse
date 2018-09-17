@@ -386,4 +386,129 @@ between two types when solving a problem with combinators.
 
 \end{frame}
 
+\begin{frame}
+\frametitle{CDLE (Cedille)}
+\framesubtitle{Typing Rules}
+
+\begin{figure}
+\centering
+\[
+\begin{array}{cc}
+  \infer{\Gamma\vdash \abs{\Lambda}{x}{T'}{t} : \abs{\forall}{x}{T'}{T}}{\Gamma,x:T'\vdash t : T & \!\!x\not\in\textit{FV}(|t|)} & 
+  \infer{\Gamma\vdash t\ -t' : [t'/x]T}{\Gamma\vdash t : \abs{\forall}{x}{T'}{T} & \Gamma\vdash t':T'} \\ \\
+
+  \look{\infer{\Gamma\vdash \beta : t \simeq t}{\Gamma\vdash t : T}} &
+  \look{\infer{\Gamma\vdash \rho\ q\ -\ t : [t_2/x]T}{\Gamma\vdash q : t_1 \simeq t_2 & \Gamma \vdash t : [t_1/x]T}} \\ \\
+
+  \look{\infer{\Gamma\vdash \phi\ q\ -\ t_1 \{t_2\} : T}{\Gamma\vdash q : t_1 \simeq t_2 & \Gamma \vdash t_1 : T}} &
+  \infer{\Gamma\vdash [t_1,t_2] : \abs{\iota}{x}{T}{T'}}{\Gamma\vdash t_1 : T & \Gamma\vdash t_2 : [t_1/x]T' & |t_1| = |t_2|} \\ \\
+
+  \infer{\Gamma\vdash t.1 : T}{\Gamma\vdash t : \abs{\iota}{x}{T}{T'}} &
+  \infer{\Gamma\vdash t.2 : [t.1/x]T'}{\Gamma\vdash t : \abs{\iota}{x}{T}{T'}} \\ \\
+
+\end{array}
+\]
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{CDLE (Cedille)}
+\framesubtitle{Erasure Rules}
+
+\begin{figure}
+\centering
+\[
+  \begin{array}{lll}
+    |\abs{\Lambda}{x}{T}{t}| & = & |t| \\
+    |t\ -t'| & = & |t| \\
+    \look{|\beta|} & \look{=} & \look{\lam{x}{x}} \\
+    \look{|\rho\ q\ - \ t|} & \look{=} & \look{|t|} \\
+    \look{|\phi\ q\ - \ t_1 \{t_2\}|} & \look{=} & \look{|t_2|} \\
+    |[t_1,t_2]| & = & |t_1| \\
+    |t.1| & = & |t| \\
+    |t.2| & = & |t| 
+  \end{array}
+  \]
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Zero-Cost Forgetful Data Reuse}
+
+\begin{verbatim}
+v2lId ◂ ∀ A : ★. ∀ n : Nat. Π xs : Vec A n. v2l xs ≃ xs 
+  = elimVec β (λ x,ih. ρ ih - β).
+
+v2l! ◂ ∀ A : ★. ∀ n : Nat. Vec A n ➔ List A
+  = λ xs. φ (v2lId xs) - (v2l xs) {xs}.
+\end{verbatim}
+
+\noindent\rule{\textwidth}{1pt}
+
+\begin{verbatim}
+|v2l!| = λ xs. xs
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Zero-Cost Enriching Data Reuse}
+
+\begin{verbatim}
+l2vId ◂ ∀ A : ★. Π xs : List A. l2v xs ≃ xs 
+  = elimVec β (λ x,ih. ρ ih - β).
+
+l2v! ◂ ∀ A : ★. Π xs : List A. Vec A (len xs)
+  = λ xs. φ (l2vId xs) - (l2v xs) {xs}.
+\end{verbatim}
+
+\noindent\rule{\textwidth}{1pt}
+
+\begin{verbatim}
+|l2v!| = λ xs. xs
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Zero-Cost Forgetful Program Reuse}
+
+\begin{verbatim}
+appV2appLId ◂ Π f : AppV. ∀ A : ★. Π xs,ys : List A. 
+  appV2appL f xs ys ≃ f (l2v! xs) (l2v! ys)
+  = λ f,xs,ys.        // v2l (f (l2v xs) (l2v ys)) ≃ f xs ys
+  ρ (l2vId xs) -      // v2l (f xs (l2v ys))
+  ρ (l2vId ys) -      // v2l (f xs ys)
+  ρ (v2lId (f xs ys)) - // f xs ys ≃ f xs ys
+  β
+
+appV2appL! ◂ AppV ➔ AppL
+  = λ f,xs,ys. φ (appV2appLId f xs ys) - 
+  (appV2appL f xs ys) {f (l2v! xs) (l2v! ys)}.
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Zero-Cost Enriching Program Reuse}
+
+\begin{verbatim}
+appL2appVId ◂ Π f : AppV. Π q : LenDistAppL f.
+  ∀ A : ★. ∀ n,m : Nat. Π xs : Vec A n. Π ys : Vec A m.
+  appL2appV f q xs ys ≃ f (v2l! xs) (v2l! ys)
+  = λ f,q,xs,ys.      // l2v (f (v2l xs) (v2l ys)) ≃ f xs ys
+  ρ (v2lId xs) -      // l2v (f xs (v2l ys)) ≃ f xs ys
+  ρ (v2lId ys) -      // l2v (f xs ys) ≃ f xs ys
+  ρ (l2vId (f xs ys)) - // f xs ys ≃ f xs ys
+  β
+
+appL2appV! ◂ Π f : AppL. LenDistAppL f ➾ AppV
+  = λ f. Λ q. λ xs,ys. 
+  φ (appL2appVId f q xs ys) - 
+  (appL2appV f q xs ys) {f (v2l! xs) (v2l! ys)}.
+\end{verbatim}
+
+\end{frame}
+
+
 \end{document}
