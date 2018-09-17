@@ -541,6 +541,76 @@ elimIdDep ◂ ∀ A : ★. ∀ B : A ➔ ★.
 
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{Zero-Cost Reuse Combinators}
+
+\texttt{IdDep}-closed combinators for particular types represent
+generic zero-cost solutions to reuse for said types. We define two
+combinators for each type, for the forgetul and enriching directions
+of reuse.
+
+\begin{block}{Program Reuse}
+Combinators for the function type, e.g. the forgetful program reuse
+combinator returning:\\
+\texttt{Id (∀ i : I. X i ➔ X' i) (Y ➔ Y')}.
+\end{block}
+
+\begin{block}{Data Reuse}
+Combinators for the fixpoint type, e.g. the forgetful data reuse
+combinator returning:\\
+\texttt{∀ i : I. Id (IFix I F imapF i) (Fix G imapG)}.
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Forgetful Program Reuse Combinator}
+\framesubtitle{e.g., \texttt{Id (∀ n : Nat. Vec A n ➔ ●) (List A ➔ ●)}}
+  
+\begin{verbatim}
+allArr2arr ◂ ∀ I : ★. ∀ X,X' : I ➔ ★. ∀ Y,Y' : ★.
+  Π r : Y ➔ I.
+  Π c1 : IdDep Y (λ y. X (r y)).
+  Π c2 : Π y : Y. Id (X' (r y)) Y'.
+  Id (∀ i : I. X i ➔ X' i) (Y ➔ Y')
+
+appV2appL ◂ Id AppV AppL
+  = // Id (∀ A : ★. ●) (∀ A : ★. ●)
+  copyType (Λ A. 
+  // Id (∀ n : Nat. Vec A n ➔ ●) (List A ➔ ●)
+  allArr2arr len l2v (λ xs. 
+  // Id (∀ m : Nat. Vec A m ➔ ●) (List A ➔ ●)
+  allArr2arr len l2v (λ ys. 
+  // Id (Vec A (add (len xs) (len ys))) (List A)
+  v2l))).
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Forgetful Data Reuse Combinator}
+\framesubtitle{e.g., \texttt{Id (IFix Nat (VecF A) imapV n) (Fix (ListF A) imapL)}}
+  
+\begin{verbatim}
+ifix2fix ◂ ∀ I : ★. ∀ F : (I ➔ ★) ➔ I ➔ ★. ∀ G : ★ ➔ ★. 
+  Π imapF : IIdMapping I F. 
+  Π imapG : IdMapping G.
+  Π c : ∀ X : I ➔ ★. ∀ Y : ★. 
+    (∀ i : I. Id (X i) Y) ➔ ∀ i : I. Id (F X i) (G Y).
+  ∀ i : I. Id (IFix I F imapF i) (Fix G imapG)
+
+vf2lf ◂ ∀ A : ★. ∀ X : Nat ➔ ★. ∀ Y :  ★. 
+  Π c : ∀ n : Nat. Id (X n) Y.
+  ∀ n : Nat. Id (VecF A X n) (ListF A Y)
+  = λ c. elimVecF (pair nilLF β)
+  (λ x,xs. pair (consLF x (elimId c xs) β)).
+
+v2l ◂ ∀ A : ★. ∀ n : Nat. Id (Vec A n) (List A) =
+  ifix2fix imapV imapL vf2lf. 
+\end{verbatim}
+
+\end{frame}
+
 
 
 \end{document}
