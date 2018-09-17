@@ -365,6 +365,25 @@ appV ◂ ∀ A : ★. ∀ n : Nat. Vec A n ➔
 
 \end{frame}
 
+\begin{frame}
+\frametitle{Solution: Zero-Cost Reuse}
 
+\begin{block}{Manual Solution}
+Write conventional conversion functions between lists and vectors, and
+their functions. Prove that conversions are extensionally the identity
+function, then use Cedille's Curry-style theory to derive a conversion
+that is also intensionally the identity function.
+\end{block}
+
+\begin{block}{Combinator Solution}
+Define a type abstraction that represents the existence of an
+intensional identity function between two types. Define (tactic-like)
+combinators over the abstraction, that decompose a reuse problem into
+simpler sub-problems (or sub-goals). Typing ensures that we can always
+derive an intensional identity function, or zero-cost conversion,
+between two types when solving a problem with combinators.
+\end{block}
+
+\end{frame}
 
 \end{document}
