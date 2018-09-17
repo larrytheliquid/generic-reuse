@@ -782,7 +782,7 @@ pattern as the forgetful direction, by first proving an extensional identity
 (\verb;l2v!;) via \verb;φ;:
 \begin{verbatim}
 l2vId ◂ ∀ A : ★. Π xs : List A. l2v xs ≃ xs 
-  = elimVec β (λ x,ih. ρ ih - β).
+  = elimList β (λ x,ih. ρ ih - β).
 l2v! ◂ ∀ A : ★. Π xs : List A. Vec A (len xs)
   = λ xs. φ (l2vId xs) - (l2v xs) {xs}.
 \end{verbatim}

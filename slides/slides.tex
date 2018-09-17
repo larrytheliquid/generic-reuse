@@ -209,11 +209,11 @@ app : ∀ A : ★. ∀ n,m : Nat.
 Type checking is non-algorithmic for \textbf{type-assignment} systems, so they
 are not useful as programming languages. Thus, we solve our problem in
 CDLE (Cedille), which has an algorithmic type checker due because it
-is a \textbf{type-annotated} version of an extrinsic type theory.
+is a \textbf{annotated} version of an extrinsic type theory.
 \end{block}
 
 \begin{block}{Zero-Cost Reuse}
-In a type-annotated setting, the constructors and functions for lists
+In a annotated setting, the constructors and functions for lists
 and vectors are different, but their \textit{erasures} are the
 same. Our solution to zero-cost reuse allows the user to reuse a list
 as a vector (or a list function as a vector function), or vice versa,
@@ -289,7 +289,7 @@ will be equal to the erasure of the original term.
 
 \begin{frame}[fragile]
 \frametitle{Extrinsic Typing of Nil Constructor}
-\framesubtitle{Type-annotated CDLE}
+\framesubtitle{Annotated CDLE}
 
 \begin{verbatim}
 List ◂ ★ ➔ ★ = λ A. ∀ X : ★. X ➔ (A ➔ X ➔ X) ➔ X.
@@ -314,7 +314,7 @@ nilV ◂ ∀ A : ★. Vec A zero = Λ A,X. λ cN,cC. cN.
 
 \begin{frame}[fragile]
 \frametitle{Extrinsic Typing of Cons Constructor}
-\framesubtitle{Type-annotated CDLE}
+\framesubtitle{Annotated CDLE}
 
 \begin{verbatim}
 List ◂ ★ ➔ ★ = λ A. ∀ X : ★. X ➔ (A ➔ X ➔ X) ➔ X.
@@ -341,7 +341,7 @@ consV ◂ ∀ A : ★. ∀ n : Nat. A ➔ Vec A n ➔ Vec A (suc n) =
 
 \begin{frame}[fragile]
 \frametitle{Extrinsic Typing of Append Function}
-\framesubtitle{Type-annotated CDLE}
+\framesubtitle{Annotated CDLE}
 
 \begin{verbatim}
 appL ◂ ∀ A : ★. List A ➔ List A ➔ List A
@@ -438,6 +438,9 @@ between two types when solving a problem with combinators.
 \framesubtitle{Manual Solution}
 
 \begin{verbatim}
+v2l ◂ ∀ A : ★. ∀ n : Nat. Vec A n ➔ List A
+  = elimVec nilL (λ x,ih. consL x ih).
+
 v2lId ◂ ∀ A : ★. ∀ n : Nat. Π xs : Vec A n. v2l xs ≃ xs 
   = elimVec β (λ x,ih. ρ ih - β).
 
@@ -458,8 +461,11 @@ v2l! ◂ ∀ A : ★. ∀ n : Nat. Vec A n ➔ List A
 \framesubtitle{Manual Solution}
 
 \begin{verbatim}
+l2v ◂ ∀ A : ★. Π xs : List A. Vec A (len xs)
+  = elimList nilV (λ x,ih. consV x ih).
+
 l2vId ◂ ∀ A : ★. Π xs : List A. l2v xs ≃ xs 
-  = elimVec β (λ x,ih. ρ ih - β).
+  = elimList β (λ x,ih. ρ ih - β).
 
 l2v! ◂ ∀ A : ★. Π xs : List A. Vec A (len xs)
   = λ xs. φ (l2vId xs) - (l2v xs) {xs}.
@@ -478,6 +484,9 @@ l2v! ◂ ∀ A : ★. Π xs : List A. Vec A (len xs)
 \framesubtitle{Manual Solution}
 
 \begin{verbatim}
+appV2appL ◂ AppV ➔ AppL
+  = λ appV,xs,ys. v2l (appV (l2v xs) (l2v ys)).
+
 appV2appLId ◂ Π f : AppV. ∀ A : ★. Π xs,ys : List A. 
   appV2appL f xs ys ≃ f (l2v! xs) (l2v! ys)
   = λ f,xs,ys.        
@@ -494,27 +503,34 @@ appV2appL! ◂ AppV ➔ AppL
 
 \end{frame}
 
-\begin{frame}[fragile]
-\frametitle{Zero-Cost Enriching Program Reuse}
-\framesubtitle{Manual Solution}
+%% \begin{frame}[fragile]
+%% \frametitle{Zero-Cost Enriching Program Reuse}
+%% \framesubtitle{Manual Solution}
 
-\begin{verbatim}
-appL2appVId ◂ Π f : AppV. Π q : LenDistAppL f.
-  ∀ A : ★. ∀ n,m : Nat. Π xs : Vec A n. Π ys : Vec A m.
-  appL2appV f q xs ys ≃ f (v2l! xs) (v2l! ys)
-  = λ f,q,xs,ys.      
-  ρ (v2lId xs) -      
-  ρ (v2lId ys) -      
-  ρ (l2vId (f xs ys)) -
-  β
+%% \begin{verbatim}
+%% appL2appV ◂ Π appL : AppL. LenDistAppL appL ➔ AppV
+%%   = λ appL,q,xs,ys.       // Vec A (add n m)            
+%%   ρ v2lPresLen xs -       // Vec A (add (len (v2l xs)) m)
+%%   ρ v2lPresLen ys -       // Vec A (add (len (v2l xs)) (len (v2l ys)))
+%%   ρ q (v2l xs) (v2l ys) - // Vec A (len (appL (v2l xs) (v2l ys)))
+%%   l2v (appL (v2l xs) (v2l ys)).
 
-appL2appV! ◂ Π f : AppL. LenDistAppL f ➾ AppV
-  = λ f. Λ q. λ xs,ys. 
-  φ (appL2appVId f q xs ys) - 
-  (appL2appV f q xs ys) {f (v2l! xs) (v2l! ys)}.
-\end{verbatim}
+%% appL2appVId ◂ Π f : AppV. Π q : LenDistAppL f.
+%%   ∀ A : ★. ∀ n,m : Nat. Π xs : Vec A n. Π ys : Vec A m.
+%%   appL2appV f q xs ys ≃ f (v2l! xs) (v2l! ys)
+%%   = λ f,q,xs,ys.      
+%%   ρ (v2lId xs) -      
+%%   ρ (v2lId ys) -      
+%%   ρ (l2vId (f xs ys)) -
+%%   β
 
-\end{frame}
+%% appL2appV! ◂ Π f : AppL. LenDistAppL f ➾ AppV
+%%   = λ f. Λ q. λ xs,ys. 
+%%   φ (appL2appVId f q xs ys) - 
+%%   (appL2appV f q xs ys) {f (v2l! xs) (v2l! ys)}.
+%% \end{verbatim}
+
+%% \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{Type of Dependent Identity Functions}
