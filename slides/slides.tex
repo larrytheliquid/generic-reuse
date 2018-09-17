@@ -693,6 +693,32 @@ v2l ◂ ∀ A : ★. ∀ n : Nat. Id (Vec A n) (List A) =
 
 \end{frame}
 
+\begin{frame}
+\frametitle{In the Paper}
+\framesubtitle{Questions?}
+
+\begin{enumerate}
+\item Generic combinator solutions to zero-cost
+  \textbf{forgetful program reuse}
+  (combinator \texttt{allArr2arr}, handling the type of non-dependent functions),
+  and \textbf{proof reuse} (combinator \texttt{allPi2pi},
+  handling the type of dependent functions).
+\item Generic combinator solutions to zero-cost
+  \textbf{enriching program reuse}
+  (combinator \texttt{arr2allArrP}, handling the type of non-dependent functions),
+  and \textbf{proof reuse} (combinator \texttt{pi2allPiP},
+  handling the type of dependent functions).
+\item A generic combinator solution to zero-cost
+  \textbf{forgetful data reuse}
+  (combinator \texttt{ifix2fix}, handling the type of fixpoints for
+  generically encoded datatypes).
+\item Generic combinator solutions to zero-cost
+  \textbf{enriching data reuse}
+  (combinators \texttt{fix2ifix} and \texttt{fix2ifixP}, handling the type of fixpoints for
+  generically encoded datatypes).
+\end{enumerate}
+
+\end{frame}
 
 
 \end{document}
