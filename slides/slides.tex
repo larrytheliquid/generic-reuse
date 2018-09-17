@@ -286,4 +286,85 @@ will be equal to the erasure of the original term.
 \end{figure}
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{Extrinsic Typing of Nil Constructor}
+\framesubtitle{Type-annotated CDLE}
+
+\begin{verbatim}
+List ◂ ★ ➔ ★ = λ A. ∀ X : ★. X ➔ (A ➔ X ➔ X) ➔ X.
+Vec ◂ ★ ➔ Nat ➔ ★ = λ A,n. ∀ X : Nat ➔ ★.
+  X zero ➔ (∀ n : Nat. A ➔ X n ➔ X (suc n)) ➔ X n.
+\end{verbatim}
+
+\noindent\rule{\textwidth}{1pt}
+
+\begin{verbatim}
+nilL ◂ ∀ A : ★. List A = Λ A,X. λ cN,cC. cN.
+nilV ◂ ∀ A : ★. Vec A zero = Λ A,X. λ cN,cC. cN.
+\end{verbatim}
+
+\noindent\rule{\textwidth}{1pt}
+
+\begin{verbatim}
+|nilL| = |nilV| = λ cN,cC. cN
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Extrinsic Typing of Cons Constructor}
+\framesubtitle{Type-annotated CDLE}
+
+\begin{verbatim}
+List ◂ ★ ➔ ★ = λ A. ∀ X : ★. X ➔ (A ➔ X ➔ X) ➔ X.
+Vec ◂ ★ ➔ Nat ➔ ★ = λ A,n. ∀ X : Nat ➔ ★.
+  X zero ➔ (∀ n : Nat. A ➔ X n ➔ X (suc n)) ➔ X n.
+\end{verbatim}
+
+\noindent\rule{\textwidth}{1pt}
+
+\begin{verbatim}
+consL ◂ ∀ A : ★. A ➔ List A ➔ List A =
+  Λ A. λ x,xs. Λ X. λ cN,cC. cC x (xs -X cN cC).
+consV ◂ ∀ A : ★. ∀ n : Nat. A ➔ Vec A n ➔ Vec A (suc n) =
+  Λ A,n. λ x,xs. Λ X. λ cN,cC. cC -n x (xs -X cN cC).
+\end{verbatim}
+
+\noindent\rule{\textwidth}{1pt}
+
+\begin{verbatim}
+|consL| = |consV| = λ x,xs,cN,cC. cC x (xs cN cC)
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Extrinsic Typing of Append Function}
+\framesubtitle{Type-annotated CDLE}
+
+\begin{verbatim}
+appL ◂ ∀ A : ★. List A ➔ List A ➔ List A
+  = Λ A. λ xs. xs -(List A ➔ List A)
+  (λ ys. ys)
+  (Λ xs. λ x,ih,ys. consL -A x (ih ys)).
+appV ◂ ∀ A : ★. ∀ n : Nat. Vec A n ➔ 
+  ∀ m : Nat. Vec A m ➔ Vec A (add n m)
+  = Λ A. λ xs. xs 
+  -(λ n. ∀ m : Nat. Vec A m ➔ Vec A (add n m))
+  (Λ m. λ ys. ys)
+  (Λ n. Λ xs,x,ih. Λ m. λ ys. 
+    consV A -(add n m) x (ih -m ys)).
+\end{verbatim}
+
+\noindent\rule{\textwidth}{1pt}
+
+\begin{verbatim}
+|appL| = |appV| = λ xs. xs (λ ys. ys) 
+  (λ x,ih,ys,cN,cC. cC x (ih ys cN cC))
+\end{verbatim}
+
+\end{frame}
+
+
+
 \end{document}
