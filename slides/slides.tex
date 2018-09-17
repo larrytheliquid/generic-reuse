@@ -476,14 +476,15 @@ l2v! ◂ ∀ A : ★. Π xs : List A. Vec A (len xs)
 \begin{verbatim}
 appV2appLId ◂ Π f : AppV. ∀ A : ★. Π xs,ys : List A. 
   appV2appL f xs ys ≃ f (l2v! xs) (l2v! ys)
-  = λ f,xs,ys.        // v2l (f (l2v xs) (l2v ys)) ≃ f xs ys
-  ρ (l2vId xs) -      // v2l (f xs (l2v ys))
-  ρ (l2vId ys) -      // v2l (f xs ys)
-  ρ (v2lId (f xs ys)) - // f xs ys ≃ f xs ys
+  = λ f,xs,ys.        
+  ρ (l2vId xs) -      
+  ρ (l2vId ys) -      
+  ρ (v2lId (f xs ys)) -
   β
 
 appV2appL! ◂ AppV ➔ AppL
-  = λ f,xs,ys. φ (appV2appLId f xs ys) - 
+  = λ f,xs,ys.
+  φ (appV2appLId f xs ys) - 
   (appV2appL f xs ys) {f (l2v! xs) (l2v! ys)}.
 \end{verbatim}
 
@@ -496,10 +497,10 @@ appV2appL! ◂ AppV ➔ AppL
 appL2appVId ◂ Π f : AppV. Π q : LenDistAppL f.
   ∀ A : ★. ∀ n,m : Nat. Π xs : Vec A n. Π ys : Vec A m.
   appL2appV f q xs ys ≃ f (v2l! xs) (v2l! ys)
-  = λ f,q,xs,ys.      // l2v (f (v2l xs) (v2l ys)) ≃ f xs ys
-  ρ (v2lId xs) -      // l2v (f xs (v2l ys)) ≃ f xs ys
-  ρ (v2lId ys) -      // l2v (f xs ys) ≃ f xs ys
-  ρ (l2vId (f xs ys)) - // f xs ys ≃ f xs ys
+  = λ f,q,xs,ys.      
+  ρ (v2lId xs) -      
+  ρ (v2lId ys) -      
+  ρ (l2vId (f xs ys)) -
   β
 
 appL2appV! ◂ Π f : AppL. LenDistAppL f ➾ AppV
