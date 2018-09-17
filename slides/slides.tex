@@ -546,7 +546,7 @@ elimIdDep ◂ ∀ A : ★. ∀ B : A ➔ ★.
 
 \texttt{IdDep}-closed combinators for particular types represent
 generic zero-cost solutions to reuse for said types. We define two
-combinators for each type, for the forgetul and enriching directions
+combinators for each type, for the forgetful and enriching directions
 of reuse.
 
 \begin{block}{Program Reuse}
@@ -586,6 +586,87 @@ appV2appL ◂ Id AppV AppL
 \end{verbatim}
 
 \end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Type of Least Fixed Points}
+  
+\begin{block}{Functors}
+\begin{enumerate}
+\item An object mapping (\verb;F ◂ ★ ➔ ★;).
+\item An arrow mapping
+  (\verb;fmap ◂ ∀ X,Y : ★. (X ➔ Y) ➔ F X ➔ F Y;).
+\item A proof of the identity law for \verb;fmap;.
+\item A proof of the composition law for \verb;fmap;.
+\end{enumerate}
+\end{block}
+
+\begin{block}{Identity Mappings}
+\begin{enumerate}
+\item A type scheme (\verb;F ◂ ★ ➔ ★;).
+\item An identpity mapping
+  (\verb;imap ◂ ∀ X,Y : ★. Id X Y ➔ Id (F X) (F Y);).
+\end{enumerate}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Identity Mappings and Fixpoints}
+
+\begin{block}{Non-Indexed}
+\begin{verbatim}
+IdMapping ◂ (★ ➔ ★) ➔ ★ = λ F. 
+  ∀ X,Y : ★. Id X Y ➔ Id (F X) (F Y).
+
+Fix ◂ Π F : ★ ➔ ★. IdMapping F ➔ ★
+\end{verbatim}
+\end{block}
+
+\begin{block}{Indexed}
+\begin{verbatim}
+IIdMapping ◂ Π I : ★. ((I ➔ ★) ➔ I ➔ ★) ➔ ★ 
+  = λ I,F. ∀ X,Y : I ➔ ★. 
+  (∀ i : I. Id (X i) (Y i)) ➔ 
+  ∀ i : I. Id (F X i) (F Y i).
+
+IFix ◂ Π I : ★. Π F : (I ➔ ★) ➔ I ➔ ★. 
+  Π imap : IIdMapping I F. I ➔ ★
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Lists and Vectors via Identity Mappings}
+
+\begin{block}{Schemes}
+\begin{verbatim}
+ListF ◂ ★ ➔ ★ ➔ ★ = λ A,X. 
+  ∀ C : ★. C ➔ (A ➔ X ➔ C) ➔ C.
+VecF ◂ ★ ➔ (Nat ➔ ★) ➔ Nat ➔ ★ = λ A,X,n. 
+  ∀ C : Nat ➔ ★. C zero ➔ 
+  (∀ n : Nat. A ➔ X n ➔ C (suc n)) ➔ C n.
+\end{verbatim}
+\end{block}
+
+\begin{block}{Identity Mappings}
+\begin{verbatim}
+imapL ◂ ∀ A : ★. IdMapping (ListF A)
+imapV ◂ ∀ A : ★. IIdMapping Nat (VecF A)
+\end{verbatim}
+\end{block}
+
+
+\begin{block}{Fixpoints}
+\begin{verbatim}
+List ◂ ★ ➔ ★ = λ A. Fix (ListF A) imapL.
+Vec ◂ ★ ➔ Nat ➔ ★ = λ A,n. 
+  IFix Nat (VecF A) imapV n.
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
 
 \begin{frame}[fragile]
 \frametitle{Forgetful Data Reuse Combinator}
