@@ -22,3 +22,7 @@ _TZ_*
 html
 .cedille
 *.cut
+*.nav
+*.snm
+*.toc
+*.vrb
