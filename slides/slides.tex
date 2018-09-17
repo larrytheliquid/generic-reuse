@@ -434,6 +434,7 @@ between two types when solving a problem with combinators.
 
 \begin{frame}[fragile]
 \frametitle{Zero-Cost Forgetful Data Reuse}
+\framesubtitle{Manual Solution}
 
 \begin{verbatim}
 v2lId ◂ ∀ A : ★. ∀ n : Nat. Π xs : Vec A n. v2l xs ≃ xs 
@@ -453,6 +454,7 @@ v2l! ◂ ∀ A : ★. ∀ n : Nat. Vec A n ➔ List A
 
 \begin{frame}[fragile]
 \frametitle{Zero-Cost Enriching Data Reuse}
+\framesubtitle{Manual Solution}
 
 \begin{verbatim}
 l2vId ◂ ∀ A : ★. Π xs : List A. l2v xs ≃ xs 
@@ -472,6 +474,7 @@ l2v! ◂ ∀ A : ★. Π xs : List A. Vec A (len xs)
 
 \begin{frame}[fragile]
 \frametitle{Zero-Cost Forgetful Program Reuse}
+\framesubtitle{Manual Solution}
 
 \begin{verbatim}
 appV2appLId ◂ Π f : AppV. ∀ A : ★. Π xs,ys : List A. 
@@ -492,6 +495,7 @@ appV2appL! ◂ AppV ➔ AppL
 
 \begin{frame}[fragile]
 \frametitle{Zero-Cost Enriching Program Reuse}
+\framesubtitle{Manual Solution}
 
 \begin{verbatim}
 appL2appVId ◂ Π f : AppV. Π q : LenDistAppL f.
@@ -510,6 +514,33 @@ appL2appV! ◂ Π f : AppL. LenDistAppL f ➾ AppV
 \end{verbatim}
 
 \end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Type of Dependent Identity Functions}
+
+In a Curry-style theory a single term can have many inhabitants. For
+example, we have seen many types for the identity function.
+\texttt{IdDep} is an abstraction that represents
+the existence of an identity function between two types
+(i.e., \texttt{|elimIdDep c| = λ a. a}).
+
+\noindent\rule{\textwidth}{1pt}
+
+\begin{verbatim}
+IdDep ◂ Π A : ★. Π B : A ➔ ★. ★
+  = λ A,B. Π a : A. Sigma (B a) (λ b. b ≃ a).
+
+intrIdDep ◂ ∀ A : ★. ∀ B : A ➔ ★. Π f : (Π a : A. B a). 
+  (Π a : A. f a ≃ a) ➔ IdDep A B 
+  =  λ f,q,a. pair (f a) (q a).
+
+elimIdDep ◂ ∀ A : ★. ∀ B : A ➔ ★. 
+  IdDep A B ➔ Π a : A. B a
+  = λ c,a. φ (proj2 (c a)) - (proj1 (c a)) {a}.
+\end{verbatim}
+
+\end{frame}
+
 
 
 \end{document}
