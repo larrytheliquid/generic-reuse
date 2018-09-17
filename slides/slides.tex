@@ -19,6 +19,7 @@
 \date[September 26, 2018]
 {ICFP 2018}
 
+\DeclareUnicodeCharacter{225F}{\ensuremath{\stackrel{?}{=}}}
 \DeclareUnicodeCharacter{2261}{\ensuremath{\equiv}}
 \DeclareUnicodeCharacter{25CF}{\ensuremath{\blacksquare}}
 \DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}
@@ -111,7 +112,7 @@ appOV ◂ ∀ A : ★. ∀ b1,b2,b3 : Bnd. ∀ n,m : Nat.
 \noindent\rule{\textwidth}{1pt}
 
 \begin{verbatim}
-appL = appV = appOL = appOV
+appL ≟ appV ≟ appOL ≟ appOV
 \end{verbatim}
 
 \end{frame}
@@ -137,7 +138,7 @@ subT ◂ ∀ Γ,Δ : Ctx. ∀ A : Tp.
 \noindent\rule{\textwidth}{1pt}
 
 \begin{verbatim}
-subR = suTb
+subR ≟ suTb
 \end{verbatim}
 
 \end{frame}
