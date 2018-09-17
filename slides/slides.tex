@@ -19,6 +19,7 @@
 \date[September 26, 2018]
 {ICFP 2018}
 
+\DeclareUnicodeCharacter{2261}{\ensuremath{\equiv}}
 \DeclareUnicodeCharacter{25CF}{\ensuremath{\blacksquare}}
 \DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}
 \DeclareUnicodeCharacter{2605}{\ensuremath{\star}}
@@ -172,6 +173,12 @@ appOV ◂ ∀ A : ★. ∀ b1,b2,b3 : Bnd. ∀ n,m : Nat.
   OVec A b1 b3 (add n m)
 \end{verbatim}
 
+\noindent\rule{\textwidth}{1pt}
+
+\begin{verbatim}
+appL = appV = appOL = appOV
+\end{verbatim}
+
 \end{frame}
 
 \begin{frame}[fragile]
@@ -191,6 +198,92 @@ subR ◂ List Raw ➔ Raw ➔ Raw
 subT ◂ ∀ Γ,Δ : Ctx. ∀ A : Tp.
   Env Γ Δ ➔ Term Γ A ➔ Term Δ A
 \end{verbatim}
+
+\noindent\rule{\textwidth}{1pt}
+
+\begin{verbatim}
+subR = suTb
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Solution: Extrinsic Typing}
+
+Consider an extrinsically typed (or Curry-style) theory, where the
+same term may be typed multiple different ways. In such a theory,
+there is no cost to convert between lists and vectors, or functions
+over them, because the terms are the same to begin with.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Extrinsic Typing of Constructors}
+
+\begin{verbatim}
+List ◂ ★ ➔ ★ = λ A. ∀ X : ★. X ➔ (A ➔ X ➔ X) ➔ X.
+
+Vec ◂ ★ ➔ Nat ➔ ★ = λ A,n. ∀ X : Nat ➔ ★.
+  X zero ➔ (∀ n : Nat. A ➔ X n ➔ X (suc n)) ➔ X n.
+\end{verbatim}
+
+\noindent\rule{\textwidth}{1pt}
+
+\begin{verbatim}
+nil ≡ λ cN,cC. cN
+cons ≡ λ x,xs,cN,cC. cC x (xs cN cC)
+
+nil : ∀ A : ★. List A
+cons : ∀ A : ★. A ➔ List A ➔ List A
+
+nil : ∀ A : ★. Vec A zero
+cons : ∀ A : ★. ∀ n : Nat. A ➔ Vec A n ➔ Vec A (suc n)
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Extrinsic Typing of Functions}
+
+\begin{verbatim}
+List ◂ ★ ➔ ★ = λ A. ∀ X : ★. X ➔ (A ➔ X ➔ X) ➔ X.
+
+Vec ◂ ★ ➔ Nat ➔ ★ = λ A,n. ∀ X : Nat ➔ ★.
+  X zero ➔ (∀ n : Nat. A ➔ X n ➔ X (suc n)) ➔ X n.
+\end{verbatim}
+
+\noindent\rule{\textwidth}{1pt}
+
+\begin{verbatim}
+app ≡ λ xs. xs (λ ys. ys) 
+  (λ x,ih,ys,cN,cC. cC x (ih ys cN cC))
+
+app : ∀ A : ★. List A ➔ List A ➔ List A
+
+app : ∀ A : ★. ∀ n,m : Nat. 
+  Vec A n ➔ Vec A m ➔ Vec A (add n m)
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Solution: Extrinsic Typing}
+
+\begin{block}{Assignment vs Annotation}
+Type checking is non-algorithmic for \textbf{type-assignment} systems, so they
+are not useful as programming languages. Thus, we solve our problem in
+CDLE (Cedille), which has an algorithmic type checker due because it
+is a \textbf{type-annotated} version of an extrinsic type theory.
+\end{block}
+
+\begin{block}{Zero-Cost Reuse}
+In a type-annotated setting, the constructors and functions for lists
+and vectors are different, but their \textit{erasures} are the
+same. Our solution to zero-cost reuse allows the user to reuse a list
+as a vector (or a list function as a vector function), or vice versa,
+without a performance penalty because the erasures of the reused term
+will be equal to the erasure of the original term.
+\end{block}
 
 \end{frame}
 
