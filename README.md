@@ -29,7 +29,7 @@ git clone and install it, but I suggest installing the now open source Cedille i
 (following [these installation instructions](https://cedille.github.io)). 
 
 Alternatively, if you don't want to manually install anything, there is a [Virtual Box](https://www.virtualbox.org/) image
-of the artifact branch that you can install from [here](https://dl.acm.org/citation.cfm?id=3235040),
+of the artifact branch that you can get from [here](https://dl.acm.org/citation.cfm?id=3235040),
 by clicking the "Source Materials" tab on the bottom and downloading the zip file.
 
 [GenericReuse](code/GenericReuse)
