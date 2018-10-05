@@ -18,10 +18,10 @@ and data reuse corresponds to fixpoint type reuse.
 Evaluating This Work
 --------------------
 
-The type checker (Cedille) to use is [here](https://github.com/cedille/cedille).
+The Cedille type checker, needed to evaluate this work, is available [here](https://github.com/cedille/cedille).
 
 The [artifact branch](https://github.com/larrytheliquid/generic-reuse/blob/artifact) has a [document](https://github.com/larrytheliquid/generic-reuse/blob/artifact/ArtifactOverview.md) that explains how to work with Cedille for
-the purpose of evaluating our generic-reuse work. 
+the purpose of evaluating this work. 
 The [master branch](https://github.com/larrytheliquid/generic-reuse/blob/master) is only ahead of the artifact branch in minor ways, so the document should apply to the master branch as well.
 
 The artifact branch includes a pre-released version of Cedille, if you don't want to separately
