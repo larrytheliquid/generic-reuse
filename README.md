@@ -15,6 +15,23 @@ program reuse corresponds to non-dependent function type reuse,
 proof reuse corresponds to dependent function type reuse,
 and data reuse corresponds to fixpoint type reuse.
 
+Evaluating This Work
+--------------------
+
+The type checker (Cedille) to use is [here](https://github.com/cedille/cedille).
+
+The [artifact branch](https://github.com/larrytheliquid/generic-reuse/blob/artifact) has a [document](https://github.com/larrytheliquid/generic-reuse/blob/artifact/ArtifactOverview.md) that explains how to work with Cedille for
+the purpose of evaluating our generic-reuse work. 
+The [master branch](https://github.com/larrytheliquid/generic-reuse/blob/master) is only ahead of the artifact branch in minor ways, so the document should apply to the master branch as well.
+
+The artifact branch includes a pre-released version of Cedille, if you don't want to separately
+git clone and install it, but I suggest installing the now open source Cedille instead
+(following [these installation instructions](https://cedille.github.io)). 
+
+Alternatively, if you don't want to manually install anything, there is a [Virtual Box](https://www.virtualbox.org/) image
+of the artifact branch that you can install from [here](https://dl.acm.org/citation.cfm?id=3235040),
+by clicking the "Source Materials" tab on the bottom and downloading the zip file.
+
 [GenericReuse](code/GenericReuse)
 ---------------------------------
 
